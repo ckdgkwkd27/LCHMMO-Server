@@ -90,7 +90,7 @@ bool SocketUtil::SetOptionKeepAlive(SOCKET _socket, bool flag)
 
 SOCKET SocketUtil::CreateListenSocket(Wstring ip, uint16 port)
 {
-    SOCKET _listenSocket;
+    SOCKET _listenSocket = INVALID_SOCKET;
 
     Init();
     Bind(_listenSocket, ip, port);

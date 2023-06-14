@@ -15,7 +15,7 @@ public:
 	void StartAccept();
 	void WorkerThreadFunc();
 
-	static char AcceptBuf[64] = { 0, };
+	static char AcceptBuf[64];
 
 private:
 	std::wstring ip;
@@ -24,15 +24,23 @@ private:
 	SOCKET listenSocket;
 	HANDLE iocpHandle;
 	uint32 workerThreadsCnt;
-	std::thread acceptThread;
 	std::vector<std::thread> workerThreads;
 
 public:
+	HANDLE GetIocpHandle()
+	{
+		return iocpHandle;
+	}
+
 	SOCKET GetListenSocket() 
 	{
 		return listenSocket;
 	}
 
+	uint32 GetMaxConnectionCnt()
+	{
+		return maxConnectionCnt;
+	}
 };
 
 extern IocpServer* GIocpServer;

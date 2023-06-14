@@ -14,18 +14,20 @@ public:
 	~Session();
 
 	SOCKET GetSocket() { return sessionSocket; }
+	void SetConnected(bool cond) { isConnected = cond; }
 	
 	bool PostSend(const char* buffer, size_t len);
 	bool FlushSend();
 
 	bool PreRecv();
 	bool PostRecv();
-
+	
 	bool PostAccept();
 
 	bool PostConnect();
 	bool PostDisconnect();
 
+	bool ProcessAccept();
 	bool ProcessSend(int32 bytes);
 	bool ProcessRecv(int32 bytes);
 	bool ProcessConnect();
@@ -56,6 +58,6 @@ public:
 	virtual void OnConnected() {}
 	virtual void OnDisconnected() {}
 	virtual size_t OnSend(size_t len) { return len; }
-	virtual void OnRecv(char* buffer, size_t len);
+	virtual void OnRecv(char* buffer, size_t len) {}
 };
 

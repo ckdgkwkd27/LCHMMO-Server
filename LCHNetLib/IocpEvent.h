@@ -31,10 +31,10 @@ public:
 
 public:
 	//IocpObjectPtr owner;
+	SessionPtr sessionRef;
 
 private:
 	EventType eventType;
-
 };
 
 class AcceptEvent : public IocpEvent 
@@ -43,7 +43,7 @@ public:
 	AcceptEvent() : IocpEvent(EventType::ACCEPT) {}
 
 public:
-	SessionPtr sessionRef;
+	//SessionPtr sessionRef;
 
 };
 

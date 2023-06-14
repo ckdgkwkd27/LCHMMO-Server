@@ -39,7 +39,7 @@ bool Acceptor::StartAccept()
 	for (uint32 i = 0; i < acceptCount; i++)
 	{
 		AcceptEvent* acceptEvent = new AcceptEvent();
-		acceptEvent->owner = shared_from_this();
+		//acceptEvent->owner = shared_from_this();
 		acceptEvents.push_back(acceptEvent);
 		PostAccept(acceptEvent);
 	}

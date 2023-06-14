@@ -40,25 +40,7 @@ bool Session::PostRecv()
 
 bool Session::PostAccept()
 {
-    AcceptEvent* acceptEvent = new AcceptEvent();
-    DWORD bytes = 0;
-    DWORD flags = 0;
-    acceptContext->mWsaBuf.len = 0;
-    acceptContext->mWsaBuf.buf = nullptr;
-
-    if (FALSE == AcceptEx(GIocpServer->GetListenSocket(), sessionSocket, GIocpServer->AcceptBuf, 0,
-        sizeof(SOCKADDR_IN) + 16, sizeof(SOCKADDR_IN) + 16, &bytes, (LPOVERLAPPED)acceptContext))
-    {
-        if (WSAGetLastError() != WSA_IO_PENDING)
-        {
-            DeleteIoContext(acceptContext);
-            printf_s("AcceptEx Error : %d\n", GetLastError());
-
-            return false;
-        }
-    }
-
-    return true;
+    return false;
 }
 
 bool Session::PostConnect()
@@ -67,6 +49,11 @@ bool Session::PostConnect()
 }
 
 bool Session::PostDisconnect()
+{
+    return false;
+}
+
+bool Session::ProcessAccept()
 {
     return false;
 }

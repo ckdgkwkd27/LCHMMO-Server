@@ -13,8 +13,7 @@ IocpServer::IocpServer(std::wstring _ip, uint16 _port, uint32 _maxConnectionCnt)
 
 void IocpServer::Initialize()
 {
-	SYSTEM_INFO sysInfo;
-	DWORD workerThreadCnt = sysInfo.dwNumberOfProcessors;
+	uint32 workerThreadCnt = std::thread::hardware_concurrency();
 	workerThreads.resize(workerThreadCnt);
 
 	iocpHandle = CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, 0);
@@ -31,7 +30,7 @@ bool IocpServer::Run()
 
 	for (uint32 i = 0; i < workerThreadsCnt; i++)
 	{
-		workerThreads[i] = std::thread(WorkerThreadFunc);
+		workerThreads[i] = std::thread(&IocpServer::WorkerThreadFunc, this);
 	}
 
 	return true;
@@ -39,11 +38,6 @@ bool IocpServer::Run()
 
 bool IocpServer::Join()
 {
-	if (acceptThread.joinable())
-	{
-		acceptThread.join();
-	}
-
 	for (uint32 i = 0; i < workerThreadsCnt; i++)
 	{
 		if (workerThreads[i].joinable())
@@ -57,35 +51,65 @@ bool IocpServer::Join()
 
 void IocpServer::StartAccept()
 {
-	while (true)
+	while (GSessionManager.AcceptClientSession())
 	{
-		SessionPtr _session = GSessionManager.IssueSession(); //여기서 CreateIoCompPort 로 등록까지 시킨다
-		SOCKET sessionSocket = _session->GetSocket();
-		for (uint32 i = 0; i < maxConnectionCnt; i++)
-		{
-			AcceptEvent* acceptEvent = new AcceptEvent();
-			acceptEvent->sessionRef = _session;
-			acceptEvent->Init();
-
-			DWORD bytesReceived = 0;
-
-			if (false == AcceptEx(listenSocket, _session->GetSocket(),
-				_session->recvBuffer.WritePos(), 0, sizeof(SOCKADDR_IN) + 16, sizeof(SOCKADDR_IN) + 16,
-				&bytesReceived, static_cast<LPOVERLAPPED>(acceptEvent)))
-			{
-				const INT32 errCode = WSAGetLastError();
-				if (errCode != WSA_IO_PENDING) {
-					std::cout << "[FAIL] Accept ErrorCode: " << errCode << std::endl;
-					continue;
-				}
-			}
-		}
-
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
-	while (GSessionManager.AcceptClientSession());
 }
 
 void IocpServer::WorkerThreadFunc()
 {
+	while (true)
+	{
+		DWORD bytes;
+		ULONG_PTR key;
+		IocpEvent* iocpEvent = nullptr;
+		bool ret = GetQueuedCompletionStatus(iocpHandle, &bytes, &key, reinterpret_cast<LPOVERLAPPED*>(&iocpEvent), INFINITE);
+		if (ret == false || bytes == 0)
+		{
+			//if send, recv then disconnect session
 
+			int32 ErrCode = WSAGetLastError();
+			std::cout << "[ERROR] GQCS Error: " << ErrCode << std::endl;
+			continue;
+		}
+		ASSERT_CRASH(iocpEvent == NULL);
+
+		switch (iocpEvent->GetType())
+		{
+		case EventType::ACCEPT:
+		{
+			SessionPtr _session = iocpEvent->sessionRef;
+			_session->ProcessAccept();
+			break;
+		}
+		case EventType::CONNECT:
+		{
+			SessionPtr _session = iocpEvent->sessionRef;
+			_session->ProcessConnect();
+			break;
+		}
+		case EventType::DISCONNECT:
+		{
+			SessionPtr _session = iocpEvent->sessionRef;
+			_session->ProcessDisconnect();
+			break;
+		}
+		case EventType::SEND:
+		{
+			SessionPtr _session = iocpEvent->sessionRef;
+			_session->ProcessSend(bytes);
+			break;
+		}
+		case EventType::RECV:
+		{
+			SessionPtr _session = iocpEvent->sessionRef;
+			_session->ProcessRecv(bytes);
+			break;
+		}
+		default:
+			std::cout << "[FAIL] Wrong EventType: " << (uint8)iocpEvent->GetType() << std::endl;
+			ASSERT_CRASH(false);
+		}
+	}
 }
