@@ -17,7 +17,15 @@ void IocpServer::Initialize()
 	workerThreads.resize(workerThreadsCnt);
 
 	iocpHandle = CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, 0);
-	listenSocket = SocketUtil::CreateListenSocket(ip, port);
+	ASSERT_CRASH(iocpHandle != NULL);
+
+	listenSocket = SocketUtil::CreateListenSocket();
+	HANDLE _handle = CreateIoCompletionPort((HANDLE)listenSocket, iocpHandle, 0, 0);
+	if (_handle != iocpHandle)
+	{
+		ASSERT_CRASH(false);
+	}
+	SocketUtil::Bind(listenSocket, ip, port);
 	SocketUtil::Listen(listenSocket);
 
 	std::cout << "Server Initialization Success.." << std::endl;
@@ -71,16 +79,19 @@ void IocpServer::WorkerThreadFunc()
 		DWORD bytes;
 		ULONG_PTR key;
 		IocpEvent* iocpEvent = nullptr;
-		bool ret = GetQueuedCompletionStatus(iocpHandle, &bytes, &key, reinterpret_cast<LPOVERLAPPED*>(&iocpEvent), INFINITE);
+		bool ret = GetQueuedCompletionStatus(iocpHandle, &bytes, &key, 
+			reinterpret_cast<LPOVERLAPPED*>(&iocpEvent), INFINITE);
 		if (ret == false || bytes == 0)
 		{
 			//if send, recv then disconnect session
-
-			int32 ErrCode = WSAGetLastError();
-			std::cout << "[ERROR] GQCS Error: " << ErrCode << std::endl;
-			continue;
+			if (iocpEvent->GetType() == EventType::SEND || iocpEvent->GetType() == EventType::RECV)
+			{
+				int32 ErrCode = WSAGetLastError();
+				std::cout << "[ERROR] GQCS Error: " << ErrCode << std::endl;
+				continue;
+			}
 		}
-		ASSERT_CRASH(iocpEvent == NULL);
+		ASSERT_CRASH(iocpEvent != NULL);
 
 		switch (iocpEvent->GetType())
 		{

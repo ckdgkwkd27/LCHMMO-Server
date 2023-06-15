@@ -15,7 +15,7 @@ Session::~Session()
 
 void Session::Register()
 {
-    CreateIoCompletionPort(reinterpret_cast<HANDLE>(sessionSocket), GIocpServer->GetIocpHandle(), 0, 0);
+    //CreateIoCompletionPort(reinterpret_cast<HANDLE>(sessionSocket), GIocpServer->GetIocpHandle(), 0, 0);
 }
 
 bool Session::PostSend(const char* buffer, size_t len)

@@ -88,7 +88,7 @@ bool SocketUtil::SetOptionKeepAlive(SOCKET _socket, bool flag)
         reinterpret_cast<char*>(&flag), sizeof(flag));
 }
 
-SOCKET SocketUtil::CreateListenSocket(Wstring ip, uint16 port)
+SOCKET SocketUtil::CreateListenSocket()
 {
 	Init();
 
@@ -97,6 +97,5 @@ SOCKET SocketUtil::CreateListenSocket(Wstring ip, uint16 port)
     SetOptionLinger(_listenSocket);
     SetOptionNoDelay(_listenSocket, true);
     SetOptionReuseAddr(_listenSocket, true);
-    Bind(_listenSocket, ip, port);
     return _listenSocket;
 }

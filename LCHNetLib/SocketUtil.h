@@ -17,6 +17,6 @@ public:
 	static bool SetOptionUpdateAcceptSocket(SOCKET _socket, SOCKET listenSocket);
 	static bool SetOptionKeepAlive(SOCKET _socket, bool flag);
 
-	static SOCKET CreateListenSocket(Wstring ip, uint16 port);
+	static SOCKET CreateListenSocket();
 };
 
