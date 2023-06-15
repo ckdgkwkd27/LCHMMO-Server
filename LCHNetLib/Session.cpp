@@ -13,6 +13,11 @@ Session::~Session()
     SocketUtil::CloseSocket(sessionSocket);
 }
 
+void Session::Register()
+{
+    CreateIoCompletionPort(reinterpret_cast<HANDLE>(sessionSocket), GIocpServer->GetIocpHandle(), 0, 0);
+}
+
 bool Session::PostSend(const char* buffer, size_t len)
 {
     if (isConnected == false)
@@ -40,7 +45,22 @@ bool Session::PostRecv()
 
 bool Session::PostAccept()
 {
-    return false;
+	sessionAcceptEvent.sessionRef = shared_from_this();
+    sessionAcceptEvent.Init();
+
+	DWORD bytes = 0;
+	if (false == AcceptEx(GIocpServer->GetListenSocket(), sessionSocket, AcceptBuffer, 0, sizeof(SOCKADDR_IN) + 16, sizeof(SOCKADDR_IN) + 16,
+		&bytes, static_cast<LPOVERLAPPED>(&sessionAcceptEvent)))
+	{
+		const INT32 errCode = WSAGetLastError();
+		if (errCode != WSA_IO_PENDING)
+		{
+			std::cout << "[FAIL] PostAccept() Error: " << errCode << std::endl;
+			PostAccept();
+		}
+	}
+
+	return true;
 }
 
 bool Session::PostConnect()
@@ -76,14 +96,4 @@ bool Session::ProcessConnect()
 bool Session::ProcessDisconnect()
 {
     return false;
-}
-
-HANDLE Session::GetHandle()
-{
-    return HANDLE();
-}
-
-bool Session::Dispatch(IocpEvent* _iocpEvent, int32 bytes)
-{
-    return true;
 }

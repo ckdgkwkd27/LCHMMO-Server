@@ -7,7 +7,7 @@
 
 class IocpServer;
 
-class Session : public IocpObject
+class Session : public std::enable_shared_from_this<Session>
 {
 public:
 	Session();
@@ -15,7 +15,8 @@ public:
 
 	SOCKET GetSocket() { return sessionSocket; }
 	void SetConnected(bool cond) { isConnected = cond; }
-	
+
+	void Register();
 	bool PostSend(const char* buffer, size_t len);
 	bool FlushSend();
 
@@ -35,6 +36,7 @@ public:
 
 private:
 	SOCKET sessionSocket = INVALID_SOCKET;
+	AcceptEvent sessionAcceptEvent;
 	ConnectEvent sessionConnectEvent;
 	DisconnectEvent sessionDisconnectEvent;
 	SendEvent sessionSendEvent;
@@ -48,13 +50,11 @@ public:
 	uint32 port;
 	SOCKADDR_IN sockAddr;
 
+	char AcceptBuffer[64] = { 0, };
 	CircularBuffer sendBuffer;
 	CircularBuffer recvBuffer;
 
 public:
-	HANDLE GetHandle() override;
-	bool Dispatch(IocpEvent* _iocpEvent, int32 bytes) override;
-
 	virtual void OnConnected() {}
 	virtual void OnDisconnected() {}
 	virtual size_t OnSend(size_t len) { return len; }

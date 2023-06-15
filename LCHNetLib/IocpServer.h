@@ -13,9 +13,9 @@ public:
 	bool Join();
 	
 	void StartAccept();
-	void WorkerThreadFunc();
 
-	static char AcceptBuf[64];
+	void AcceptThreadFunc();
+	void WorkerThreadFunc();
 
 private:
 	std::wstring ip;
@@ -24,6 +24,7 @@ private:
 	SOCKET listenSocket;
 	HANDLE iocpHandle;
 	uint32 workerThreadsCnt;
+	std::thread AcceptThread;
 	std::vector<std::thread> workerThreads;
 
 public:

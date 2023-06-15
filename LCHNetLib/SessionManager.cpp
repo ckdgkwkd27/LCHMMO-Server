@@ -7,7 +7,7 @@ SessionManager GSessionManager;
 SessionPtr SessionManager::CreateSession(IocpCorePtr _iocpCore, SessionFactory _factory)
 {
     auto _session = _factory();
-    _iocpCore->Register(_session);
+    //_iocpCore->Register(_session);
     return _session;
 }
 
@@ -38,11 +38,16 @@ bool SessionManager::AcceptClientSession()
 {
     while (GetIssueCount() < GIocpServer->GetMaxConnectionCnt())
     {
-        LockGuard lockGuard(sessionLock);
-
         SessionPtr _session = GSessionManager.IssueSession();
-        if (_session->PostAccept() == false)
+        if (_session == nullptr)
+        {
             return false;
+        }
+
+        if (_session->PostAccept() == false)
+        {
+            return false;
+        }
     }
 
     return true;
@@ -53,6 +58,7 @@ void SessionManager::PrepareSessions(uint32 maxSessionCnt)
     for (uint32 i = 0; i < maxSessionCnt; i++)
     {
         SessionPtr _session = std::make_shared<Session>();
+        _session->Register();
         sessionPool.push_back(_session);
     }
 }

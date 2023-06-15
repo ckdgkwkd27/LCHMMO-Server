@@ -13,8 +13,8 @@ IocpServer::IocpServer(std::wstring _ip, uint16 _port, uint32 _maxConnectionCnt)
 
 void IocpServer::Initialize()
 {
-	uint32 workerThreadCnt = std::thread::hardware_concurrency();
-	workerThreads.resize(workerThreadCnt);
+	workerThreadsCnt = std::thread::hardware_concurrency() / 2;
+	workerThreads.resize(workerThreadsCnt);
 
 	iocpHandle = CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, 0);
 	listenSocket = SocketUtil::CreateListenSocket(ip, port);
@@ -26,8 +26,6 @@ void IocpServer::Initialize()
 
 bool IocpServer::Run()
 {
-	StartAccept();
-
 	for (uint32 i = 0; i < workerThreadsCnt; i++)
 	{
 		workerThreads[i] = std::thread(&IocpServer::WorkerThreadFunc, this);
@@ -50,6 +48,15 @@ bool IocpServer::Join()
 }
 
 void IocpServer::StartAccept()
+{
+	GSessionManager.PrepareSessions(maxConnectionCnt);
+
+	AcceptThread = std::thread(&IocpServer::AcceptThreadFunc, this);
+	std::cout << "[INFO] Start Accept..." << std::endl;
+
+}
+
+void IocpServer::AcceptThreadFunc()
 {
 	while (GSessionManager.AcceptClientSession())
 	{
@@ -79,6 +86,7 @@ void IocpServer::WorkerThreadFunc()
 		{
 		case EventType::ACCEPT:
 		{
+			std::cout << "[INFO] Accepted..!!!!!!" << std::endl;
 			SessionPtr _session = iocpEvent->sessionRef;
 			_session->ProcessAccept();
 			break;

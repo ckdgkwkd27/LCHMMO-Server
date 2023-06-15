@@ -90,14 +90,13 @@ bool SocketUtil::SetOptionKeepAlive(SOCKET _socket, bool flag)
 
 SOCKET SocketUtil::CreateListenSocket(Wstring ip, uint16 port)
 {
-    SOCKET _listenSocket = INVALID_SOCKET;
+	Init();
 
-    Init();
-    Bind(_listenSocket, ip, port);
+    SOCKET _listenSocket = CreateSocket();
     SetOptionKeepAlive(_listenSocket, true);
     SetOptionLinger(_listenSocket);
     SetOptionNoDelay(_listenSocket, true);
     SetOptionReuseAddr(_listenSocket, true);
-    
+    Bind(_listenSocket, ip, port);
     return _listenSocket;
 }
