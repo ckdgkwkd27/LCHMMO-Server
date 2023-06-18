@@ -93,6 +93,7 @@ bool Acceptor::Dispatch(IocpEvent* _iocpEvent, int32 bytes)
     }
 
     SOCKADDR_IN sockAddr;
+    memset(&sockAddr, 0, sizeof(sockAddr));
     size_t AddrSize = sizeof(sockAddr);
     if (SOCKET_ERROR == ::getpeername(session->GetSocket(), reinterpret_cast<SOCKADDR*>(&sockAddr), reinterpret_cast<int*>(AddrSize)))
     {
@@ -100,7 +101,7 @@ bool Acceptor::Dispatch(IocpEvent* _iocpEvent, int32 bytes)
         return false;
     }
 
-    session->sockAddr = sockAddr;
+    session->sockAddrIn = sockAddr;
     session->ProcessConnect();
     PostAccept(acceptEvent);
     return true;

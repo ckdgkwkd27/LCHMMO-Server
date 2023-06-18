@@ -15,16 +15,37 @@ Session::~Session()
 
 void Session::Register()
 {
-    //CreateIoCompletionPort(reinterpret_cast<HANDLE>(sessionSocket), GIocpServer->GetIocpHandle(), 0, 0);
+    CreateIoCompletionPort(reinterpret_cast<HANDLE>(sessionSocket), GIocpServer->GetIocpHandle(), 0, 0);
 }
 
-bool Session::PostSend(const char* buffer, size_t len)
+bool Session::PostSend(CircularBuffer _sendBuffer)
 {
     if (isConnected == false)
         return false;
 
-    LockGuard lockGuard(sendLock);
+    {
+        LockGuard lockGuard(sendLock);
 
+        sessionSendEvent.Init();
+        sessionSendEvent.sessionRef = shared_from_this();
+        sessionSendEvent.sendBuffer = _sendBuffer;
+
+        DWORD numOfBytes = 0;
+        WSABUF wsabuf;
+        wsabuf.buf = sessionSendEvent.sendBuffer->data();
+        wsabuf.len = static_cast<LONG>(sessionSendEvent.sendBuffer->DataSize());
+
+        if (SOCKET_ERROR == WSASend(_socket, &wsabuf, (DWORD)1, &numOfBytes, 0, &sessionSendEvent, nullptr))
+        {
+            INT32 errCode = WSAGetLastError();
+            if (errCode != WSA_IO_PENDING) {
+                std::cout << "[FAIL] Send Error: " << errCode << std::endl;
+                sessionSendEvent.sessionRef = nullptr;
+                sessionSendEvent.sendBuffer->Clear();
+            }
+        }
+
+    }
     return true;
 }
 
@@ -75,7 +96,26 @@ bool Session::PostDisconnect()
 
 bool Session::ProcessAccept()
 {
-    return false;
+    isConnected = true;
+    SocketUtil::SetOptionUpdateAcceptSocket(sessionSocket, GIocpServer->GetListenSocket());
+    SocketUtil::SetOptionNoDelay(sessionSocket, true);
+    SocketUtil::SetOptionLinger(sessionSocket);
+
+    
+    SOCKADDR_IN _sockAddrIn;
+    int32 AddrSize = sizeof(_sockAddrIn);
+    SOCKADDR* castSockAddr = reinterpret_cast<SOCKADDR*>(&_sockAddrIn);
+
+    if (SOCKET_ERROR == ::getpeername(sessionSocket, castSockAddr, &AddrSize))
+    {
+        std::cout << "[FAIL] getpeername error: " << GetLastError() << std::endl;
+        return false;
+    }
+
+    Register();
+    sockAddrIn = _sockAddrIn;
+    std::cout << "[INFO] Accept Completed" << std::endl;
+    return true;
 }
 
 bool Session::ProcessSend(int32 bytes)

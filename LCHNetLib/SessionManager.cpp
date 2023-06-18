@@ -38,7 +38,7 @@ bool SessionManager::AcceptClientSession()
 {
     while (GetIssueCount() < GIocpServer->GetMaxConnectionCnt())
     {
-        SessionPtr _session = GSessionManager.IssueSession();
+        SessionPtr _session = IssueSession();
         if (_session == nullptr)
         {
             return false;
@@ -58,7 +58,6 @@ void SessionManager::PrepareSessions(uint32 maxSessionCnt)
     for (uint32 i = 0; i < maxSessionCnt; i++)
     {
         SessionPtr _session = std::make_shared<Session>();
-        _session->Register();
         sessionPool.push_back(_session);
     }
 }

@@ -17,7 +17,7 @@ public:
 	void SetConnected(bool cond) { isConnected = cond; }
 
 	void Register();
-	bool PostSend(const char* buffer, size_t len);
+	bool PostSend(CircularBuffer _sendBuffer);
 	bool FlushSend();
 
 	bool PreRecv();
@@ -48,7 +48,7 @@ private:
 public:
 	Wstring ip;
 	uint32 port;
-	SOCKADDR_IN sockAddr;
+	SOCKADDR_IN sockAddrIn;
 
 	char AcceptBuffer[64] = { 0, };
 	CircularBuffer sendBuffer;
