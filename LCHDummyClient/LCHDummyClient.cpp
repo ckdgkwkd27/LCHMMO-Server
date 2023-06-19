@@ -17,8 +17,17 @@ int main()
 
 	std::cout << "Start Connect.." << std::endl;
 
+	send(sock, "Hello World", strlen("Hello World"), 0);
+	send(sock, "South Korea", strlen("South Korea"), 0);
+	send(sock, "¾È³çÇÏ¼¼¿ä~", strlen("¾È³çÇÏ¼¼¿ä~"), 0);
+
+	char buffer[512] = { 0, };
 	while (true)
 	{
-
+		if (recv(sock, buffer, 512, 0) != -1)
+		{
+			std::cout << buffer << std::endl;
+		}
+		memset(buffer, 0, sizeof(buffer));
 	}
 }
