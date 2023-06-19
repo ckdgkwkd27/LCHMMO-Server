@@ -13,6 +13,8 @@ int main()
 	addr.sin_family = AF_INET;
 	addr.sin_port = 7777;
 
+	SocketUtil::SetOptionNoDelay(sock, true);
+
 	connect(sock, (sockaddr*)&addr, sizeof(addr));
 
 	std::cout << "Start Connect.." << std::endl;

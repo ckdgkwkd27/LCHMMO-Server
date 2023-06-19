@@ -146,7 +146,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Acceptor.h" />
-    <ClInclude Include="AddrUtil.h" />
     <ClInclude Include="CircularBuffer.h" />
     <ClInclude Include="Includes.h" />
     <ClInclude Include="IocpCore.h" />
@@ -162,7 +161,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Acceptor.cpp" />
-    <ClCompile Include="AddrUtil.cpp" />
     <ClCompile Include="CircularBuffer.cpp" />
     <ClCompile Include="IocpCore.cpp" />
     <ClCompile Include="IocpEvent.cpp" />

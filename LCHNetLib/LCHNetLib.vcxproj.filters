@@ -16,9 +16,6 @@
     <ClInclude Include="Macro.h">
       <Filter>Primitive</Filter>
     </ClInclude>
-    <ClInclude Include="AddrUtil.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Acceptor.h">
       <Filter>Network\Connection</Filter>
     </ClInclude>
@@ -51,9 +48,6 @@
     </ClCompile>
     <ClCompile Include="Macro.cpp">
       <Filter>Primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="AddrUtil.cpp">
-      <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="Acceptor.cpp">
       <Filter>Network\Connection</Filter>
