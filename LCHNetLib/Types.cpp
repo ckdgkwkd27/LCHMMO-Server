@@ -3,3 +3,4 @@
 #include "Session.h"
 #include "IocpCore.h"
 #include "Acceptor.h"
+#include "CircularBuffer.h"

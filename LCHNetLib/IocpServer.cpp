@@ -97,7 +97,6 @@ void IocpServer::WorkerThreadFunc()
 		{
 		case EventType::ACCEPT:
 		{
-			std::cout << "[INFO] GQCS ACCEPT" << std::endl;
 			SessionPtr _session = iocpEvent->sessionRef;
 			_session->ProcessAccept();
 			break;
@@ -116,12 +115,16 @@ void IocpServer::WorkerThreadFunc()
 		}
 		case EventType::SEND:
 		{
+			std::cout << "[INFO] GQCS SEND" << std::endl;
+
 			SessionPtr _session = iocpEvent->sessionRef;
 			_session->ProcessSend(bytes);
 			break;
 		}
 		case EventType::RECV:
 		{
+			std::cout << "[INFO] GQCS RECV" << std::endl;
+
 			SessionPtr _session = iocpEvent->sessionRef;
 			_session->ProcessRecv(bytes);
 			break;

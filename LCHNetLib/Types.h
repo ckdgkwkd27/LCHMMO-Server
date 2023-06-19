@@ -3,6 +3,7 @@ class IocpObject;
 class Session;
 class IocpCore;
 class Acceptor;
+class CircularBuffer;
 
 using int64 = __int64;
 using int32 = __int32;
@@ -18,6 +19,7 @@ using IocpObjectPtr = std::shared_ptr<IocpObject>;
 using SessionPtr = std::shared_ptr<Session>;
 using IocpCorePtr = std::shared_ptr<IocpCore>;
 using AcceptorPtr = std::shared_ptr<Acceptor>;
+using CircularBufferPtr = std::shared_ptr<CircularBuffer>;
 
 using AtomicBool = std::atomic<bool>;
 using LockGuard = std::lock_guard<std::recursive_mutex>;

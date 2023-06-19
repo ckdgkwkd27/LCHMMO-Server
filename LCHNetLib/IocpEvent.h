@@ -66,7 +66,7 @@ public:
 	}
 
 public:
-	std::shared_ptr<CircularBuffer> sendBuffer;
+	CircularBufferPtr sendBuffer;
 };
 
 class RecvEvent : public IocpEvent 

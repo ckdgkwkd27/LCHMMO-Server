@@ -17,7 +17,7 @@ public:
 	void SetConnected(bool cond) { isConnected = cond; }
 
 	void Register();
-	bool PostSend(CircularBuffer _sendBuffer);
+	bool PostSend(CircularBufferPtr _sendBuffer);
 	bool FlushSend();
 
 	bool PreRecv();
@@ -57,7 +57,7 @@ public:
 public:
 	virtual void OnConnected() {}
 	virtual void OnDisconnected() {}
-	virtual size_t OnSend(size_t len) { return len; }
-	virtual void OnRecv(char* buffer, size_t len) {}
+	virtual void OnSend(size_t len) { }
+	virtual uint32 OnRecv(char* buffer, size_t len) { return len; }
 };
 

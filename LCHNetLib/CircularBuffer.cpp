@@ -12,10 +12,17 @@ CircularBuffer::~CircularBuffer()
     buffer.clear();
 }
 
+void CircularBuffer::Clear()
+{
+    buffer.clear();
+    readPos = 0;
+    writePos = 0;
+}
+
 //데이터가 없으면 비워주고, 끝까지 있으면 [][][][r][][w] 맨 앞으로 이동
 void CircularBuffer::Reposition()
 {
-    size_t dataSize = buffer.size();
+    size_t dataSize = DataSize();
     if (dataSize == 0)
     {
         readPos = 0;
@@ -27,7 +34,7 @@ void CircularBuffer::Reposition()
         if(FreeSize() < bufferSize)
         memcpy(&buffer[0], &buffer[readPos], dataSize);
         readPos = 0;
-        writePos = 0;
+        writePos = dataSize;
     }
 }
 
@@ -67,4 +74,13 @@ uint32 CircularBuffer::DataSize()
 uint32 CircularBuffer::FreeSize()
 {
     return capacity - writePos;
+}
+
+void CircularBuffer::WriteBuf(char* Buf)
+{
+    char* destData = WritePos();
+    uint32 writeSize = sizeof(char) * strlen(Buf);
+    memcpy(destData, Buf, writeSize);
+    OnWrite(writeSize);
+    Reposition();
 }
