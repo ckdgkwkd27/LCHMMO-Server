@@ -101,7 +101,7 @@ bool Acceptor::Dispatch(IocpEvent* _iocpEvent, int32 bytes)
         return false;
     }
 
-    session->sockAddrIn = sockAddr;
+    //session->sockAddrIn = sockAddr;
     session->ProcessConnect();
     PostAccept(acceptEvent);
     return true;

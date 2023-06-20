@@ -7,30 +7,15 @@ SessionManager GSessionManager;
 SessionPtr SessionManager::CreateSession(IocpCorePtr _iocpCore, SessionFactory _factory)
 {
     auto _session = _factory();
-    //_iocpCore->Register(_session);
     return _session;
 }
 
-void SessionManager::AddSession(SessionPtr _session)
-{
-    LockGuard lockGuard(sessionLock);
-    //sessions.insert(_session);
-    userCnt++;
-}
-
-void SessionManager::RemoveSession(SessionPtr _session)
-{
-    LockGuard lockGuard(sessionLock);
-    //sessions.erase(_session);
-    userCnt--;
-}
-
-void SessionManager::Broadcast(CircularBuffer _sendBuffer)
+void SessionManager::Broadcast(CircularBufferPtr _sendBuffer)
 {
     LockGuard lockGuard(sessionLock);
     for (auto _session : activeSessions)
     {
-        //_session->PostSend();
+        _session->PostSend(_sendBuffer);
     }
 }
 

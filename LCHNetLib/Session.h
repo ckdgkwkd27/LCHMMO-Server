@@ -46,10 +46,7 @@ private:
 	RecursiveMutex sendLock;
 
 public:
-	Wstring ip;
-	uint32 port;
 	SOCKADDR_IN sockAddrIn;
-
 	char AcceptBuffer[64] = { 0, };
 	CircularBuffer sendBuffer;
 	CircularBuffer recvBuffer;

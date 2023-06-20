@@ -18,9 +18,7 @@ private:
 
 public:
 	SessionPtr CreateSession(IocpCorePtr _iocpCore, SessionFactory _factory);
-	void AddSession(SessionPtr _session);
-	void RemoveSession(SessionPtr _session);
-	void Broadcast(CircularBuffer _sendBuffer);
+	void Broadcast(CircularBufferPtr _sendBuffer);
 
 	bool AcceptClientSession();
 	void PrepareSessions(uint32 maxSessionCnt);
@@ -28,6 +26,7 @@ public:
 	void ReturnSession(SessionPtr _session);
 
 	uint32 GetIssueCount() { return issueCnt; }
+	std::list<SessionPtr> GetSessionPool() { return sessionPool; }
 };
 
 extern SessionManager GSessionManager;

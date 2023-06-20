@@ -30,3 +30,5 @@
 
 #include "Types.h"
 #include "Macro.h"
+
+using namespace std::chrono;

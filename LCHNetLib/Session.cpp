@@ -109,12 +109,55 @@ bool Session::PostAccept()
 
 bool Session::PostConnect()
 {
-    return false;
+    if(isConnected)
+        return false;
+
+    if (SocketUtil::SetOptionReuseAddr(sessionSocket, true) == false)
+        return false;
+
+    if (SocketUtil::BindAnyAddress(sessionSocket, 0) == false)
+        return false;
+
+    sessionConnectEvent.Init();
+    sessionConnectEvent.sessionRef = shared_from_this();
+
+    DWORD bytes = 0;
+    SOCKADDR_IN _sockAddrIn = sockAddrIn;
+    if (false == SocketUtil::ConnectEx(sessionSocket, reinterpret_cast<SOCKADDR*>(&sockAddrIn), sizeof(sockAddrIn), nullptr, 0,
+        &bytes, &sessionConnectEvent))
+    {
+        int32 errCode = WSAGetLastError();
+        if (errCode != WSA_IO_PENDING)
+        {
+            std::cout << "[FAIL] PostConnect() Error: " << errCode << std::endl;
+            sessionConnectEvent.sessionRef = nullptr;
+            return false;
+        }
+    }
+
+    return true;
 }
 
 bool Session::PostDisconnect()
 {
-    return false;
+    if(isConnected == false)
+        return false;
+
+    sessionDisconnectEvent.Init();
+    sessionDisconnectEvent.sessionRef = shared_from_this();
+    isConnected.store(false);
+
+    if (false == SocketUtil::DisconnectEx(sessionSocket, &sessionDisconnectEvent, TF_REUSE_SOCKET, 0))
+    {
+        int32 errCode = WSAGetLastError();
+        if (errCode != WSA_IO_PENDING)
+        {
+            sessionDisconnectEvent.sessionRef = nullptr;
+            return false;
+        }
+    }
+
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,7 +169,6 @@ bool Session::ProcessAccept()
     SocketUtil::SetOptionUpdateAcceptSocket(sessionSocket, GIocpServer->GetListenSocket());
     SocketUtil::SetOptionNoDelay(sessionSocket, true);
     SocketUtil::SetOptionLinger(sessionSocket);
-
     
     SOCKADDR_IN _sockAddrIn;
     int32 AddrSize = sizeof(_sockAddrIn);
@@ -138,15 +180,11 @@ bool Session::ProcessAccept()
 
     Register();
     sockAddrIn = _sockAddrIn;
-    char ipBuf[32];
 
+    char ipBuf[32];
     inet_ntop(AF_INET, &_sockAddrIn.sin_addr.s_addr, ipBuf, sizeof(ipBuf));
     std::cout << "[INFO] Session Accept Completed: " << ipBuf << std::endl;
 
-    PostRecv();
-
-    sendBuffer.WriteBuf(const_cast<char*>("Hello World123456789"));
-    PostSend(std::make_shared<CircularBuffer>(sendBuffer));
     return true;
 }
 

@@ -1,10 +1,28 @@
 #include "pch.h"
 #include "SocketUtil.h"
 
+LPFN_CONNECTEX SocketUtil::ConnectEx = nullptr;
+LPFN_DISCONNECTEX SocketUtil::DisconnectEx = nullptr;
+
 bool SocketUtil::Init()
 {
     WSADATA _wsaData;
     RETURN_FALSE_ON_FAIL(::WSAStartup(MAKEWORD(2, 2), &_wsaData));
+
+    SOCKET dummySocket = CreateSocket();
+
+	DWORD bytes = 0;
+    GUID guid = WSAID_CONNECTEX;
+    LPVOID* fn = reinterpret_cast<LPVOID*>(&ConnectEx);
+    if (SOCKET_ERROR == ::WSAIoctl(dummySocket, SIO_GET_EXTENSION_FUNCTION_POINTER, &guid, sizeof(guid), fn, sizeof(*fn), OUT & bytes, NULL, NULL))
+        return false;
+
+    bytes = 0;
+    guid = WSAID_DISCONNECTEX;
+    fn = reinterpret_cast<LPVOID*>(&DisconnectEx);
+	if (SOCKET_ERROR == ::WSAIoctl(dummySocket, SIO_GET_EXTENSION_FUNCTION_POINTER, &guid, sizeof(guid), fn, sizeof(*fn), OUT & bytes, NULL, NULL))
+		return false;
+
     return true;
 }
 

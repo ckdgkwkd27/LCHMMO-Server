@@ -2,6 +2,9 @@
 class SocketUtil
 {
 public:
+	static LPFN_CONNECTEX ConnectEx;
+	static LPFN_DISCONNECTEX DisconnectEx;
+
 	static bool Init();
 	static void Clear();
 	static SOCKET CreateSocket();
