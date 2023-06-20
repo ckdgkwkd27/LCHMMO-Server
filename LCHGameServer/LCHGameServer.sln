@@ -11,6 +11,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LCHNetLib", "..\LCHNetLib\LCHNetLib.vcxproj", "{599F8C12-36EB-4984-9F56-8C389685478A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LCHDummyClient", "..\LCHDummyClient\LCHDummyClient.vcxproj", "{8E82921A-DDDA-4BB2-B9D1-26038B7DECF9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{599F8C12-36EB-4984-9F56-8C389685478A} = {599F8C12-36EB-4984-9F56-8C389685478A}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
