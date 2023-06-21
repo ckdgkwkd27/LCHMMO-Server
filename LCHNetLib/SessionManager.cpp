@@ -37,17 +37,6 @@ bool SessionManager::AcceptClientSession(uint32 maxSessionCnt)
     return true;
 }
 
-void SessionManager::PrepareSessions(uint32 maxSessionCnt, SOCKET _listenSocket, HANDLE _iocpHandle)
-{
-    for (uint32 i = 0; i < maxSessionCnt; i++)
-    {
-        SessionPtr _session = std::make_shared<Session>();
-        _session->SetListenSocket(_listenSocket);
-        _session->SetIocpHandle(_iocpHandle);
-        sessionPool.push_back(_session);
-    }
-}
-
 SessionPtr SessionManager::IssueSession()
 {
     LockGuard lockGuard(sessionLock);

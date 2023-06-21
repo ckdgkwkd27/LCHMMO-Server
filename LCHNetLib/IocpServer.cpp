@@ -56,7 +56,7 @@ bool IocpServer::Join()
 
 void IocpServer::StartAccept()
 {
-	GSessionManager.PrepareSessions(maxConnectionCnt, listenSocket, iocpHandle);
+	GSessionManager.PrepareSessions<Session>(maxConnectionCnt, listenSocket, iocpHandle);
 
 	AcceptThread = std::thread(&IocpServer::AcceptThreadFunc, this);
 	std::cout << "[INFO] Start Accept..." << std::endl;

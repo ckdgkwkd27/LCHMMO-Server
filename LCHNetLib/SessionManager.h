@@ -21,6 +21,8 @@ public:
 	void Broadcast(CircularBufferPtr _sendBuffer);
 
 	bool AcceptClientSession(uint32 maxSessionCnt);
+
+	template <typename T>
 	void PrepareSessions(uint32 maxSessionCnt, SOCKET _listenSocket, HANDLE _iocpHandle);
 	SessionPtr IssueSession();
 	void ReturnSession(SessionPtr _session);
@@ -31,3 +33,14 @@ public:
 
 extern SessionManager GSessionManager;
 
+template <typename T>
+void SessionManager::PrepareSessions(uint32 maxSessionCnt, SOCKET _listenSocket, HANDLE _iocpHandle)
+{
+	for (uint32 i = 0; i < maxSessionCnt; i++)
+	{
+		SessionPtr _session = std::make_shared<T>();
+		_session->SetListenSocket(_listenSocket);
+		_session->SetIocpHandle(_iocpHandle);
+		sessionPool.push_back(_session);
+	}
+}

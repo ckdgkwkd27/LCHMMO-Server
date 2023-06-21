@@ -216,6 +216,7 @@ bool Session::ProcessRecv(int32 bytes)
         return false;
     }
 
+    recvBuffer.Clean();
     PostRecv();
     return true;
 }
