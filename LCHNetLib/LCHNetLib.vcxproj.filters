@@ -35,9 +35,6 @@
     <ClInclude Include="SessionManager.h">
       <Filter>Network\Session</Filter>
     </ClInclude>
-    <ClInclude Include="IocpServer.h">
-      <Filter>Network\IOCP</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SocketUtil.cpp">
@@ -70,9 +67,6 @@
     <ClCompile Include="CircularBuffer.cpp" />
     <ClCompile Include="SessionManager.cpp">
       <Filter>Network\Session</Filter>
-    </ClCompile>
-    <ClCompile Include="IocpServer.cpp">
-      <Filter>Network\IOCP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

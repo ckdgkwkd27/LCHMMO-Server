@@ -20,8 +20,8 @@ public:
 	SessionPtr CreateSession(IocpCorePtr _iocpCore, SessionFactory _factory);
 	void Broadcast(CircularBufferPtr _sendBuffer);
 
-	bool AcceptClientSession();
-	void PrepareSessions(uint32 maxSessionCnt);
+	bool AcceptClientSession(uint32 maxSessionCnt);
+	void PrepareSessions(uint32 maxSessionCnt, SOCKET _listenSocket, HANDLE _iocpHandle);
 	SessionPtr IssueSession();
 	void ReturnSession(SessionPtr _session);
 

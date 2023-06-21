@@ -15,6 +15,8 @@ public:
 
 	SOCKET GetSocket() { return sessionSocket; }
 	void SetConnected(bool cond) { isConnected = cond; }
+	void SetListenSocket(SOCKET _listenSocket) { listenSocket = _listenSocket; }
+	void SetIocpHandle(HANDLE _iocpHandle) { iocpHandle = _iocpHandle; }
 
 	void Register();
 	bool PostSend(CircularBufferPtr _sendBuffer);
@@ -32,6 +34,8 @@ public:
 
 private:
 	SOCKET sessionSocket = INVALID_SOCKET;
+	SOCKET listenSocket = INVALID_SOCKET;
+	HANDLE iocpHandle = INVALID_HANDLE_VALUE;
 	AcceptEvent sessionAcceptEvent;
 	ConnectEvent sessionConnectEvent;
 	DisconnectEvent sessionDisconnectEvent;

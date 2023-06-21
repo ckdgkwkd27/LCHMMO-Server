@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Session.h"
-#include "IocpServer.h"
 
 Session::Session()
     : recvBuffer(BUFFER_SIZE), sendBuffer(BUFFER_SIZE), isConnected(false)
@@ -15,7 +14,7 @@ Session::~Session()
 
 void Session::Register()
 {
-    CreateIoCompletionPort(reinterpret_cast<HANDLE>(sessionSocket), GIocpServer->GetIocpHandle(), 0, 0);
+    CreateIoCompletionPort(reinterpret_cast<HANDLE>(sessionSocket), iocpHandle, 0, 0);
 }
 
 bool Session::PostSend(CircularBufferPtr _sendBuffer)
@@ -83,7 +82,7 @@ bool Session::PostAccept()
     sessionAcceptEvent.Init();
 
 	DWORD bytes = 0;
-	if (false == AcceptEx(GIocpServer->GetListenSocket(), sessionSocket, AcceptBuffer, 0, sizeof(SOCKADDR_IN) + 16, sizeof(SOCKADDR_IN) + 16,
+	if (false == AcceptEx(listenSocket, sessionSocket, AcceptBuffer, 0, sizeof(SOCKADDR_IN) + 16, sizeof(SOCKADDR_IN) + 16,
 		&bytes, static_cast<LPOVERLAPPED>(&sessionAcceptEvent)))
 	{
 		const INT32 errCode = WSAGetLastError();
@@ -156,7 +155,7 @@ bool Session::PostDisconnect()
 bool Session::ProcessAccept()
 {
     isConnected = true;
-    SocketUtil::SetOptionUpdateAcceptSocket(sessionSocket, GIocpServer->GetListenSocket());
+    SocketUtil::SetOptionUpdateAcceptSocket(sessionSocket, listenSocket);
     SocketUtil::SetOptionNoDelay(sessionSocket, true);
     SocketUtil::SetOptionLinger(sessionSocket);
     

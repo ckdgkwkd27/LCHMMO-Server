@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "IocpServer.h"
 
-IocpServer* GIocpServer = nullptr;
 char AcceptBuf[64] = { 0, };
 
 IocpServer::IocpServer(std::wstring _ip, uint16 _port, uint32 _maxConnectionCnt)
@@ -57,7 +56,7 @@ bool IocpServer::Join()
 
 void IocpServer::StartAccept()
 {
-	GSessionManager.PrepareSessions(maxConnectionCnt);
+	GSessionManager.PrepareSessions(maxConnectionCnt, listenSocket, iocpHandle);
 
 	AcceptThread = std::thread(&IocpServer::AcceptThreadFunc, this);
 	std::cout << "[INFO] Start Accept..." << std::endl;
@@ -66,7 +65,7 @@ void IocpServer::StartAccept()
 
 void IocpServer::AcceptThreadFunc()
 {
-	while (GSessionManager.AcceptClientSession())
+	while (GSessionManager.AcceptClientSession(maxConnectionCnt))
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}

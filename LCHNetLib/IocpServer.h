@@ -44,5 +44,3 @@ public:
 	}
 };
 
-extern IocpServer* GIocpServer;
-
