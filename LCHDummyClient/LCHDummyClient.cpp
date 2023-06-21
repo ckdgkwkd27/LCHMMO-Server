@@ -8,7 +8,7 @@ int main()
 	SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
 	SessionManager sm;
-	sm.PrepareSessions(10);
+	sm.PrepareSessions(10, INVALID_SOCKET, INVALID_HANDLE_VALUE);
 	for (auto& ss : sm.GetSessionPool())
 	{
 		sockaddr_in addr = {};
