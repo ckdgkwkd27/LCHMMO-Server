@@ -3,8 +3,10 @@
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="LCHGameServer.cpp" />
+    <ClCompile Include="..\LCHNetLib\IocpServer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="..\LCHNetLib\IocpServer.h" />
   </ItemGroup>
 </Project>
