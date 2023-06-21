@@ -18,13 +18,9 @@ public:
 
 	void Register();
 	bool PostSend(CircularBufferPtr _sendBuffer);
-	bool FlushSend();
 
-	bool PreRecv();
 	bool PostRecv();
-	
 	bool PostAccept();
-
 	bool PostConnect();
 	bool PostDisconnect();
 
@@ -55,6 +51,11 @@ public:
 	virtual void OnConnected() {}
 	virtual void OnDisconnected() {}
 	virtual void OnSend(size_t len) { }
-	virtual uint32 OnRecv(char* buffer, size_t len) { return len; }
+	virtual size_t OnRecv(char* buffer, size_t len) { return len; }
 };
 
+class PacketHeader
+{
+	uint16 size;
+	uint16 id;
+};

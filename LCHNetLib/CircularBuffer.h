@@ -6,7 +6,7 @@ public:
 	~CircularBuffer();
 
 	void Clear();
-	void Reposition();
+	void Clean();
 	bool OnRead(uint32 bytes);
 	bool OnWrite(uint32 bytes);
 
@@ -15,6 +15,7 @@ public:
 	uint32 DataSize();
 	uint32 FreeSize();
 	void WriteBuf(char* Buf);
+	char* ReadBuf(uint32 bytes);
 
 	char* data()
 	{

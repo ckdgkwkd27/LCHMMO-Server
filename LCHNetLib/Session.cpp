@@ -49,16 +49,6 @@ bool Session::PostSend(CircularBufferPtr _sendBuffer)
     return true;
 }
 
-bool Session::FlushSend()
-{
-    return true;
-}
-
-bool Session::PreRecv()
-{
-    return false;
-}
-
 bool Session::PostRecv()
 {
     if (isConnected == false)
@@ -183,7 +173,9 @@ bool Session::ProcessAccept()
 
     char ipBuf[32];
     inet_ntop(AF_INET, &_sockAddrIn.sin_addr.s_addr, ipBuf, sizeof(ipBuf));
-    std::cout << "[INFO] Session Accept Completed: " << ipBuf << std::endl;
+    std::cout << "[INFO] Session Accept Completed! Socket=" << sessionSocket << " ,IP=" << ipBuf << std::endl;
+
+    PostRecv();
 
     return true;
 }
@@ -225,19 +217,27 @@ bool Session::ProcessRecv(int32 bytes)
         return false;
     }
 
-
-    recvBuffer.Reposition();
-    std::cout << recvBuffer.data() << std::endl;
     PostRecv();
     return true;
 }
 
 bool Session::ProcessConnect()
 {
-    return false;
+    sessionConnectEvent.sessionRef = nullptr;
+    isConnected.store(true);
+
+    OnConnected();
+    PostRecv();
+    return true;
 }
 
 bool Session::ProcessDisconnect()
 {
-    return false;
+	char ipBuf[32];
+	inet_ntop(AF_INET, &sessionDisconnectEvent.sessionRef->sockAddrIn.sin_addr.s_addr, ipBuf, sizeof(ipBuf));
+    std::cout << "[INFO] Session Disconnected! Socket=" << sessionSocket << ", IP=" << ipBuf << std::endl;
+
+    sessionDisconnectEvent.sessionRef = nullptr;
+    OnDisconnected();
+    return true;
 }

@@ -81,16 +81,7 @@ void IocpServer::WorkerThreadFunc()
 		IocpEvent* iocpEvent = nullptr;
 		bool ret = GetQueuedCompletionStatus(iocpHandle, &bytes, &key, 
 			reinterpret_cast<LPOVERLAPPED*>(&iocpEvent), INFINITE);
-		if (ret == false || bytes == 0)
-		{
-			//if send, recv then disconnect session
-			if (iocpEvent->GetType() == EventType::SEND || iocpEvent->GetType() == EventType::RECV)
-			{
-				int32 ErrCode = WSAGetLastError();
-				std::cout << "[ERROR] GQCS Error: " << ErrCode << std::endl;
-				continue;
-			}
-		}
+
 		ASSERT_CRASH(iocpEvent != NULL);
 
 		switch (iocpEvent->GetType())
@@ -115,16 +106,12 @@ void IocpServer::WorkerThreadFunc()
 		}
 		case EventType::SEND:
 		{
-			std::cout << "[INFO] GQCS SEND" << std::endl;
-
 			SessionPtr _session = iocpEvent->sessionRef;
 			_session->ProcessSend(bytes);
 			break;
 		}
 		case EventType::RECV:
 		{
-			std::cout << "[INFO] GQCS RECV" << std::endl;
-
 			SessionPtr _session = iocpEvent->sessionRef;
 			_session->ProcessRecv(bytes);
 			break;

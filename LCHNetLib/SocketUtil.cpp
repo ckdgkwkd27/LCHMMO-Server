@@ -7,7 +7,8 @@ LPFN_DISCONNECTEX SocketUtil::DisconnectEx = nullptr;
 bool SocketUtil::Init()
 {
     WSADATA _wsaData;
-    RETURN_FALSE_ON_FAIL(::WSAStartup(MAKEWORD(2, 2), &_wsaData));
+    if (WSAStartup(MAKEWORD(2, 2), &_wsaData) != 0)
+        return false;
 
     SOCKET dummySocket = CreateSocket();
 
@@ -108,7 +109,7 @@ bool SocketUtil::SetOptionKeepAlive(SOCKET _socket, bool flag)
 
 SOCKET SocketUtil::CreateListenSocket()
 {
-	Init();
+    ASSERT_CRASH(Init() == true);
 
     SOCKET _listenSocket = CreateSocket();
     SetOptionKeepAlive(_listenSocket, true);
