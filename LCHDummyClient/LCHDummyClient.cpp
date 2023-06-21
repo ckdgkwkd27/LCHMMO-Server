@@ -8,7 +8,7 @@ int main()
 	SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
 	SessionManager sm;
-	sm.PrepareSessions(1);
+	sm.PrepareSessions(10);
 	for (auto& ss : sm.GetSessionPool())
 	{
 		sockaddr_in addr = {};
@@ -26,14 +26,22 @@ int main()
 
 	std::cout << "Start Connect All.." << std::endl;
 
+	char buffer[512] = { 0, };
 	while (true)
 	{
 		std::this_thread::sleep_for(0.5s);
 		for (auto& ss : sm.GetSessionPool())
 		{
 			if (SOCKET_ERROR == send(ss->GetSocket(), "Look At Me~", strlen("Look At Me~"), 0))
-				std::cout << "Something Wrong~~~: " << WSAGetLastError() << std::endl;
+				std::cout << "send Wrong~~~: " << WSAGetLastError() << std::endl;
 		}
-		std::cout << "브로드캐스트~" << std::endl;
+
+		for (auto& ss : sm.GetSessionPool())
+		{
+			if (SOCKET_ERROR == recv(ss->GetSocket(), buffer, 512, 0))
+				std::cout << "recv Wrong~~~: " << WSAGetLastError() << std::endl;
+			std::cout << buffer << std::endl;
+			memset(buffer, 0, sizeof(buffer));
+		}
 	}
 }
