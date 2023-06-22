@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "SocketUtil.h"
 #include "SessionManager.h"
+#include "ServerSession.h"
 
 int main()
 {
@@ -8,7 +9,7 @@ int main()
 	SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
 	SessionManager sm;
-	sm.PrepareSessions<Session>(10, INVALID_SOCKET, INVALID_HANDLE_VALUE);
+	sm.PrepareSessions<ServerSession>(10, INVALID_SOCKET, INVALID_HANDLE_VALUE);
 	for (auto& ss : sm.GetSessionPool())
 	{
 		sockaddr_in addr = {};
@@ -27,16 +28,19 @@ int main()
 	std::cout << "Start Connect All.." << std::endl;
 
 	char buffer[512] = { 0, };
-	while (true)
+	for(uint32 i = 0; i < 2; i++)
 	{
 		std::this_thread::sleep_for(0.5s);
 		for (auto& ss : sm.GetSessionPool())
 		{
-			if (SOCKET_ERROR == send(ss->GetSocket(), "Look At Me~", strlen("Look At Me~"), 0))
+			std::string msg = "Look At Me~";
+			int32 len = (int32)msg.length();
+			if (SOCKET_ERROR == send(ss->GetSocket(), msg.c_str(), len, 0))
 				std::cout << "send Wrong~~~: " << WSAGetLastError() << std::endl;
 		}
 
 		std::cout << "BroadCast~" << std::endl;
+
 
 		/*for (auto& ss : sm.GetSessionPool())
 		{
@@ -45,5 +49,10 @@ int main()
 			std::cout << buffer << std::endl;
 			memset(buffer, 0, sizeof(buffer));
 		}*/
+	}
+
+	while (true)
+	{
+
 	}
 }
