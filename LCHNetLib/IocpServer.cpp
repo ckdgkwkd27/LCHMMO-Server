@@ -54,15 +54,6 @@ bool IocpServer::Join()
 	return true;
 }
 
-void IocpServer::StartAccept()
-{
-	GSessionManager.PrepareSessions<Session>(maxConnectionCnt, listenSocket, iocpHandle);
-
-	AcceptThread = std::thread(&IocpServer::AcceptThreadFunc, this);
-	std::cout << "[INFO] Start Accept..." << std::endl;
-
-}
-
 void IocpServer::AcceptThreadFunc()
 {
 	while (GSessionManager.AcceptClientSession(maxConnectionCnt))
@@ -78,10 +69,23 @@ void IocpServer::WorkerThreadFunc()
 		DWORD bytes;
 		ULONG_PTR key;
 		IocpEvent* iocpEvent = nullptr;
-		bool ret = GetQueuedCompletionStatus(iocpHandle, &bytes, &key, 
-			reinterpret_cast<LPOVERLAPPED*>(&iocpEvent), INFINITE);
-
+		bool ret = GetQueuedCompletionStatus(iocpHandle, &bytes, &key, reinterpret_cast<LPOVERLAPPED*>(&iocpEvent), INFINITE);
 		ASSERT_CRASH(iocpEvent != NULL);
+
+		if (ret == false)
+		{
+			int32 errCode = WSAGetLastError();
+			switch (errCode)
+			{
+			case WAIT_TIMEOUT:
+				return;
+			case ERROR_NETNAME_DELETED:
+				break;
+			default:
+				std::cout << "[FAIL] GQCS ErrorCode: " << WSAGetLastError() << std::endl;
+				break;
+			}
+		}
 
 		switch (iocpEvent->GetType())
 		{

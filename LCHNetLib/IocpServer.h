@@ -12,6 +12,7 @@ public:
 	bool Run();
 	bool Join();
 	
+	template <typename T>
 	void StartAccept();
 
 	void AcceptThreadFunc();
@@ -44,3 +45,12 @@ public:
 	}
 };
 
+template <typename T>
+void IocpServer::StartAccept()
+{
+	GSessionManager.PrepareSessions<T>(maxConnectionCnt, listenSocket, iocpHandle);
+
+	AcceptThread = std::thread(&IocpServer::AcceptThreadFunc, this);
+	std::cout << "[INFO] Start Accept..." << std::endl;
+
+}

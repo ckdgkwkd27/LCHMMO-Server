@@ -27,6 +27,9 @@ public:
 	SessionPtr IssueSession();
 	void ReturnSession(SessionPtr _session);
 
+	void AddToActivePool(SessionPtr _session);
+	void DeleteFromActivePool(SessionPtr _session);
+
 	uint32 GetIssueCount() { return issueCnt; }
 	std::list<SessionPtr> GetSessionPool() { return sessionPool; }
 };

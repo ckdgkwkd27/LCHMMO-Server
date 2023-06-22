@@ -22,7 +22,7 @@ void CircularBuffer::Clear()
 //데이터가 없으면 비워주고, 끝까지 있으면 [][][][r][][w] 맨 앞으로 이동
 void CircularBuffer::Clean()
 {
-    size_t dataSize = DataSize();
+    uint32 dataSize = DataSize();
     if (dataSize == 0)
     {
         readPos = 0;
@@ -31,10 +31,12 @@ void CircularBuffer::Clean()
 
     else
     {
-        if(FreeSize() < bufferSize)
-        memcpy(&buffer[0], &buffer[readPos], dataSize);
-        readPos = 0;
-        writePos = dataSize;
+        if (FreeSize() < bufferSize)
+        {
+            memcpy(&buffer[0], &buffer[readPos], dataSize);
+            readPos = 0;
+            writePos = dataSize;
+        }
     }
 }
 
@@ -79,7 +81,7 @@ uint32 CircularBuffer::FreeSize()
 void CircularBuffer::WriteBuf(char* Buf)
 {
     char* destData = WritePos();
-    uint32 writeSize = sizeof(char) * strlen(Buf);
+    uint32 writeSize = (uint32)(sizeof(char) * strlen(Buf));
     memcpy(destData, Buf, writeSize);
     OnWrite(writeSize);
     Clean();

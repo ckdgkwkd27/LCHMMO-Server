@@ -49,7 +49,6 @@ SessionPtr SessionManager::IssueSession()
     }
 
     sessionPool.pop_back();
-    activeSessions.push_back(_session);
 
     return _session;
 }
@@ -68,4 +67,19 @@ void SessionManager::ReturnSession(SessionPtr _session)
     }
 
     sessionPool.push_back(_session);
+}
+
+void SessionManager::AddToActivePool(SessionPtr _session)
+{
+    LockGuard lockGuard(sessionLock);
+    ASSERT_CRASH((_session != nullptr));
+
+    activeSessions.push_back(_session);
+}
+
+void SessionManager::DeleteFromActivePool(SessionPtr _session)
+{
+    LockGuard lockGuard(sessionLock);
+    ASSERT_CRASH((_session != nullptr));
+    ASSERT_CRASH((activeSessions.end() != std::find(activeSessions.begin(), activeSessions.end(), _session)));
 }

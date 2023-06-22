@@ -175,7 +175,6 @@ bool Session::ProcessAccept()
     std::cout << "[INFO] Session Accept Completed! Socket=" << sessionSocket << " ,IP=" << ipBuf << std::endl;
 
     PostRecv();
-
     return true;
 }
 

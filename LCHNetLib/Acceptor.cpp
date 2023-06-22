@@ -50,7 +50,6 @@ bool Acceptor::StartAccept()
 bool Acceptor::PostAccept(AcceptEvent* _acceptEvent)
 {
 	auto _session = GSessionManager.CreateSession(iocpCore, onAcceptCompleted);
-	SOCKET skt = _session->GetSocket();
 
     _acceptEvent->sessionRef = _session;
     _acceptEvent->Init();

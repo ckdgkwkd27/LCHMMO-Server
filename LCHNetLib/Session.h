@@ -54,12 +54,13 @@ public:
 public:
 	virtual void OnConnected() {}
 	virtual void OnDisconnected() {}
-	virtual void OnSend(size_t len) { }
-	virtual size_t OnRecv(char* buffer, size_t len) { return len; }
+	virtual void OnSend(uint32 len) { len = 0; }
+	virtual uint32 OnRecv(char* buffer, uint32 len) { buffer = nullptr; return len; }
 };
 
 class PacketHeader
 {
+public:
 	uint16 size;
 	uint16 id;
 };
