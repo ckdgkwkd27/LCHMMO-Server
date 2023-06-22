@@ -3,7 +3,7 @@
 
 void ClientSession::OnConnected()
 {
-	GSessionManager.AddToActivePool(shared_from_this());
+	std::cout << "OnConnected()" << std::endl;
 }
 
 void ClientSession::OnDisconnected()
