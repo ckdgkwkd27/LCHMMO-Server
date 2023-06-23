@@ -53,6 +53,7 @@ public:
 	CircularBuffer recvBuffer;
 
 public:
+	virtual void OnAccepted() {}
 	virtual void OnConnected() {}
 	virtual void OnDisconnected() {}
 	virtual void OnSend(uint32 len) { len = 0; }

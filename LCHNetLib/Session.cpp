@@ -171,7 +171,7 @@ bool Session::ProcessAccept()
     Register();
     sockAddrIn = _sockAddrIn;
 
-    GSessionManager.AddToActivePool(shared_from_this());
+    OnAccepted();
 
     char ipBuf[32];
     inet_ntop(AF_INET, &_sockAddrIn.sin_addr.s_addr, ipBuf, sizeof(ipBuf));
