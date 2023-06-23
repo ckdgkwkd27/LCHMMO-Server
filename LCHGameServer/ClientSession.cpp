@@ -1,6 +1,11 @@
 #include "pch.h"
 #include "ClientSession.h"
 
+void ClientSession::OnAccepted()
+{
+	GSessionManager.AddToActivePool(shared_from_this());
+}
+
 void ClientSession::OnConnected()
 {
 	std::cout << "OnConnected()" << std::endl;

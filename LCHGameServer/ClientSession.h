@@ -5,6 +5,7 @@
 class ClientSession : public Session
 {
 public:
+	virtual void OnAccepted();
 	virtual void OnConnected();
 	virtual void OnDisconnected();
 	virtual void OnSend(uint32 len);
