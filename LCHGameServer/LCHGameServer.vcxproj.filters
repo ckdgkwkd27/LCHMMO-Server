@@ -4,9 +4,11 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="LCHGameServer.cpp" />
     <ClCompile Include="ClientSession.cpp" />
+    <ClCompile Include="ClientPacketHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="ClientSession.h" />
+    <ClInclude Include="ClientPacketHandler.h" />
   </ItemGroup>
 </Project>

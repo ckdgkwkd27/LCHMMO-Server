@@ -72,9 +72,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>../Output/bin/debug/</OutDir>
+    <LibraryPath>C:\Users\User\Desktop\PortFolio\Server\Output\Lib\debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\User\Desktop\PortFolio\Server\Output\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>../Output/bin/release/</OutDir>
+    <LibraryPath>C:\Users\User\Desktop\PortFolio\Server\Output\Lib\release;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\User\Desktop\PortFolio\Server\Output\include</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -152,10 +156,12 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="ServerPacketHandler.cpp" />
     <ClCompile Include="ServerSession.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="ServerPacketHandler.h" />
     <ClInclude Include="ServerSession.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

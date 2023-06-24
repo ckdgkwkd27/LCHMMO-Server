@@ -72,9 +72,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>../Output/bin/debug/</OutDir>
+    <LibraryPath>C:\Users\User\Desktop\PortFolio\Server\Output\Lib\debug;$(LibraryPath)</LibraryPath>
+    <ExternalIncludePath>C:\Users\User\Desktop\PortFolio\Server\Output\include;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>../Output/bin/release/</OutDir>
+    <LibraryPath>C:\Users\User\Desktop\PortFolio\Server\Output\Lib\release;$(LibraryPath)</LibraryPath>
+    <ExternalIncludePath>C:\Users\User\Desktop\PortFolio\Server\Output\include;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -121,7 +125,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>LchNetLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>LchNetLib.lib;libprotobufd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../Output/lib/debug/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -143,11 +147,12 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>LchNetLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>LchNetLib.lib;libprotobuf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../Output/lib/release/</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ClientPacketHandler.cpp" />
     <ClCompile Include="ClientSession.cpp" />
     <ClCompile Include="LCHGameServer.cpp" />
     <ClCompile Include="pch.cpp">
@@ -158,6 +163,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClientPacketHandler.h" />
     <ClInclude Include="ClientSession.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
