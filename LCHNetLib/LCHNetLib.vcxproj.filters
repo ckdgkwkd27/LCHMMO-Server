@@ -35,7 +35,7 @@
     <ClInclude Include="SessionManager.h">
       <Filter>Network\Session</Filter>
     </ClInclude>
-    <ClInclude Include="IocpServer.h">
+    <ClInclude Include="IocpManager.h">
       <Filter>Network\IOCP</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,7 +71,7 @@
     <ClCompile Include="SessionManager.cpp">
       <Filter>Network\Session</Filter>
     </ClCompile>
-    <ClCompile Include="IocpServer.cpp">
+    <ClCompile Include="IocpManager.cpp">
       <Filter>Network\IOCP</Filter>
     </ClCompile>
   </ItemGroup>

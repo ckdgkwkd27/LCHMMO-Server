@@ -3,7 +3,7 @@
 #include "IocpCore.h"
 #include "CircularBuffer.h"
 
-class IocpServer;
+class IocpManager;
 
 class SessionManager
 {

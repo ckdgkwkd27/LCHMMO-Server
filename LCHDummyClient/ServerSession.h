@@ -1,5 +1,6 @@
 #pragma once
 #include "Session.h"
+#include "ServerPacketHandler.h"
 
 class ServerSession : public Session
 {

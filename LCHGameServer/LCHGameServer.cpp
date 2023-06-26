@@ -1,22 +1,22 @@
 #include "pch.h"
 #include "Acceptor.h"
 #include "SessionManager.h"
-#include "IocpServer.h"
+#include "IocpManager.h"
 #include "ClientSession.h"
 
 int main()
 {
-    IocpServer* iocpServer = new IocpServer(L"127.0.0.1", 7777, 10);
-    iocpServer->Initialize();
-    iocpServer->StartAccept<ClientSession>();
-    iocpServer->Run();
+    IocpManager* iocpManager = new IocpManager(L"127.0.0.1", 7777, 10);
+    iocpManager->Initialize();
+    iocpManager->StartAccept<ClientSession>();
+    iocpManager->Run();
 
     while (true)
     {
 
     }
 
-    iocpServer->Join();
+    iocpManager->Join();
 
     return true;
 }

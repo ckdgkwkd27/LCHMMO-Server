@@ -28,19 +28,16 @@ uint32 ClientSession::OnRecv(char* buffer, uint32 len)
 	while (true)
 	{
 		uint32 dataSize = len - processLen;
-		if(dataSize < sizeof(PacketHeader))
+		if (dataSize < sizeof(PacketHeader))
 			break;
 
 		PacketHeader header = *(reinterpret_cast<PacketHeader*>(&buffer[processLen]));
 		if (dataSize < header.size)
 			break;
 
-		/*
-		ClientPacketHandler::HandlePacket();
-		*/
-
+		ClientPacketHandler::HandlePacket(std::dynamic_pointer_cast<ClientSession>(shared_from_this()), buffer, len);
 		processLen += header.size;
 	}
-	std::cout << "OnRecv() Len=" << len << std::endl;
+
 	return processLen;
 }

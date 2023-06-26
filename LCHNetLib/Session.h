@@ -5,7 +5,7 @@
 
 #define BUFFER_SIZE 65535
 
-class IocpServer;
+class IocpManager;
 class SessionManager;
 
 class Session : public std::enable_shared_from_this<Session>
