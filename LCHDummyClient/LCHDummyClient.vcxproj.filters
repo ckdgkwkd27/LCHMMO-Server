@@ -11,4 +11,9 @@
     <ClInclude Include="ServerSession.h" />
     <ClInclude Include="ServerPacketHandler.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Protobuf">
+      <UniqueIdentifier>{a9c3a2f4-7c68-4cd8-8577-8e05d6b470db}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
 </Project>

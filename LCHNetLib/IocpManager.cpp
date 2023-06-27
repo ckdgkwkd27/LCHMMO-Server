@@ -24,14 +24,19 @@ void IocpManager::Initialize()
 	{
 		ASSERT_CRASH(false);
 	}
-	SocketUtil::Bind(listenSocket, ip, port);
-	SocketUtil::Listen(listenSocket);
 
 	std::cout << "Server Initialization Success.." << std::endl;
 	return;
 }
 
-bool IocpManager::Run()
+void IocpManager::BindAndListen()
+{
+	SocketUtil::Bind(listenSocket, ip, port);
+	SocketUtil::Listen(listenSocket);
+	std::cout << "Server Listen Start.." << std::endl;
+}
+
+bool IocpManager::StartWorker()
 {
 	for (uint32 i = 0; i < workerThreadsCnt; i++)
 	{
@@ -52,6 +57,12 @@ bool IocpManager::Join()
 	}
 
 	return true;
+}
+
+bool IocpManager::StartConnect()
+{
+
+	return false;
 }
 
 void IocpManager::AcceptThreadFunc()

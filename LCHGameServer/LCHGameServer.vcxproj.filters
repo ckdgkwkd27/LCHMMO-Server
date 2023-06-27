@@ -11,4 +11,14 @@
     <ClInclude Include="ClientSession.h" />
     <ClInclude Include="ClientPacketHandler.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Protobuf">
+      <UniqueIdentifier>{9b369edb-e76f-4222-bc65-1bee95083538}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\protobuf-3.18.x\bin\Packet.proto">
+      <Filter>Protobuf</Filter>
+    </None>
+  </ItemGroup>
 </Project>

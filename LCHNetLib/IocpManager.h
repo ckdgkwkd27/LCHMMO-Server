@@ -9,8 +9,10 @@ public:
 	IocpManager(std::wstring _ip, uint16 _port, uint32 _maxConnectionCnt);
 	
 	void Initialize();
-	bool Run();
+	void BindAndListen();
+	bool StartWorker();
 	bool Join();
+	bool StartConnect();
 	
 	template <typename T>
 	void StartAccept();
