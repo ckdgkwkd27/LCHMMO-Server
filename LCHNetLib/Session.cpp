@@ -97,7 +97,7 @@ bool Session::PostAccept()
 	return true;
 }
 
-bool Session::PostConnect()
+bool Session::PostConnect(Wstring ip, uint32 port)
 {
     if(isConnected)
         return false;
@@ -112,8 +112,16 @@ bool Session::PostConnect()
     sessionConnectEvent.sessionRef = shared_from_this();
 
     DWORD bytes = 0;
-    SOCKADDR_IN _sockAddrIn = sockAddrIn;
-    if (false == SocketUtil::ConnectEx(sessionSocket, reinterpret_cast<SOCKADDR*>(&sockAddrIn), sizeof(sockAddrIn), nullptr, 0,
+    //SOCKADDR_IN _sockAddrIn = sockAddrIn;
+
+    sockaddr_in addr = {};
+    IN_ADDR address;
+    ::InetPtonW(AF_INET, ip.c_str(), &address);
+    addr.sin_addr = address;
+    addr.sin_family = AF_INET;
+    addr.sin_port = port;
+
+    if (false == SocketUtil::ConnectEx(sessionSocket, reinterpret_cast<SOCKADDR*>(&addr), sizeof(addr), nullptr, 0,
         &bytes, &sessionConnectEvent))
     {
         int32 errCode = WSAGetLastError();

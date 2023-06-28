@@ -12,7 +12,9 @@ public:
 	void BindAndListen();
 	bool StartWorker();
 	bool Join();
-	bool StartConnect();
+
+	template <typename T>
+	void StartConnect();
 	
 	template <typename T>
 	void StartAccept();
@@ -54,5 +56,12 @@ void IocpManager::StartAccept()
 
 	AcceptThread = std::thread(&IocpManager::AcceptThreadFunc, this);
 	std::cout << "[INFO] Start Accept..." << std::endl;
+}
 
+template <typename T>
+void IocpManager::StartConnect()
+{
+	GSessionManager.PrepareSessions<T>(maxConnectionCnt, INVALID_SOCKET, iocpHandle);
+	GSessionManager.ConnectServerSession(maxConnectionCnt, ip, port);
+	std::cout << "[INFO] Start Connect..." << std::endl;
 }

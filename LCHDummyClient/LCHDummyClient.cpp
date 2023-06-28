@@ -2,57 +2,21 @@
 #include "SocketUtil.h"
 #include "SessionManager.h"
 #include "ServerSession.h"
+#include "IocpManager.h"
 
 int main()
 {
-	SocketUtil::Init();
-	SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+    IocpManager* iocpManager = new IocpManager(L"127.0.0.1", 7777, 5);
+    iocpManager->Initialize();
+    iocpManager->StartConnect<ServerSession>();
+    iocpManager->StartWorker();
 
-	SessionManager sm;
-	sm.PrepareSessions<ServerSession>(10, INVALID_SOCKET, INVALID_HANDLE_VALUE);
-	for (auto& ss : sm.GetSessionPool())
-	{
-		sockaddr_in addr = {};
-		IN_ADDR address;
-		::InetPtonW(AF_INET, L"127.0.0.1", &address);
-		addr.sin_addr = address;
-		addr.sin_family = AF_INET;
-		addr.sin_port = 7777;
+    while (true)
+    {
 
-		ss->sockAddrIn = addr;
-		connect(ss->GetSocket(), (sockaddr*)&addr, sizeof(addr));
-	}
+    }
 
-	SocketUtil::SetOptionNoDelay(sock, true);
+    iocpManager->Join();
 
-	std::cout << "Start Connect All.." << std::endl;
-
-	char buffer[512] = { 0, };
-	for(uint32 i = 0; i < 2; i++)
-	{
-		std::this_thread::sleep_for(0.5s);
-		for (auto& ss : sm.GetSessionPool())
-		{
-			std::string msg = "Look At Me~";
-			int32 len = (int32)msg.length();
-			if (SOCKET_ERROR == send(ss->GetSocket(), msg.c_str(), len, 0))
-				std::cout << "send Wrong~~~: " << WSAGetLastError() << std::endl;
-		}
-
-		std::cout << "BroadCast~" << std::endl;
-
-
-		/*for (auto& ss : sm.GetSessionPool())
-		{
-			if (SOCKET_ERROR == recv(ss->GetSocket(), buffer, 512, 0))
-				std::cout << "recv Wrong~~~: " << WSAGetLastError() << std::endl;
-			std::cout << buffer << std::endl;
-			memset(buffer, 0, sizeof(buffer));
-		}*/
-	}
-
-	while (true)
-	{
-
-	}
+    return true;
 }

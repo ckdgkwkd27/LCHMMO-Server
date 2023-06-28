@@ -25,7 +25,7 @@ void IocpManager::Initialize()
 		ASSERT_CRASH(false);
 	}
 
-	std::cout << "Server Initialization Success.." << std::endl;
+	std::cout << "[INFO] Initialization Success.." << std::endl;
 	return;
 }
 
@@ -33,7 +33,7 @@ void IocpManager::BindAndListen()
 {
 	SocketUtil::Bind(listenSocket, ip, port);
 	SocketUtil::Listen(listenSocket);
-	std::cout << "Server Listen Start.." << std::endl;
+	std::cout << "[INFO] Server Listen Start.." << std::endl;
 }
 
 bool IocpManager::StartWorker()
@@ -57,12 +57,6 @@ bool IocpManager::Join()
 	}
 
 	return true;
-}
-
-bool IocpManager::StartConnect()
-{
-
-	return false;
 }
 
 void IocpManager::AcceptThreadFunc()

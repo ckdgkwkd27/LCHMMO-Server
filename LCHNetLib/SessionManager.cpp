@@ -37,6 +37,25 @@ bool SessionManager::AcceptClientSession(uint32 maxSessionCnt)
     return true;
 }
 
+bool SessionManager::ConnectServerSession(uint32 maxSessionCnt, Wstring connIp, uint32 connPort)
+{
+    while (GetIssueCount() < maxSessionCnt)
+    {
+        SessionPtr _session = IssueSession();
+        if (_session == nullptr)
+        {
+            return false;
+        }
+
+        if (_session->PostConnect(connIp, connPort) == false)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 SessionPtr SessionManager::IssueSession()
 {
     LockGuard lockGuard(sessionLock);

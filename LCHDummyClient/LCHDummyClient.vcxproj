@@ -122,6 +122,9 @@
       <AdditionalDependencies>LCHNetLib.lib;libprotobufd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../Protobuf/lib/debug/;../Output/lib/debug/</AdditionalLibraryDirectories>
     </Link>
+    <PreBuildEvent>
+      <Command>../protobuf-3.18.x/bin/batch.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -142,6 +145,9 @@
       <AdditionalDependencies>LCHNetLib.lib;libprotobuf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../Protobuf/lib/release/;../Output/lib/release/</AdditionalLibraryDirectories>
     </Link>
+    <PreBuildEvent>
+      <Command>../protobuf-3.18.x/bin/batch.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="LCHDummyClient.cpp">

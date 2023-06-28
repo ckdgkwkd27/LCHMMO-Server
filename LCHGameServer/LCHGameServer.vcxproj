@@ -129,8 +129,7 @@
       <AdditionalLibraryDirectories>../Output/lib/debug/;../Protobuf/lib/debug/</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>../protobuf-3.18.x/bin/batch.bat</Command>
     </PreBuildEvent>
     <PreBuildEvent>
       <Message>
@@ -158,6 +157,9 @@
       <AdditionalDependencies>LchNetLib.lib;libprotobuf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../Protobuf/lib/release;../Output/lib/release/</AdditionalLibraryDirectories>
     </Link>
+    <PreBuildEvent>
+      <Command>../protobuf-3.18.x/bin/batch.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ClientPacketHandler.cpp" />

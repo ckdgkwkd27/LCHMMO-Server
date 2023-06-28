@@ -24,7 +24,7 @@ public:
 
 	bool PostRecv();
 	bool PostAccept();
-	bool PostConnect();
+	bool PostConnect(Wstring ip, uint32 port);
 	bool PostDisconnect();
 
 	bool ProcessAccept();
