@@ -91,7 +91,7 @@ char* CircularBuffer::ReadBuf(uint32 bytes)
 {
     char* subBuffer = new char[bytes];
     uint32 j = 0;
-    for(uint32 i = readPos - bytes; i <= readPos; i++)
+    for(uint32 i = readPos; i <= readPos + bytes; i++)
     {
         subBuffer[j] = buffer[i];
         j++;

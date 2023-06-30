@@ -6,7 +6,7 @@
 
 int main()
 {
-    IocpManager* iocpManager = new IocpManager(L"127.0.0.1", 7777, 5);
+    IocpManager* iocpManager = new IocpManager(L"127.0.0.1", 7777, 100);
     iocpManager->Initialize();
     iocpManager->StartConnect<ServerSession>();
     iocpManager->StartWorker();

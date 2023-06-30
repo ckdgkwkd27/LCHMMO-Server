@@ -7,6 +7,7 @@ void ServerSession::OnAccepted()
 
 void ServerSession::OnConnected()
 {
+	std::cout << "[INFO] Server OnConnected..!" << std::endl;
 }
 
 void ServerSession::OnDisconnected()

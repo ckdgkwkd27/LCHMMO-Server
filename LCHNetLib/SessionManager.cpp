@@ -47,6 +47,7 @@ bool SessionManager::ConnectServerSession(uint32 maxSessionCnt, Wstring connIp, 
             return false;
         }
 
+        _session->Register();
         if (_session->PostConnect(connIp, connPort) == false)
         {
             return false;

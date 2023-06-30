@@ -83,6 +83,7 @@ void IocpManager::WorkerThreadFunc()
 			switch (errCode)
 			{
 			case WAIT_TIMEOUT:
+				std::cout << "[FAIL] GQCS Timeout Fail" << std::endl;
 				return;
 			case ERROR_NETNAME_DELETED:
 				break;
