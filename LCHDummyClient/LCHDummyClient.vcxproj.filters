@@ -5,15 +5,26 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="ServerSession.cpp" />
     <ClCompile Include="ServerPacketHandler.cpp" />
+    <ClCompile Include="..\protobuf-3.18.x\bin\protocol.pb.cc">
+      <Filter>Protobuf</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="ServerSession.h" />
     <ClInclude Include="ServerPacketHandler.h" />
+    <ClInclude Include="..\protobuf-3.18.x\bin\protocol.pb.h">
+      <Filter>Protobuf</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Protobuf">
       <UniqueIdentifier>{a9c3a2f4-7c68-4cd8-8577-8e05d6b470db}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\protobuf-3.18.x\bin\protocol.proto">
+      <Filter>Protobuf</Filter>
+    </None>
   </ItemGroup>
 </Project>

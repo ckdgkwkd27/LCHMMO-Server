@@ -5,11 +5,17 @@
     <ClCompile Include="LCHGameServer.cpp" />
     <ClCompile Include="ClientSession.cpp" />
     <ClCompile Include="ClientPacketHandler.cpp" />
+    <ClCompile Include="..\protobuf-3.18.x\bin\protocol.pb.cc">
+      <Filter>Protobuf</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="ClientSession.h" />
     <ClInclude Include="ClientPacketHandler.h" />
+    <ClInclude Include="..\protobuf-3.18.x\bin\protocol.pb.h">
+      <Filter>Protobuf</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Protobuf">
@@ -17,7 +23,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\protobuf-3.18.x\bin\Packet.proto">
+    <None Include="..\protobuf-3.18.x\bin\protocol.proto">
       <Filter>Protobuf</Filter>
     </None>
   </ItemGroup>

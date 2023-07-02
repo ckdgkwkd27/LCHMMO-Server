@@ -1,17 +1,57 @@
 syntax = "proto3";
 package protocol;
 
-message BuffData
+enum MessageType 
 {
-	uint64 buffId = 1;
-	float remainTime = 2;
-	repeated uint64 victims = 3;
-};
+    PKT_CS_LOGIN = 0;
+	PKT_SC_LOGIN = 1;
+	
+	PKT_CS_CHAT = 2;
+	PKT_SC_CHAT = 3;
+	
+	PKT_CS_MOVE = 4;
+	PKT_SC_MOVE = 5;
+}
 
-message S_TEST
+message LoginRequest
 {
-	uint64 id = 1;
-	uint32 hp = 2;
-	uint32 attack = 3;
-	repeated BuffData buffs = 4;
-};
+     int64 PlayerId = 1;
+}
+
+ message Position 
+ {
+     float x = 1;
+     float y = 2;
+	 float z = 3;
+ }
+	
+message LoginResult
+{
+     int64 PlayerId = 1;
+	 string PlayerName = 2;
+	 Position PlayerPos = 3;
+}
+
+message ChatRequest
+{
+     int64 PlayerId = 1;
+     string PlayerMessage = 2;
+}
+
+message ChatResult
+{
+     string PlayerName = 1;
+     string PlayerMessage = 2;
+}
+
+message MoveRequest
+{
+     int64 PlayerId = 1;
+	 Position PlayerPos = 2;
+}
+
+message MoveResult
+{
+     int64 PlayerId = 1;
+	 Position PlayerPos = 2;
+}
