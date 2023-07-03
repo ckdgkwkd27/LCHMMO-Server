@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ClientSession.h"
+#include "ClientPacketHandler.h"
 
 void ClientSession::OnAccepted()
 {

@@ -1,57 +1,34 @@
 syntax = "proto3";
 package protocol;
 
-enum MessageType 
+message RequestLogin
 {
-    PKT_CS_LOGIN = 0;
-	PKT_SC_LOGIN = 1;
-	
-	PKT_CS_CHAT = 2;
-	PKT_SC_CHAT = 3;
-	
-	PKT_CS_MOVE = 4;
-	PKT_SC_MOVE = 5;
+	string id = 1;
 }
 
-message LoginRequest
+message ReturnLogin
 {
-     int64 PlayerId = 1;
+	bool success = 1;
+	uint64 playerId = 2;
 }
 
- message Position 
- {
-     float x = 1;
-     float y = 2;
-	 float z = 3;
- }
-	
-message LoginResult
+message RequestEnterGame
 {
-     int64 PlayerId = 1;
-	 string PlayerName = 2;
-	 Position PlayerPos = 3;
+	uint64 playerId = 1;
 }
 
-message ChatRequest
+message ReturnEnterGame
 {
-     int64 PlayerId = 1;
-     string PlayerMessage = 2;
+	bool success = 1;
 }
 
-message ChatResult
+message RequestChat
 {
-     string PlayerName = 1;
-     string PlayerMessage = 2;
+	string msg = 1;
 }
 
-message MoveRequest
+message ReturnChat
 {
-     int64 PlayerId = 1;
-	 Position PlayerPos = 2;
-}
-
-message MoveResult
-{
-     int64 PlayerId = 1;
-	 Position PlayerPos = 2;
+	uint64 playerId = 1;
+	string msg = 2;
 }

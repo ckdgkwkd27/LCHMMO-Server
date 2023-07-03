@@ -120,8 +120,8 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>../LCHNetLib/;../Protobuf/include</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4125;4127</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>../protobuf-3.18.x/bin/;../LCHNetLib/;../protobuf-3.18.x/bin/;../Protobuf/include</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4125;4127;26495;4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,9 +148,9 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>../LCHNetLib/;../Protobuf/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../protobuf-3.18.x/bin/;../LCHNetLib/;../Protobuf/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <DisableSpecificWarnings>4125;4127</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4125;4127;26495;4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -114,8 +114,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);PROTOBUF_USE_DLLS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Protobuf/include;../LCHNetLib/</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4125;4127</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>../Protobuf/include;../LCHNetLib/;../protobuf-3.18.x/bin/</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4125;4127;26495;4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -124,7 +124,8 @@
       <AdditionalLibraryDirectories>../Protobuf/lib/debug/;../Output/lib/debug/</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>../protobuf-3.18.x/bin/batch.bat</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -135,9 +136,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);PROTOBUF_USE_DLLS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../Protobuf/include;../LCHNetLib/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Protobuf/include;../LCHNetLib/;../protobuf-3.18.x/bin/</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <DisableSpecificWarnings>4125;4127</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4125;4127;26495;4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,7 +149,8 @@
       <AdditionalLibraryDirectories>../Protobuf/lib/release/;../Output/lib/release/</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>../protobuf-3.18.x/bin/batch.bat</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

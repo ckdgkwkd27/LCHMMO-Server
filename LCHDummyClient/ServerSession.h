@@ -1,6 +1,6 @@
 #pragma once
 #include "Session.h"
-#include "ServerPacketHandler.h"
+#include "SessionManager.h"
 
 class ServerSession : public Session
 {
@@ -12,3 +12,4 @@ public:
 	virtual uint32 OnRecv(char* buffer, uint32 len);
 };
 
+extern bool GConnected;

@@ -119,7 +119,7 @@ bool Session::PostConnect(Wstring ip, uint32 port)
     ::InetPtonW(AF_INET, ip.c_str(), &address);
     addr.sin_addr = address;
     addr.sin_family = AF_INET;
-    addr.sin_port = port;
+    addr.sin_port = (uint16)port;
 
     if (false == SocketUtil::ConnectEx(sessionSocket, reinterpret_cast<SOCKADDR*>(&addr), sizeof(addr), nullptr, 0,
         &bytes, &sessionConnectEvent))
