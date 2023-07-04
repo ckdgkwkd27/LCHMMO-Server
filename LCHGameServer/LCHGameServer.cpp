@@ -3,10 +3,13 @@
 #include "SessionManager.h"
 #include "IocpManager.h"
 #include "ClientSession.h"
+#include "ClientPacketHandler.h"
 
 int main()
 {
-    IocpManager* iocpManager = new IocpManager(L"127.0.0.1", 7777, 100);
+    ClientPacketHandler::Init();
+
+    IocpManager* iocpManager = new IocpManager(L"127.0.0.1", 7777, 10);
     iocpManager->Initialize();
     iocpManager->BindAndListen();
     iocpManager->StartAccept<ClientSession>();

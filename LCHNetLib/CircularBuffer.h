@@ -1,4 +1,6 @@
 #pragma once
+#define MAX_BUFFER_SIZE 65535
+
 class CircularBuffer
 {
 public:

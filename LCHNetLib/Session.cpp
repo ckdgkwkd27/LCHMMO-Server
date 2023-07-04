@@ -191,7 +191,7 @@ bool Session::ProcessAccept()
 
 bool Session::ProcessSend(int32 bytes)
 {
-    sessionSendEvent.sessionRef = nullptr;
+    //sessionSendEvent.sessionRef = nullptr;
     sessionSendEvent.sendBuffer->Clear();
 
     if (bytes == 0)

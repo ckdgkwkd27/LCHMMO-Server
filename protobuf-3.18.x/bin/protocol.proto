@@ -4,6 +4,7 @@ package protocol;
 message RequestLogin
 {
 	string id = 1;
+	string password = 2;
 }
 
 message ReturnLogin

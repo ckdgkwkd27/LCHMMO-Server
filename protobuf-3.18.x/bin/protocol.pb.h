@@ -205,6 +205,7 @@ class RequestLogin final :
 
   enum : int {
     kIdFieldNumber = 1,
+    kPasswordFieldNumber = 2,
   };
   // string id = 1;
   void clear_id();
@@ -220,6 +221,20 @@ class RequestLogin final :
   std::string* _internal_mutable_id();
   public:
 
+  // string password = 2;
+  void clear_password();
+  const std::string& password() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_password(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_password();
+  PROTOBUF_MUST_USE_RESULT std::string* release_password();
+  void set_allocated_password(std::string* password);
+  private:
+  const std::string& _internal_password() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_password(const std::string& value);
+  std::string* _internal_mutable_password();
+  public:
+
   // @@protoc_insertion_point(class_scope:protocol.RequestLogin)
  private:
   class _Internal;
@@ -228,6 +243,7 @@ class RequestLogin final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr id_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr password_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_protocol_2eproto;
 };
@@ -1033,6 +1049,52 @@ inline void RequestLogin::set_allocated_id(std::string* id) {
   id_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), id,
       GetArenaForAllocation());
   // @@protoc_insertion_point(field_set_allocated:protocol.RequestLogin.id)
+}
+
+// string password = 2;
+inline void RequestLogin::clear_password() {
+  password_.ClearToEmpty();
+}
+inline const std::string& RequestLogin::password() const {
+  // @@protoc_insertion_point(field_get:protocol.RequestLogin.password)
+  return _internal_password();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void RequestLogin::set_password(ArgT0&& arg0, ArgT... args) {
+ 
+ password_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:protocol.RequestLogin.password)
+}
+inline std::string* RequestLogin::mutable_password() {
+  std::string* _s = _internal_mutable_password();
+  // @@protoc_insertion_point(field_mutable:protocol.RequestLogin.password)
+  return _s;
+}
+inline const std::string& RequestLogin::_internal_password() const {
+  return password_.Get();
+}
+inline void RequestLogin::_internal_set_password(const std::string& value) {
+  
+  password_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* RequestLogin::_internal_mutable_password() {
+  
+  return password_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* RequestLogin::release_password() {
+  // @@protoc_insertion_point(field_release:protocol.RequestLogin.password)
+  return password_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void RequestLogin::set_allocated_password(std::string* password) {
+  if (password != nullptr) {
+    
+  } else {
+    
+  }
+  password_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), password,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:protocol.RequestLogin.password)
 }
 
 // -------------------------------------------------------------------

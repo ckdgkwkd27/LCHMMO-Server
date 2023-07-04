@@ -10,7 +10,7 @@ void ClientPacketHandler::Init()
         GClientPacketHandler[i] = HandleInvalid;
     }
 
-    GClientPacketHandler[PKT_CS_LOGIN] = [](ClientSessionPtr& session, char* buffer, uint32 len) { return HandleProtobuf<protocol::RequestLogin>(Handle_PKT_CS_LOGIN, session, buffer, len); };
+    GClientPacketHandler[PKT_CS_LOGIN] = [](ClientSessionPtr& session, char* buffer, uint32 len) { return HandlePacket<protocol::RequestLogin>(Handle_PKT_CS_LOGIN, session, buffer, len); };
 }
 
 bool ClientPacketHandler::HandlePacket(ClientSessionPtr session, char* buffer, uint32 len)
@@ -28,15 +28,20 @@ bool HandleInvalid(ClientSessionPtr& session, char* buffer, uint32 len)
 
 bool Handle_PKT_CS_LOGIN(ClientSessionPtr& session, protocol::RequestLogin& packet)
 {
-    return false;
+    std::cout << "[PACKET] Handle Login! Socket= " << session->GetSocket() << ", ID=" << packet.id() << ", Password=" << packet.password() << std::endl;
+    return true;
 }
 
 bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterGame& packet)
 {
+    session->GetSocket();
+    packet.playerid();
     return false;
 }
 
 bool Handle_PKT_CS_CHAT(ClientSessionPtr& session, protocol::RequestChat& packet)
 {
+    session->GetSocket();
+    packet.msg();
     return false;
 }

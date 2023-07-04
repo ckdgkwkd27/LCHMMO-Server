@@ -42,7 +42,11 @@
 *.sap
 
 *vs
-*Output
+LCH*.exe
+*Output/*.exe
+*Output/*.pdb
+LCHNetLib.lib
+LCHNetLib.idb
 *.pdb
 *.tlog
 */x64

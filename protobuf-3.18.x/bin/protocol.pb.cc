@@ -19,7 +19,8 @@ PROTOBUF_PRAGMA_INIT_SEG
 namespace protocol {
 constexpr RequestLogin::RequestLogin(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : id_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string){}
+  : id_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , password_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string){}
 struct RequestLoginDefaultTypeInternal {
   constexpr RequestLoginDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -104,6 +105,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_protocol_2eproto::offsets[] PR
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::protocol::RequestLogin, id_),
+  PROTOBUF_FIELD_OFFSET(::protocol::RequestLogin, password_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::protocol::ReturnLogin, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -144,11 +146,11 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_protocol_2eproto::offsets[] PR
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::protocol::RequestLogin)},
-  { 7, -1, -1, sizeof(::protocol::ReturnLogin)},
-  { 15, -1, -1, sizeof(::protocol::RequestEnterGame)},
-  { 22, -1, -1, sizeof(::protocol::ReturnEnterGame)},
-  { 29, -1, -1, sizeof(::protocol::RequestChat)},
-  { 36, -1, -1, sizeof(::protocol::ReturnChat)},
+  { 8, -1, -1, sizeof(::protocol::ReturnLogin)},
+  { 16, -1, -1, sizeof(::protocol::RequestEnterGame)},
+  { 23, -1, -1, sizeof(::protocol::ReturnEnterGame)},
+  { 30, -1, -1, sizeof(::protocol::RequestChat)},
+  { 37, -1, -1, sizeof(::protocol::ReturnChat)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -161,17 +163,17 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 };
 
 const char descriptor_table_protodef_protocol_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\016protocol.proto\022\010protocol\"\032\n\014RequestLog"
-  "in\022\n\n\002id\030\001 \001(\t\"0\n\013ReturnLogin\022\017\n\007success"
-  "\030\001 \001(\010\022\020\n\010playerId\030\002 \001(\004\"$\n\020RequestEnter"
-  "Game\022\020\n\010playerId\030\001 \001(\004\"\"\n\017ReturnEnterGam"
-  "e\022\017\n\007success\030\001 \001(\010\"\032\n\013RequestChat\022\013\n\003msg"
-  "\030\001 \001(\t\"+\n\nReturnChat\022\020\n\010playerId\030\001 \001(\004\022\013"
-  "\n\003msg\030\002 \001(\tb\006proto3"
+  "\n\016protocol.proto\022\010protocol\",\n\014RequestLog"
+  "in\022\n\n\002id\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\"0\n\013Retu"
+  "rnLogin\022\017\n\007success\030\001 \001(\010\022\020\n\010playerId\030\002 \001"
+  "(\004\"$\n\020RequestEnterGame\022\020\n\010playerId\030\001 \001(\004"
+  "\"\"\n\017ReturnEnterGame\022\017\n\007success\030\001 \001(\010\"\032\n\013"
+  "RequestChat\022\013\n\003msg\030\001 \001(\t\"+\n\nReturnChat\022\020"
+  "\n\010playerId\030\001 \001(\004\022\013\n\003msg\030\002 \001(\tb\006proto3"
   ;
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_protocol_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_protocol_2eproto = {
-  false, false, 259, descriptor_table_protodef_protocol_2eproto, "protocol.proto", 
+  false, false, 277, descriptor_table_protodef_protocol_2eproto, "protocol.proto", 
   &descriptor_table_protocol_2eproto_once, nullptr, 0, 6,
   schemas, file_default_instances, TableStruct_protocol_2eproto::offsets,
   file_level_metadata_protocol_2eproto, file_level_enum_descriptors_protocol_2eproto, file_level_service_descriptors_protocol_2eproto,
@@ -207,11 +209,17 @@ RequestLogin::RequestLogin(const RequestLogin& from)
     id_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_id(), 
       GetArenaForAllocation());
   }
+  password_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_password().empty()) {
+    password_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_password(), 
+      GetArenaForAllocation());
+  }
   // @@protoc_insertion_point(copy_constructor:protocol.RequestLogin)
 }
 
 void RequestLogin::SharedCtor() {
 id_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+password_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 RequestLogin::~RequestLogin() {
@@ -224,6 +232,7 @@ RequestLogin::~RequestLogin() {
 inline void RequestLogin::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   id_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  password_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void RequestLogin::ArenaDtor(void* object) {
@@ -243,6 +252,7 @@ void RequestLogin::Clear() {
   (void) cached_has_bits;
 
   id_.ClearToEmpty();
+  password_.ClearToEmpty();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -258,6 +268,16 @@ const char* RequestLogin::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_I
           auto str = _internal_mutable_id();
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "protocol.RequestLogin.id"));
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // string password = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
+          auto str = _internal_mutable_password();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "protocol.RequestLogin.password"));
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -301,6 +321,16 @@ failure:
         1, this->_internal_id(), target);
   }
 
+  // string password = 2;
+  if (!this->_internal_password().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_password().data(), static_cast<int>(this->_internal_password().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "protocol.RequestLogin.password");
+    target = stream->WriteStringMaybeAliased(
+        2, this->_internal_password(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -322,6 +352,13 @@ size_t RequestLogin::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
         this->_internal_id());
+  }
+
+  // string password = 2;
+  if (!this->_internal_password().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_password());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
@@ -349,6 +386,9 @@ void RequestLogin::MergeFrom(const RequestLogin& from) {
   if (!from._internal_id().empty()) {
     _internal_set_id(from._internal_id());
   }
+  if (!from._internal_password().empty()) {
+    _internal_set_password(from._internal_password());
+  }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -372,6 +412,11 @@ void RequestLogin::InternalSwap(RequestLogin* other) {
       &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       &id_, lhs_arena,
       &other->id_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &password_, lhs_arena,
+      &other->password_, rhs_arena
   );
 }
 

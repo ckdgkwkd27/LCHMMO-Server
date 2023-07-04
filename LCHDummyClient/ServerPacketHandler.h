@@ -27,14 +27,30 @@ class ServerPacketHandler
 public:
 	static void Init();
 	static bool HandlePacket(ServerSessionPtr session, char* buffer, uint32 len);
+	static CircularBufferPtr MakeSendBufferPtr(protocol::RequestLogin& pkt) { return MakeSendBufferPtr(pkt, PKT_CS_LOGIN); }
 
 private:
 	template<typename PacketType, typename ProcessFunc>
-	static bool HandleProtobuf(ProcessFunc func, ServerSessionPtr& session, char* buffer, uint32 len);
+	static bool HandlePacket(ProcessFunc func, ServerSessionPtr& session, char* buffer, uint32 len);
+
+	template<typename T>
+	static CircularBufferPtr MakeSendBufferPtr(T& pkt, uint16 PacketID)
+	{
+		const uint16 dataSize = static_cast<uint16>(pkt.ByteSizeLong());
+		const uint16 packetSize = dataSize + sizeof(PacketHeader);
+
+		CircularBufferPtr sendBuffer = std::make_shared<CircularBuffer>(MAX_BUFFER_SIZE);
+		PacketHeader* header = reinterpret_cast<PacketHeader*>(sendBuffer->data());
+		header->size = packetSize;
+		header->id = PacketID;
+		ASSERT_CRASH(pkt.SerializeToArray(&header[1], dataSize));
+		ASSERT_CRASH(sendBuffer->OnWrite(packetSize) != false);
+		return sendBuffer;
+	}
 };
 
 template<typename PacketType, typename ProcessFunc>
-inline bool ServerPacketHandler::HandleProtobuf(ProcessFunc func, ServerSessionPtr& session, char* buffer, uint32 len)
+inline bool ServerPacketHandler::HandlePacket(ProcessFunc func, ServerSessionPtr& session, char* buffer, uint32 len)
 {
 	PacketType packet;
 	if (packet.ParseFromArray(buffer + sizeof(PacketHeader), len - sizeof(PacketHeader)) == false)
