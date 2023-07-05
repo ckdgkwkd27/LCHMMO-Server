@@ -28,7 +28,9 @@ bool HandleInvalid(ClientSessionPtr& session, char* buffer, uint32 len)
 
 bool Handle_PKT_CS_LOGIN(ClientSessionPtr& session, protocol::RequestLogin& packet)
 {
-    std::cout << "[PACKET] Handle Login! Socket= " << session->GetSocket() << ", ID=" << packet.id() << ", Password=" << packet.password() << std::endl;
+    //std::cout << "[PACKET] Handle Login! Socket= " << session->GetSocket() << ", ID=" << packet.id() << ", Password=" << packet.password() << std::endl;
+    if (packet.id() != "test_id" || packet.password() != "test_pw")
+        ASSERT_CRASH(false);
     return true;
 }
 

@@ -46,6 +46,7 @@ bool Session::PostSend(CircularBufferPtr _sendBuffer)
             }
         }
     }
+
     return true;
 }
 
@@ -191,7 +192,8 @@ bool Session::ProcessAccept()
 
 bool Session::ProcessSend(int32 bytes)
 {
-    //sessionSendEvent.sessionRef = nullptr;
+    LockGuard lockGuard(sendLock);
+
     sessionSendEvent.sendBuffer->Clear();
 
     if (bytes == 0)

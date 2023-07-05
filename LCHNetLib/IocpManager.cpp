@@ -67,6 +67,46 @@ void IocpManager::AcceptThreadFunc()
 	}
 }
 
+void IocpManager::Dispatch(IocpEvent* iocpEvent, DWORD bytes)
+{
+	switch (iocpEvent->GetType())
+	{
+	case EventType::ACCEPT:
+	{
+		SessionPtr _session = iocpEvent->sessionRef;
+		_session->ProcessAccept();
+		break;
+	}
+	case EventType::CONNECT:
+	{
+		SessionPtr _session = iocpEvent->sessionRef;
+		_session->ProcessConnect();
+		break;
+	}
+	case EventType::DISCONNECT:
+	{
+		SessionPtr _session = iocpEvent->sessionRef;
+		_session->ProcessDisconnect();
+		break;
+	}
+	case EventType::SEND:
+	{
+		SessionPtr _session = iocpEvent->sessionRef;
+		_session->ProcessSend(bytes);
+		break;
+	}
+	case EventType::RECV:
+	{
+		SessionPtr _session = iocpEvent->sessionRef;
+		_session->ProcessRecv(bytes);
+		break;
+	}
+	default:
+		std::cout << "[FAIL] Wrong EventType: " << (uint8)iocpEvent->GetType() << std::endl;
+		break;
+	}
+}
+
 void IocpManager::WorkerThreadFunc()
 {
 	while (true)
@@ -89,45 +129,11 @@ void IocpManager::WorkerThreadFunc()
 				break;
 			default:
 				std::cout << "[FAIL] GQCS ErrorCode: " << WSAGetLastError() << std::endl;
+				Dispatch(iocpEvent, bytes);
 				break;
 			}
 		}
 
-		switch (iocpEvent->GetType())
-		{
-		case EventType::ACCEPT:
-		{
-			SessionPtr _session = iocpEvent->sessionRef;
-			_session->ProcessAccept();
-			break;
-		}
-		case EventType::CONNECT:
-		{
-			SessionPtr _session = iocpEvent->sessionRef;
-			_session->ProcessConnect();
-			break;
-		}
-		case EventType::DISCONNECT:
-		{
-			SessionPtr _session = iocpEvent->sessionRef;
-			_session->ProcessDisconnect();
-			break;
-		}
-		case EventType::SEND:
-		{
-			SessionPtr _session = iocpEvent->sessionRef;
-			_session->ProcessSend(bytes);
-			break;
-		}
-		case EventType::RECV:
-		{
-			SessionPtr _session = iocpEvent->sessionRef;
-			_session->ProcessRecv(bytes);
-			break;
-		}
-		default:
-			std::cout << "[FAIL] Wrong EventType: " << (uint8)iocpEvent->GetType() << std::endl;
-			ASSERT_CRASH(false);
-		}
+		Dispatch(iocpEvent, bytes);
 	}
 }

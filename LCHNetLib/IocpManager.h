@@ -19,6 +19,7 @@ public:
 	template <typename T>
 	void StartAccept();
 
+	void Dispatch(IocpEvent* iocpEvent, DWORD bytes);
 	void AcceptThreadFunc();
 	void WorkerThreadFunc();
 

@@ -13,11 +13,16 @@ void ServerSession::OnConnected()
 	std::cout << "[INFO] Server OnConnected..!" << std::endl;
 	GConnected = true;
 
-	protocol::RequestLogin loginPacket;
-	loginPacket.set_id("test_id");
-	loginPacket.set_password("test_pw");
-	auto _sendBuffer = ServerPacketHandler::MakeSendBufferPtr(loginPacket);
-	PostSend(_sendBuffer);
+	for (int i = 0; i < 3; i++)
+	{
+		protocol::RequestLogin loginPacket;
+		loginPacket.set_id("test_id");
+		loginPacket.set_password("test_pw");
+		auto _sendBuffer = ServerPacketHandler::MakeSendBufferPtr(loginPacket);
+
+		PostSend(_sendBuffer);
+		std::this_thread::sleep_for(1ms);
+	}
 }
 
 void ServerSession::OnDisconnected()
