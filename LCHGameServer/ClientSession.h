@@ -2,6 +2,7 @@
 #include "Session.h"
 #include "SessionManager.h"
 
+class Player;
 class ClientSession : public Session
 {
 public:
@@ -10,5 +11,8 @@ public:
 	virtual void OnDisconnected();
 	virtual void OnSend(uint32 len);
 	virtual uint32 OnRecv(char* buffer, uint32 len);
+
+public:
+	std::shared_ptr<Player> currentPlayer;
 };
 

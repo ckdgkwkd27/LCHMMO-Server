@@ -1,25 +1,58 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="pch.cpp" />
     <ClCompile Include="LCHGameServer.cpp" />
-    <ClCompile Include="ClientSession.cpp" />
-    <ClCompile Include="ClientPacketHandler.cpp" />
     <ClCompile Include="..\protobuf-3.18.x\bin\protocol.pb.cc">
       <Filter>Protobuf</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerManager.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>PCH</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientPacketHandler.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientSession.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="ClientSession.h" />
-    <ClInclude Include="ClientPacketHandler.h" />
     <ClInclude Include="..\protobuf-3.18.x\bin\protocol.pb.h">
       <Filter>Protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerManager.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientSession.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientPacketHandler.h">
+      <Filter>Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Protobuf">
       <UniqueIdentifier>{9b369edb-e76f-4222-bc65-1bee95083538}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player">
+      <UniqueIdentifier>{ad65f75d-f879-4bad-89b5-d207f4bcd86b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PCH">
+      <UniqueIdentifier>{65dc2819-dcaf-4a00-8d30-a4ec890d73ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{8d90beed-e8b8-494b-9635-3a7a05902e10}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
