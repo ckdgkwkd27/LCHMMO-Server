@@ -7,6 +7,7 @@
 #include <memory>
 #include <set>
 #include <map>
+#include <unordered_map>
 #include <utility>
 #include <functional>
 #include <istream>

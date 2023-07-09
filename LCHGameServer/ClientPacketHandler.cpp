@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ClientPacketHandler.h"
+#include "PlayerManager.h"
 
 ClientPacketHandlerFunc GClientPacketHandler[UINT16_MAX];
 
@@ -28,14 +29,28 @@ bool HandleInvalid(ClientSessionPtr& session, char* buffer, uint32 len)
 
 bool Handle_PKT_CS_LOGIN(ClientSessionPtr& session, protocol::RequestLogin& packet)
 {
-    //std::cout << "[PACKET] Handle Login! Socket= " << session->GetSocket() << ", ID=" << packet.id() << ", Password=" << packet.password() << std::endl;
-    if (packet.id() != "test_id" || packet.password() != "test_pw")
-        ASSERT_CRASH(false);
+    std::cout << "[PACKET] Handle Login! Socket= " << session->GetSocket() << ", ID=" << packet.id() << ", Password=" << packet.password() << std::endl;
+    
+    //#TODO: DB Login Check하고 Pass, Fail 통보
+
+    auto _player = GPlayerManager.NewPlayer();
+    session->currentPlayer = _player;
+
+    protocol::ReturnLogin ReturnPkt;
+    ReturnPkt.set_playerid(_player->playerId);
+    ReturnPkt.set_success(true);
+    auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(ReturnPkt);
+    session->PostSend(_sendBuffer);
     return true;
 }
 
 bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterGame& packet)
 {
+    if (session->currentPlayer->playerId != packet.playerid())
+        return false;
+
+    //ZONE Spawn
+    //BroadCast
     session->GetSocket();
     packet.playerid();
     return false;

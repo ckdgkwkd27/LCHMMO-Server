@@ -10,6 +10,7 @@ public:
 	virtual void OnDisconnected();
 	virtual void OnSend(uint32 len);
 	virtual uint32 OnRecv(char* buffer, uint32 len);
-};
 
-extern bool GConnected;
+public:
+	bool isConnected = false;
+};

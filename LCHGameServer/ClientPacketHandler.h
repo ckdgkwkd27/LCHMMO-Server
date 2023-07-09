@@ -27,6 +27,7 @@ class ClientPacketHandler
 public:
 	static void Init();
 	static bool HandlePacket(ClientSessionPtr session, char* buffer, uint32 len);
+	static CircularBufferPtr MakeSendBufferPtr(protocol::ReturnLogin& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_LOGIN); }
 
 	template<typename T>
 	static CircularBufferPtr MakeSendBufferPtr(T& pkt, uint16 PacketID)
@@ -35,6 +36,9 @@ public:
 		const uint16 packetSize = dataSize + sizeof(PacketHeader);
 
 		CircularBufferPtr sendBuffer = std::make_shared<CircularBuffer>(MAX_BUFFER_SIZE);
+		if (sendBuffer == nullptr)
+			ASSERT_CRASH(false);
+
 		PacketHeader* header = reinterpret_cast<PacketHeader*>(sendBuffer->data());
 		header->size = packetSize;
 		header->id = PacketID;

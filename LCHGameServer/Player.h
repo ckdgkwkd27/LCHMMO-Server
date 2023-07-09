@@ -1,7 +1,8 @@
 #pragma once
+#include "Actor.h"
 class ClientSession;
 
-class Player
+class Player : public Actor
 {
 public:
 	uint32 playerId;

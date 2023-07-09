@@ -12,7 +12,7 @@ IocpManager::IocpManager(std::wstring _ip, uint16 _port, uint32 _maxConnectionCn
 
 void IocpManager::Initialize()
 {
-	workerThreadsCnt = std::thread::hardware_concurrency() / 2;
+	workerThreadsCnt = std::thread::hardware_concurrency();
 	workerThreads.resize(workerThreadsCnt);
 
 	iocpHandle = CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, 0);

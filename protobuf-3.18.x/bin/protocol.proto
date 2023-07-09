@@ -33,3 +33,8 @@ message ReturnChat
 	uint64 playerId = 1;
 	string msg = 2;
 }
+
+message RequestMove
+{
+
+}

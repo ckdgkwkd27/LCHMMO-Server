@@ -5,12 +5,6 @@
     <ClCompile Include="..\protobuf-3.18.x\bin\protocol.pb.cc">
       <Filter>Protobuf</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Player</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerManager.cpp">
-      <Filter>Player</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>PCH</Filter>
     </ClCompile>
@@ -20,16 +14,25 @@
     <ClCompile Include="ClientSession.cpp">
       <Filter>Network</Filter>
     </ClCompile>
+    <ClCompile Include="Zone.cpp">
+      <Filter>Zone</Filter>
+    </ClCompile>
+    <ClCompile Include="ZoneManager.cpp">
+      <Filter>Zone</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Actor\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerManager.cpp">
+      <Filter>Actor\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protobuf-3.18.x\bin\protocol.pb.h">
       <Filter>Protobuf</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Player</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerManager.h">
-      <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>PCH</Filter>
@@ -40,19 +43,40 @@
     <ClInclude Include="ClientPacketHandler.h">
       <Filter>Network</Filter>
     </ClInclude>
+    <ClInclude Include="ZoneManager.h">
+      <Filter>Zone</Filter>
+    </ClInclude>
+    <ClInclude Include="Zone.h">
+      <Filter>Zone</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerManager.h">
+      <Filter>Actor\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Actor\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Protobuf">
       <UniqueIdentifier>{9b369edb-e76f-4222-bc65-1bee95083538}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Player">
-      <UniqueIdentifier>{ad65f75d-f879-4bad-89b5-d207f4bcd86b}</UniqueIdentifier>
     </Filter>
     <Filter Include="PCH">
       <UniqueIdentifier>{65dc2819-dcaf-4a00-8d30-a4ec890d73ee}</UniqueIdentifier>
     </Filter>
     <Filter Include="Network">
       <UniqueIdentifier>{8d90beed-e8b8-494b-9635-3a7a05902e10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Zone">
+      <UniqueIdentifier>{6932aa7a-13e9-4dcd-acd1-fe447f9af11f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor">
+      <UniqueIdentifier>{2e9fa985-ce80-4815-b515-2af1f91f4d2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\Player">
+      <UniqueIdentifier>{ad65f75d-f879-4bad-89b5-d207f4bcd86b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

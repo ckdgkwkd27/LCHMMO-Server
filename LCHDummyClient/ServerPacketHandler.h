@@ -3,7 +3,7 @@
 #include "protocol.pb.h"
 
 using ServerSessionPtr = std::shared_ptr<ServerSession>;
-using ServerPacketHandlerFunc = std::function<bool(ServerSessionPtr, char*, uint32)>;
+using ServerPacketHandlerFunc = std::function<bool(ServerSessionPtr&, char*, uint32)>;
 
 extern ServerPacketHandlerFunc GServerPacketHandler[UINT16_MAX];
 
@@ -28,11 +28,7 @@ public:
 	static void Init();
 	static bool HandlePacket(ServerSessionPtr session, char* buffer, uint32 len);
 	static CircularBufferPtr MakeSendBufferPtr(protocol::RequestLogin& pkt) { return MakeSendBufferPtr(pkt, PKT_CS_LOGIN); }
-
-private:
-	template<typename PacketType, typename ProcessFunc>
-	static bool HandlePacket(ProcessFunc func, ServerSessionPtr& session, char* buffer, uint32 len);
-
+	static CircularBufferPtr MakeSendBufferPtr(protocol::RequestEnterGame& pkt) { return MakeSendBufferPtr(pkt, PKT_CS_ENTER_GAME); }
 	template<typename T>
 	static CircularBufferPtr MakeSendBufferPtr(T& pkt, uint16 PacketID)
 	{
@@ -40,6 +36,9 @@ private:
 		const uint16 packetSize = dataSize + sizeof(PacketHeader);
 
 		CircularBufferPtr sendBuffer = std::make_shared<CircularBuffer>(MAX_BUFFER_SIZE);
+		if (sendBuffer == nullptr)
+			ASSERT_CRASH(false);
+
 		PacketHeader* header = reinterpret_cast<PacketHeader*>(sendBuffer->data());
 		header->size = packetSize;
 		header->id = PacketID;
@@ -47,6 +46,10 @@ private:
 		ASSERT_CRASH(sendBuffer->OnWrite(packetSize) != false);
 		return sendBuffer;
 	}
+
+private:
+	template<typename PacketType, typename ProcessFunc>
+	static bool HandlePacket(ProcessFunc func, ServerSessionPtr& session, char* buffer, uint32 len);
 };
 
 template<typename PacketType, typename ProcessFunc>

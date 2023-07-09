@@ -4,9 +4,11 @@
 #include "IocpManager.h"
 #include "ClientSession.h"
 #include "ClientPacketHandler.h"
+#include "PlayerManager.h"
 
 int main()
 {
+    GPlayerManager.Init();
     ClientPacketHandler::Init();
 
     IocpManager* iocpManager = new IocpManager(L"127.0.0.1", 7777, 50);
