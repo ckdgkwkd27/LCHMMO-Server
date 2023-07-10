@@ -21,6 +21,7 @@
 #include <list>
 #include <chrono>
 #include <time.h>
+#include <stack>
 
 #include <thread>
 #include <mutex>
