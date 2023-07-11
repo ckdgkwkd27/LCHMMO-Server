@@ -4,9 +4,10 @@
 
 class PlayerManager {
 public:
-	void Init(uint64 maxSize = MAX_PLAYER);
+	void Initialize(uint64 maxSize = MAX_PLAYER);
 	PlayerPtr NewPlayer();
 	void DeletePlayer(PlayerPtr _player);
+	PlayerPtr FindPlayerByID(uint32 playerID);
 	PlayerPtr FindPlayerByName(std::string _name);
 
 private:
@@ -19,13 +20,13 @@ public:
 private:
 	RecursiveMutex playerLock;
 	std::queue<PlayerPtr> playerPool;
-	uint64 NumOfPlayers = 0;
-	uint64 PlayerIdx = 0;
+	uint64 numOfPlayers = 0;
+	uint64 playerIdx = 0;
 
 public:
-	uint64 GetPlayerIdx() { return PlayerIdx; }
-	void IncreasePlayerIdx() { PlayerIdx++; }
-	void DecreasePlayerIdx() { PlayerIdx--; }
+	uint64 GetPlayerIdx() { return playerIdx; }
+	void IncreasePlayerIdx() { playerIdx++; }
+	void DecreasePlayerIdx() { playerIdx--; }
 };
 
 extern PlayerManager GPlayerManager;

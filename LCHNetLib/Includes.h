@@ -17,7 +17,7 @@
 #include <MSWSock.h>
 #include <Windows.h>
 #include <time.h>
-#include <functional>
+#include <algorithm>
 #include <list>
 #include <chrono>
 #include <time.h>

@@ -5,10 +5,13 @@
 #include "ClientSession.h"
 #include "ClientPacketHandler.h"
 #include "PlayerManager.h"
+#include "ZoneManager.h"
 
 int main()
 {
-    GPlayerManager.Init();
+    GPlayerManager.Initialize();
+    GZoneManager.Initialize();
+
     ClientPacketHandler::Init();
 
     IocpManager* iocpManager = new IocpManager(L"127.0.0.1", 7777, 50);

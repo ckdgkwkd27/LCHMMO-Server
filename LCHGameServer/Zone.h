@@ -5,7 +5,12 @@ using ZoneIDType = uint32;
 class Zone
 {
 public:
-	ZoneIDType ZoneID;
-	std::unordered_map<ActorIDType, Actor*> ZoneActorMap;
+	void RegisterActor(Actor* _actor);
+	Actor* FindActor(ActorIDType _actorID);
+public:
+	ZoneIDType zoneID;
+	std::vector<Actor*> actorVector;
+	uint32 xMax;
+	uint32 yMax;
 };
 

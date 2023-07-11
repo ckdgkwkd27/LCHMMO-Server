@@ -20,8 +20,8 @@ class Actor
 public:
 
 public:
-	ActorIDType ActorID;
-	PositionType Position;
-	RotationType Rotation;
+	ActorIDType actorID;
+	PositionType position;
+	RotationType rotation;
 };
 

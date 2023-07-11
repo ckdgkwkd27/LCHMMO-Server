@@ -2,7 +2,7 @@
 #include "PlayerManager.h"
 PlayerManager GPlayerManager;
 
-void PlayerManager::Init(uint64 maxSize)
+void PlayerManager::Initialize(uint64 maxSize)
 {
 	for (uint32 idx = 0; idx < maxSize; idx++)
 	{
@@ -10,7 +10,7 @@ void PlayerManager::Init(uint64 maxSize)
 		_player->playerId = idx;
 		playerPool.push(_player);
 	}
-	NumOfPlayers = 0;
+	numOfPlayers = 0;
 
 	std::cout << "[INFO] Player Init Completed!" << std::endl;
 }
@@ -27,8 +27,8 @@ PlayerPtr PlayerManager::NewPlayer()
 
 void PlayerManager::AddPlayer(PlayerPtr _player)
 {
-	AllPlayerInfo.insert({PlayerIdx, _player});
-	NumOfPlayers++;
+	AllPlayerInfo.insert({playerIdx, _player});
+	numOfPlayers++;
 }
 
 void PlayerManager::DeletePlayer(PlayerPtr _player)
@@ -39,6 +39,19 @@ void PlayerManager::DeletePlayer(PlayerPtr _player)
 	ReturnPlayer(_player);
 }
 
+PlayerPtr PlayerManager::FindPlayerByID(uint32 playerID)
+{
+	uint64 _playerId;
+	for (auto& info : AllPlayerInfo)
+	{
+		if (info.second->playerId == playerID)
+		{
+			return info.second;
+		}
+	}
+	return nullptr;
+}
+
 PlayerPtr PlayerManager::FindPlayerByName(std::string _name)
 {
 	uint64 _playerId;
@@ -46,7 +59,6 @@ PlayerPtr PlayerManager::FindPlayerByName(std::string _name)
 	{
 		if (info.second->name == _name)
 		{
-			_playerId = info.first;
 			return info.second;
 		}
 	}
@@ -57,5 +69,5 @@ PlayerPtr PlayerManager::FindPlayerByName(std::string _name)
 void PlayerManager::ReturnPlayer(PlayerPtr _player)
 {
 	playerPool.push(_player);
-	NumOfPlayers--;
+	numOfPlayers--;
 }

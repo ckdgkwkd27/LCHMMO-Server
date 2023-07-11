@@ -1,9 +1,18 @@
 #pragma once
 #include "Zone.h"
+#include "ObjectPool.h"
 
 class ZoneManager
 {
 public:
-	std::unordered_map<ZoneIDType, Zone*> ZoneMap;
+	ZoneManager();
+	void Initialize();
+	void RegisterZone(Zone* _zone);
+	bool RegisterActor(ZoneIDType _zoneID, Actor* _actor);
+
+public:
+	std::vector<Zone*> zoneVector;
+	ObjectPool<Zone>* zonePool;
 };
 
+extern ZoneManager GZoneManager;

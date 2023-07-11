@@ -37,7 +37,8 @@ inline ObjectPool<T>::~ObjectPool()
 	
 	while (!pool.empty())
 	{
-		T* _object = pool.pop();
+		T* _object = pool.top();
+		pool.pop();
 		delete _object;
 	}
 
@@ -54,7 +55,8 @@ T* ObjectPool<T>::BorrowObject()
 		ExpandPool();
 	}
 	
-	T* _object = pool.pop();
+	T* _object = pool.top();
+	pool.pop();
 	return _object;
 }
 

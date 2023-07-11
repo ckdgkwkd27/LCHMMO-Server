@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ClientPacketHandler.h"
 #include "PlayerManager.h"
+#include "ZoneManager.h"
 
 ClientPacketHandlerFunc GClientPacketHandler[UINT16_MAX];
 
@@ -50,6 +51,8 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
         return false;
 
     //ZONE Spawn
+    GZoneManager.RegisterActor(0, GPlayerManager.FindPlayerByID(packet.playerid()));
+
     //BroadCast
     session->GetSocket();
     packet.playerid();
