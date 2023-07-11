@@ -50,12 +50,29 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
     if (session->currentPlayer->playerId != packet.playerid())
         return false;
 
-    //ZONE Spawn
-    GZoneManager.RegisterActor(0, GPlayerManager.FindPlayerByID(packet.playerid()));
+    //Zone Spawn
+    PlayerPtr player = GPlayerManager.FindPlayerByID(packet.playerid());
+    GZoneManager.RegisterActor(0, player.get());
 
     //BroadCast
-    session->GetSocket();
-    packet.playerid();
+    auto zone = GZoneManager.FindZoneByID(0);
+    if (zone == nullptr)
+        return false;
+
+    protocol::ReturnEnterGame ReturnPkt;
+    ReturnPkt.set_success(true);
+    auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(ReturnPkt);
+
+    for (auto actor : zone->actorVector)
+    {
+        if(actor->actorID == player->actorID)
+            continue;
+
+        Player* _player = dynamic_cast<Player*>(actor);
+        _player->ownerSession->PostSend(_sendBuffer);
+    }
+
+    std::cout << "[INFO] ReturnEnter Packet Send Socket=" << session->GetSocket() << ", PlayerID=" << packet.playerid() << std::endl;
     return false;
 }
 

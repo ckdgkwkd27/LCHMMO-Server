@@ -11,7 +11,7 @@ ZoneManager::ZoneManager()
 //#TODO 추후에 Config에서 읽을수 있도록한다
 void ZoneManager::Initialize()
 {
-	for (uint32 idx = 0; 5; idx++)
+	for (uint32 idx = 0; idx < 5; idx++)
 	{
 		Zone* _zone = zonePool->BorrowObject();
 		_zone->zoneID = idx;
@@ -19,6 +19,8 @@ void ZoneManager::Initialize()
 		_zone->yMax = 100;
 		RegisterZone(_zone);
 	}
+
+	std::cout << "[INFO] Zone Init Completed!" << std::endl;
 }
 
 void ZoneManager::RegisterZone(Zone* _zone)
@@ -53,4 +55,13 @@ bool ZoneManager::RegisterActor(ZoneIDType _zoneID, Actor* _actor)
 	
 	(*it)->RegisterActor(_actor);
 	return true;
+}
+
+Zone* ZoneManager::FindZoneByID(ZoneIDType _zoneId)
+{
+	auto it = std::find_if(zoneVector.begin(), zoneVector.end(), [_zoneId](Zone* _zone) { return _zone->zoneID == _zoneId; });
+	if(it == zoneVector.end())
+		return nullptr;
+
+	return *it;
 }

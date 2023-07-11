@@ -25,7 +25,7 @@ void IocpManager::Initialize()
 		ASSERT_CRASH(false);
 	}
 
-	std::cout << "[INFO] Initialization Success.." << std::endl;
+	std::cout << "[INFO] IOCP Initialization Success.." << std::endl;
 	return;
 }
 

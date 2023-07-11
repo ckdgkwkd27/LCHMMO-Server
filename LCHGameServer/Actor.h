@@ -18,10 +18,11 @@ struct RotationType
 class Actor
 {
 public:
-
+	virtual ~Actor() {}
 public:
 	ActorIDType actorID;
 	PositionType position;
 	RotationType rotation;
 };
 
+using ActorPtr = std::shared_ptr<Actor>;

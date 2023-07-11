@@ -28,6 +28,7 @@ public:
 	static void Init();
 	static bool HandlePacket(ClientSessionPtr session, char* buffer, uint32 len);
 	static CircularBufferPtr MakeSendBufferPtr(protocol::ReturnLogin& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_LOGIN); }
+	static CircularBufferPtr MakeSendBufferPtr(protocol::ReturnEnterGame& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_ENTER_GAME); }
 
 	template<typename T>
 	static CircularBufferPtr MakeSendBufferPtr(T& pkt, uint16 PacketID)

@@ -14,3 +14,4 @@ public:
 	uint32 yMax;
 };
 
+using ZonePtr = std::shared_ptr<Zone>;

@@ -41,7 +41,6 @@ void PlayerManager::DeletePlayer(PlayerPtr _player)
 
 PlayerPtr PlayerManager::FindPlayerByID(uint32 playerID)
 {
-	uint64 _playerId;
 	for (auto& info : AllPlayerInfo)
 	{
 		if (info.second->playerId == playerID)
@@ -54,7 +53,6 @@ PlayerPtr PlayerManager::FindPlayerByID(uint32 playerID)
 
 PlayerPtr PlayerManager::FindPlayerByName(std::string _name)
 {
-	uint64 _playerId;
 	for (auto& info : AllPlayerInfo)
 	{
 		if (info.second->name == _name)
