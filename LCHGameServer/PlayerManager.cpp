@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "PlayerManager.h"
+#include "ZoneManager.h"
 PlayerManager GPlayerManager;
 
 void PlayerManager::Initialize(uint64 maxSize)

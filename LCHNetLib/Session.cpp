@@ -25,7 +25,6 @@ bool Session::PostSend(CircularBufferPtr _sendBuffer)
 
     {
         LockGuard lockGuard(sendLock);
-
         sessionSendEvent.Init();
         sessionSendEvent.sessionRef = shared_from_this();
         sessionSendEvent.sendBuffer = _sendBuffer;
@@ -198,6 +197,7 @@ bool Session::ProcessSend(int32 bytes)
 
     if (bytes == 0)
     {
+        ASSERT_CRASH(false); //DEBUG
         PostDisconnect();
         return true;
     }
@@ -210,12 +210,14 @@ bool Session::ProcessRecv(int32 bytes)
 {
     if (bytes == 0)
     {
+        ASSERT_CRASH(false); //DEBUG
         PostDisconnect();
         return false;
     }
 
     if (recvBuffer.OnWrite(bytes) == false)
     {
+        ASSERT_CRASH(false); //DEBUG
         PostDisconnect();
         return false;
     }
@@ -224,6 +226,7 @@ bool Session::ProcessRecv(int32 bytes)
     uint32 processLen = OnRecv(recvBuffer.ReadPos(), dataSize);
     if (processLen < 0 || dataSize < processLen || recvBuffer.OnRead(processLen) == false)
     {
+        ASSERT_CRASH(false); //DEBUG
         PostDisconnect();
         return false;
     }

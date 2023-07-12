@@ -5,13 +5,15 @@ using ZoneIDType = uint32;
 class Zone
 {
 public:
-	void RegisterActor(Actor* _actor);
-	Actor* FindActor(ActorIDType _actorID);
+	void RegisterActor(ActorPtr _actor);
+	ActorPtr FindActor(ActorIDType _actorID);
+
 public:
 	ZoneIDType zoneID;
-	std::vector<Actor*> actorVector;
+	std::vector<ActorPtr> actorVector;
 	uint32 xMax;
 	uint32 yMax;
+	RecursiveMutex actorLock;
 };
 
 using ZonePtr = std::shared_ptr<Zone>;

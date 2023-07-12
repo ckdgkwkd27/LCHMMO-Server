@@ -2,6 +2,16 @@
 #include "Session.h"
 #include "SessionManager.h"
 
+enum SessionState : uint8
+{
+	NONE,
+	CONNECTED,
+	LOGIN,
+	ENTER_GAME,
+
+	END
+};
+
 class Player;
 class ClientSession : public Session
 {

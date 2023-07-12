@@ -20,7 +20,7 @@ void ClientSession::OnDisconnected()
 
 void ClientSession::OnSend(uint32 len)
 {
-	std::cout << "OnSend() Len=" << len << std::endl;
+	//std::cout << "OnSend() Len=" << len << std::endl;
 }
 
 uint32 ClientSession::OnRecv(char* buffer, uint32 len)

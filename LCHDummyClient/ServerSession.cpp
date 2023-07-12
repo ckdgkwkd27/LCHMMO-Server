@@ -9,7 +9,7 @@ void ServerSession::OnAccepted()
 void ServerSession::OnConnected()
 {
 	std::cout << "[INFO] Server OnConnected..!" << std::endl;
-	isConnected = true;
+	state = SessionState::CONNECTED;
 
 	protocol::RequestLogin loginPacket;
 	loginPacket.set_id("test_id");
@@ -20,6 +20,7 @@ void ServerSession::OnConnected()
 
 void ServerSession::OnDisconnected()
 {
+	ASSERT_CRASH(false);
 }
 
 void ServerSession::OnSend(uint32 len)

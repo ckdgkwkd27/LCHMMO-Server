@@ -12,7 +12,14 @@ void ClientPacketHandler::Init()
         GClientPacketHandler[i] = HandleInvalid;
     }
 
-    GClientPacketHandler[PKT_CS_LOGIN] = [](ClientSessionPtr& session, char* buffer, uint32 len) { return HandlePacket<protocol::RequestLogin>(Handle_PKT_CS_LOGIN, session, buffer, len); };
+    GClientPacketHandler[PKT_CS_LOGIN] = [](ClientSessionPtr& session, char* buffer, uint32 len) 
+    { 
+        return HandlePacket<protocol::RequestLogin>(Handle_PKT_CS_LOGIN, session, buffer, len); 
+    };
+    GClientPacketHandler[PKT_CS_ENTER_GAME] = [](ClientSessionPtr& session, char* buffer, uint32 len)
+    {
+        return HandlePacket<protocol::RequestEnterGame>(Handle_PKT_CS_ENTER_GAME, session, buffer, len);
+    };
 }
 
 bool ClientPacketHandler::HandlePacket(ClientSessionPtr session, char* buffer, uint32 len)
@@ -30,11 +37,13 @@ bool HandleInvalid(ClientSessionPtr& session, char* buffer, uint32 len)
 
 bool Handle_PKT_CS_LOGIN(ClientSessionPtr& session, protocol::RequestLogin& packet)
 {
-    std::cout << "[PACKET] Handle Login! Socket= " << session->GetSocket() << ", ID=" << packet.id() << ", Password=" << packet.password() << std::endl;
+    std::cout << "[INFO] Handle Login! Socket= " << session->GetSocket() << ", ID=" << packet.id() << ", Password=" << packet.password() << std::endl;
     
     //#TODO: DB Login Check하고 Pass, Fail 통보
 
     auto _player = GPlayerManager.NewPlayer();
+    _player->actorID = GZoneManager.IssueActorID();
+    _player->ownerSession = session;
     session->currentPlayer = _player;
 
     protocol::ReturnLogin ReturnPkt;
@@ -52,7 +61,7 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
 
     //Zone Spawn
     PlayerPtr player = GPlayerManager.FindPlayerByID(packet.playerid());
-    GZoneManager.RegisterActor(0, player.get());
+    GZoneManager.RegisterActor(0, player);
 
     //BroadCast
     auto zone = GZoneManager.FindZoneByID(0);
@@ -63,16 +72,26 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
     ReturnPkt.set_success(true);
     auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(ReturnPkt);
 
-    for (auto actor : zone->actorVector)
+    zone->actorLock.lock();
+    for (auto& actor : zone->actorVector)
     {
+        if (actor == nullptr)
+            ASSERT_CRASH(false);
+
         if(actor->actorID == player->actorID)
             continue;
 
-        Player* _player = dynamic_cast<Player*>(actor);
+        //DEBUG
+		if (static_cast<LONG>(_sendBuffer->DataSize()) == 0)
+		{
+			std::cout << "DataSize = 0" << std::endl;
+		}
+        PlayerPtr _player = std::dynamic_pointer_cast<Player>(actor);
         _player->ownerSession->PostSend(_sendBuffer);
     }
+    zone->actorLock.unlock();
 
-    std::cout << "[INFO] ReturnEnter Packet Send Socket=" << session->GetSocket() << ", PlayerID=" << packet.playerid() << std::endl;
+    std::cout << "[INFO] ReturnEnterGame Packet Send Socket=" << session->GetSocket() << ", PlayerID=" << packet.playerid() << std::endl;
     return false;
 }
 
