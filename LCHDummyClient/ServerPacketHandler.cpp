@@ -52,7 +52,7 @@ bool Handle_PKT_SC_LOGIN(ServerSessionPtr& session, protocol::ReturnLogin& packe
 bool Handle_PKT_SC_ENTER_GAME(ServerSessionPtr& session, protocol::ReturnEnterGame& packet)
 {
 	//#TODO Spawn In Game
-	printf("[INFO] ME=%d, NewPlayer=%d\n", session->playerId, packet.playerid());
+	printf("[INFO] NewPlayer=%d => ME=%d\n", packet.playerid(), session->playerId);
 
 	session->state = SessionState::ENTER_GAME;
 	return true;

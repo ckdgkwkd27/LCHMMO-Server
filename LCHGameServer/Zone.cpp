@@ -37,6 +37,7 @@ void Zone::BroadCast(ActorPtr _selfPlayer, CircularBufferPtr _sendBuffer)
 		_player = std::dynamic_pointer_cast<Player>(_actor);
 		if (_player != nullptr && _player != _selfPlayer)
 		{
+			printf("self=%d => other=%d\n", _selfPlayer->actorId, _player->playerId);
 			_player->ownerSession->PostSend(_sendBuffer);
 		}
 	}
