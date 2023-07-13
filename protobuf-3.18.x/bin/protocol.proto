@@ -20,7 +20,8 @@ message RequestEnterGame
 
 message ReturnEnterGame
 {
-	bool success = 1;
+	uint64 actorId = 1;
+	uint64 playerId = 2;
 }
 
 message RequestChat

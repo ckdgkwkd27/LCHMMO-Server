@@ -29,6 +29,8 @@ private:
 	uint32 bufferSize = 0;
 	uint32 readPos = 0;
 	uint32 writePos = 0;
+
+private:
 	std::vector<char> buffer;
 };
 

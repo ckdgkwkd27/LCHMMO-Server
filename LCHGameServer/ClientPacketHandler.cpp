@@ -42,7 +42,7 @@ bool Handle_PKT_CS_LOGIN(ClientSessionPtr& session, protocol::RequestLogin& pack
     //#TODO: DB Login Check하고 Pass, Fail 통보
 
     auto _player = GPlayerManager.NewPlayer();
-    _player->actorID = GZoneManager.IssueActorID();
+    _player->actorId = GZoneManager.IssueActorID();
     _player->ownerSession = session;
     session->currentPlayer = _player;
 
@@ -69,27 +69,10 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
         return false;
 
     protocol::ReturnEnterGame ReturnPkt;
-    ReturnPkt.set_success(true);
+    ReturnPkt.set_actorid(player->actorId);
+    ReturnPkt.set_playerid(player->playerId);
     auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(ReturnPkt);
-
-    zone->actorLock.lock();
-    for (auto& actor : zone->actorVector)
-    {
-        if (actor == nullptr)
-            ASSERT_CRASH(false);
-
-        if(actor->actorID == player->actorID)
-            continue;
-
-        //DEBUG
-		if (static_cast<LONG>(_sendBuffer->DataSize()) == 0)
-		{
-			std::cout << "DataSize = 0" << std::endl;
-		}
-        PlayerPtr _player = std::dynamic_pointer_cast<Player>(actor);
-        _player->ownerSession->PostSend(_sendBuffer);
-    }
-    zone->actorLock.unlock();
+    zone->BroadCast(player, _sendBuffer);
 
     std::cout << "[INFO] ReturnEnterGame Packet Send Socket=" << session->GetSocket() << ", PlayerID=" << packet.playerid() << std::endl;
     return false;

@@ -23,5 +23,5 @@ public:
 
 public:
 	uint8 state = NONE;
-	uint32 playerID;
+	uint32 playerId;
 };

@@ -51,7 +51,7 @@ bool ZoneManager::RegisterActor(ZoneIDType _zoneID, ActorPtr _actor)
 	}
 
 	//이미 액터가 존재
-	if (nullptr != (*it)->FindActor(_actor->actorID))
+	if (nullptr != (*it)->FindActor(_actor->actorId))
 	{
 		return false;
 	}

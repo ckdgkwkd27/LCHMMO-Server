@@ -39,7 +39,7 @@ bool Handle_PKT_SC_LOGIN(ServerSessionPtr& session, protocol::ReturnLogin& packe
 		return false;
 	
 	std::cout << "[INFO] Login Completed PlayerID: " << packet.playerid() << std::endl;
-	session->playerID = packet.playerid();
+	session->playerId = packet.playerid();
 	session->state = SessionState::LOGIN;
 
 	protocol::RequestEnterGame RequestPkt;
@@ -52,7 +52,7 @@ bool Handle_PKT_SC_LOGIN(ServerSessionPtr& session, protocol::ReturnLogin& packe
 bool Handle_PKT_SC_ENTER_GAME(ServerSessionPtr& session, protocol::ReturnEnterGame& packet)
 {
 	//#TODO Spawn In Game
-	std::cout << "[SPAWN] Socket=" << session->GetSocket() << std::endl;
+	printf("[INFO] ME=%d, NewPlayer=%d\n", session->playerId, packet.playerid());
 
 	session->state = SessionState::ENTER_GAME;
 	return true;

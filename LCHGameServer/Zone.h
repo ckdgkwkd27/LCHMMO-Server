@@ -7,6 +7,7 @@ class Zone
 public:
 	void RegisterActor(ActorPtr _actor);
 	ActorPtr FindActor(ActorIDType _actorID);
+	void BroadCast(ActorPtr _selfPlayer, CircularBufferPtr _sendBuffer);
 
 public:
 	ZoneIDType zoneID;

@@ -20,7 +20,7 @@ class Actor
 public:
 	virtual ~Actor() {}
 public:
-	ActorIDType actorID;
+	ActorIDType actorId;
 	PositionType position;
 	RotationType rotation;
 };
