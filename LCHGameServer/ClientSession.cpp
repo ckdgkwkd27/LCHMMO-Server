@@ -18,11 +18,6 @@ void ClientSession::OnDisconnected()
 	GSessionManager.DeleteFromActivePool(shared_from_this());
 }
 
-void ClientSession::OnSend(uint32 len)
-{
-	//std::cout << "OnSend() Len=" << len << std::endl;
-}
-
 uint32 ClientSession::OnRecv(char* buffer, uint32 len)
 {
 	uint32 processLen = 0;

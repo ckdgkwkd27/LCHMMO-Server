@@ -23,11 +23,6 @@ void ServerSession::OnDisconnected()
 	ASSERT_CRASH(false);
 }
 
-void ServerSession::OnSend(uint32 len)
-{
-	//std::cout << "[INFO] Send Bytes=" << len << std::endl;
-}
-
 uint32 ServerSession::OnRecv(char* buffer, uint32 len)
 {
 	uint32 processLen = 0;

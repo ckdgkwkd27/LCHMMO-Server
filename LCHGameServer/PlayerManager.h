@@ -7,7 +7,7 @@ public:
 	void Initialize(uint64 maxSize = MAX_PLAYER);
 	PlayerPtr NewPlayer();
 	void DeletePlayer(PlayerPtr _player);
-	PlayerPtr FindPlayerByID(uint32 playerID);
+	PlayerPtr FindPlayerByID(PlayerIDType playerID);
 	PlayerPtr FindPlayerByName(std::string _name);
 
 private:

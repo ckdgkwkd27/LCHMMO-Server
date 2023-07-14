@@ -14,6 +14,8 @@ public:
 	std::vector<ActorPtr> actorVector;
 	uint32 xMax;
 	uint32 yMax;
+
+private:
 	RecursiveMutex actorLock;
 };
 

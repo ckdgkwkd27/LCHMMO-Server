@@ -40,7 +40,7 @@ void PlayerManager::DeletePlayer(PlayerPtr _player)
 	ReturnPlayer(_player);
 }
 
-PlayerPtr PlayerManager::FindPlayerByID(uint32 playerID)
+PlayerPtr PlayerManager::FindPlayerByID(PlayerIDType playerID)
 {
 	for (auto& info : AllPlayerInfo)
 	{

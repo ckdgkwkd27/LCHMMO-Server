@@ -33,6 +33,7 @@ void ZoneManager::RegisterZone(ZonePtr _zone)
 bool ZoneManager::RegisterActor(ZoneIDType _zoneID, ActorPtr _actor)
 {
 	LockGuard guard(zoneLock);
+
 	ZonePtr _zone = nullptr;
 	auto it = zoneVector.begin();
 	for (; it != zoneVector.end(); it++)

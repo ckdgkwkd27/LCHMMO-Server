@@ -9,7 +9,7 @@ int main()
 {
     ServerPacketHandler::Init();
 
-    IocpManager* iocpManager = new IocpManager(L"127.0.0.1", 7777, 3);
+    IocpManager* iocpManager = new IocpManager(L"127.0.0.1", 7777, 10);
     iocpManager->Initialize();
     iocpManager->StartConnect<ServerSession>();
     iocpManager->StartWorker();

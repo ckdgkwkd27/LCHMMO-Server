@@ -18,10 +18,9 @@ public:
 	virtual void OnAccepted();
 	virtual void OnConnected();
 	virtual void OnDisconnected();
-	virtual void OnSend(uint32 len);
 	virtual uint32 OnRecv(char* buffer, uint32 len);
 
 public:
 	uint8 state = NONE;
-	uint32 playerId;
+	uint64 playerId;
 };

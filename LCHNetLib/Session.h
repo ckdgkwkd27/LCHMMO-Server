@@ -56,7 +56,6 @@ public:
 	virtual void OnAccepted() {}
 	virtual void OnConnected() {}
 	virtual void OnDisconnected() {}
-	virtual void OnSend(uint32 len) { len = 0; }
 	virtual uint32 OnRecv(char* buffer, uint32 len) { buffer = nullptr; return len; }
 };
 

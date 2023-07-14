@@ -52,7 +52,7 @@ bool Handle_PKT_SC_LOGIN(ServerSessionPtr& session, protocol::ReturnLogin& packe
 bool Handle_PKT_SC_ENTER_GAME(ServerSessionPtr& session, protocol::ReturnEnterGame& packet)
 {
 	//#TODO Spawn In Game
-	printf("[INFO] NewPlayer=%d => ME=%d\n", packet.playerid(), session->playerId);
+	printf("[INFO] NewPlayer=%lld => ME=%lld\n", packet.playerid(), session->playerId);
 
 	session->state = SessionState::ENTER_GAME;
 	return true;
@@ -62,6 +62,3 @@ bool Handle_PKT_SC_CHAT(ServerSessionPtr& session, protocol::ReturnChat& packet)
 {
 	return false;
 }
-
-//Session State는 서버의 상태값이니까 전혀 의미가 없는거 아닐까?
-//이전에 SendBuffer를 지워버려서 의미 없어지는건가?

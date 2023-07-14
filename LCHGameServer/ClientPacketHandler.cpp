@@ -59,35 +59,33 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
     if (session->currentPlayer->playerId != packet.playerid())
         return false;
 
-    //Zone Spawn
-    PlayerPtr player = GPlayerManager.FindPlayerByID(packet.playerid());
-    if (false == GZoneManager.RegisterActor(0, player))
-        return false;
+    {
+		LockGuard guard(GZoneManager.zoneLock);
 
-    printf("{DEBUG} Player Register %d\n", player->playerId);
-    //BroadCast
-    auto zone = GZoneManager.FindZoneByID(0);
-    if (zone == nullptr)
-        return false;
+        //Zone Spawn
+        PlayerPtr player = GPlayerManager.FindPlayerByID(packet.playerid());
+        if (false == GZoneManager.RegisterActor(0, player))
+            return false;
 
-    protocol::ReturnEnterGame ReturnPkt;
-    ReturnPkt.set_actorid(player->actorId);
-    ReturnPkt.set_playerid(player->playerId);
-    auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(ReturnPkt);
-    zone->BroadCast(player, _sendBuffer);
+        //BroadCast
+        auto zone = GZoneManager.FindZoneByID(0);
+        if (zone == nullptr)
+            return false;
 
-    //#TODO
-    /*
-    * 0 -> 1 // 1 -> 0 과 같이 통보순서가 이상한 문제 해결해야 함
-    */
+        protocol::ReturnEnterGame ReturnPkt;
+        ReturnPkt.set_actorid(player->actorId);
+        ReturnPkt.set_playerid(player->playerId);
+        auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(ReturnPkt);
+        zone->BroadCast(player, _sendBuffer);
+    }
 
     std::cout << "[INFO] ReturnEnterGame Packet Send Socket=" << session->GetSocket() << ", PlayerID=" << packet.playerid() << std::endl;
-    return false;
+    return true;
 }
 
 bool Handle_PKT_CS_CHAT(ClientSessionPtr& session, protocol::RequestChat& packet)
 {
     session->GetSocket();
     packet.msg();
-    return false;
+    return true;
 }

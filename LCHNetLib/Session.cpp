@@ -201,7 +201,7 @@ bool Session::ProcessSend(int32 bytes)
         return true;
     }
 
-    OnSend(bytes);
+    //OnSend(bytes);
     return true;
 }
 

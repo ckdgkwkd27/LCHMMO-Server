@@ -17,7 +17,7 @@ public:
 	std::shared_ptr<ObjectPool<Zone>> zonePool;
 	uint32 numOfActors;
 
-private:
+public:
 	RecursiveMutex zoneLock;
 };
 

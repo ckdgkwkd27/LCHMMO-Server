@@ -1,5 +1,5 @@
 #pragma once
-using ActorIDType = uint32;
+using ActorIDType = uint64;
 
 struct PositionType
 {

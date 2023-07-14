@@ -1,11 +1,13 @@
 #pragma once
 #include "Actor.h"
+using PlayerIDType = uint64;
+
 class ClientSession;
 
 class Player : public Actor
 {
 public:
-	uint32 playerId;
+	PlayerIDType playerId;
 	std::string name;
 	std::shared_ptr<ClientSession> ownerSession;
 };
