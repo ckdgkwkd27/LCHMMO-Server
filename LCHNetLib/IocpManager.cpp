@@ -16,13 +16,13 @@ void IocpManager::Initialize()
 	workerThreads.resize(workerThreadsCnt);
 
 	iocpHandle = CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, 0);
-	ASSERT_CRASH(iocpHandle != NULL);
+	CRASH_ASSERT(iocpHandle != NULL);
 
 	listenSocket = SocketUtil::CreateListenSocket();
 	HANDLE _handle = CreateIoCompletionPort((HANDLE)listenSocket, iocpHandle, 0, 0);
 	if (_handle != iocpHandle)
 	{
-		ASSERT_CRASH(false);
+		CRASH_ASSERT(false);
 	}
 
 	std::cout << "[INFO] IOCP Initialization Success.." << std::endl;
@@ -115,7 +115,7 @@ void IocpManager::WorkerThreadFunc()
 		ULONG_PTR key;
 		IocpEvent* iocpEvent = nullptr;
 		bool ret = GetQueuedCompletionStatus(iocpHandle, &bytes, &key, reinterpret_cast<LPOVERLAPPED*>(&iocpEvent), INFINITE);
-		ASSERT_CRASH(iocpEvent != NULL);
+		CRASH_ASSERT(iocpEvent != NULL);
 
 		if (ret == false)
 		{

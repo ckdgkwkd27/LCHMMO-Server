@@ -92,7 +92,7 @@ void SessionManager::ReturnSession(SessionPtr _session)
 void SessionManager::AddToActivePool(SessionPtr _session)
 {
     LockGuard lockGuard(sessionLock);
-    ASSERT_CRASH((_session != nullptr));
+    CRASH_ASSERT((_session != nullptr));
 
     activeSessions.push_back(_session);
 }
@@ -100,6 +100,6 @@ void SessionManager::AddToActivePool(SessionPtr _session)
 void SessionManager::DeleteFromActivePool(SessionPtr _session)
 {
     LockGuard lockGuard(sessionLock);
-    ASSERT_CRASH((_session != nullptr));
-    ASSERT_CRASH((activeSessions.end() != std::find(activeSessions.begin(), activeSessions.end(), _session)));
+    CRASH_ASSERT((_session != nullptr));
+    CRASH_ASSERT((activeSessions.end() != std::find(activeSessions.begin(), activeSessions.end(), _session)));
 }

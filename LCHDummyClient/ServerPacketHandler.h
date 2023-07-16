@@ -37,13 +37,13 @@ public:
 
 		CircularBufferPtr sendBuffer = std::make_shared<CircularBuffer>(MAX_BUFFER_SIZE);
 		if (sendBuffer == nullptr)
-			ASSERT_CRASH(false);
+			CRASH_ASSERT(false);
 
 		PacketHeader* header = reinterpret_cast<PacketHeader*>(sendBuffer->data());
 		header->size = packetSize;
 		header->id = PacketID;
-		ASSERT_CRASH(pkt.SerializeToArray(&header[1], dataSize));
-		ASSERT_CRASH(sendBuffer->OnWrite(packetSize) != false);
+		CRASH_ASSERT(pkt.SerializeToArray(&header[1], dataSize));
+		CRASH_ASSERT(sendBuffer->OnWrite(packetSize) != false);
 		return sendBuffer;
 	}
 

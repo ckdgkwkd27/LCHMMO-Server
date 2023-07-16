@@ -109,7 +109,7 @@ bool SocketUtil::SetOptionKeepAlive(SOCKET _socket, bool flag)
 
 SOCKET SocketUtil::CreateListenSocket()
 {
-    ASSERT_CRASH(Init() == true);
+    CRASH_ASSERT(Init() == true);
 
     SOCKET _listenSocket = CreateSocket();
     SetOptionKeepAlive(_listenSocket, true);

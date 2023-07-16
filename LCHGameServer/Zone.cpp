@@ -8,7 +8,7 @@ void Zone::RegisterActor(ActorPtr _actor)
 	LockGuard guard(actorLock);
 
 	if(_actor == nullptr)
-		ASSERT_CRASH(false);
+		CRASH_ASSERT(false);
 	actorVector.push_back(_actor);
 }
 
@@ -18,7 +18,7 @@ ActorPtr Zone::FindActor(ActorIDType _actorID)
 
 	auto it = std::find_if(actorVector.begin(), actorVector.end(), [_actorID](ActorPtr _actor)
 		{
-			if (_actor == nullptr) ASSERT_CRASH(false);
+			if (_actor == nullptr) CRASH_ASSERT(false);
 			return _actor->actorId == _actorID;
 		});
 	if (it == actorVector.end())

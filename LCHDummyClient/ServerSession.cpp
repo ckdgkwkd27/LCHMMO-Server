@@ -20,7 +20,8 @@ void ServerSession::OnConnected()
 
 void ServerSession::OnDisconnected()
 {
-	ASSERT_CRASH(false);
+	//CRASH_ASSERT(false);
+	CRASH_ASSERT(false);
 }
 
 uint32 ServerSession::OnRecv(char* buffer, uint32 len)

@@ -22,7 +22,6 @@
 #include <chrono>
 #include <time.h>
 #include <stack>
-
 #include <thread>
 #include <mutex>
 #include <atomic>
@@ -32,5 +31,6 @@
 
 #include "Types.h"
 #include "Macro.h"
+#include "Global.h"
 
 using namespace std::chrono;

@@ -38,6 +38,12 @@
     <ClInclude Include="IocpManager.h">
       <Filter>Network\IOCP</Filter>
     </ClInclude>
+    <ClInclude Include="DumpUtil.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Global.h">
+      <Filter>Primitive</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SocketUtil.cpp">
@@ -73,6 +79,12 @@
     </ClCompile>
     <ClCompile Include="IocpManager.cpp">
       <Filter>Network\IOCP</Filter>
+    </ClCompile>
+    <ClCompile Include="DumpUtil.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Global.cpp">
+      <Filter>Primitive</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

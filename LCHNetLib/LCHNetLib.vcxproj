@@ -148,6 +148,8 @@
   <ItemGroup>
     <ClInclude Include="Acceptor.h" />
     <ClInclude Include="CircularBuffer.h" />
+    <ClInclude Include="DumpUtil.h" />
+    <ClInclude Include="Global.h" />
     <ClInclude Include="Includes.h" />
     <ClInclude Include="IocpCore.h" />
     <ClInclude Include="IocpEvent.h" />
@@ -163,6 +165,8 @@
   <ItemGroup>
     <ClCompile Include="Acceptor.cpp" />
     <ClCompile Include="CircularBuffer.cpp" />
+    <ClCompile Include="DumpUtil.cpp" />
+    <ClCompile Include="Global.cpp" />
     <ClCompile Include="IocpCore.cpp" />
     <ClCompile Include="IocpEvent.cpp" />
     <ClCompile Include="IocpObject.cpp" />
