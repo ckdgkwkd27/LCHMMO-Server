@@ -24,3 +24,5 @@ public:
 
 	static LONG WINAPI execptionFilter(struct _EXCEPTION_POINTERS* exceptionInfo);
 };
+
+extern DumpUtil GDumpUtil;

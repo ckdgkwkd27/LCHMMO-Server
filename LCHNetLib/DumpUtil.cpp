@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "DumpUtil.h"
 
+DumpUtil GDumpUtil;
+
 DumpUtil::DumpUtil()
 {
 	::SetUnhandledExceptionFilter(execptionFilter);
@@ -58,5 +60,3 @@ LONG WINAPI DumpUtil::execptionFilter(struct _EXCEPTION_POINTERS* exceptionInfo)
 
 	return EXCEPTION_CONTINUE_SEARCH;
 }
-
-static DumpUtil minidump;

@@ -6,6 +6,7 @@
 *.userosscache
 
 # Files built by Visual Studio
+*.dmp
 *_i.c
 *_p.c
 *_h.h
