@@ -20,7 +20,7 @@ void SessionManager::Broadcast(CircularBufferPtr _sendBuffer)
 
 bool SessionManager::AcceptClientSession(uint32 maxSessionCnt)
 {
-    while (GetIssueCount() < maxSessionCnt)
+    while (issueCnt < maxSessionCnt)
     {
         SessionPtr _session = IssueSession();
         if (_session == nullptr)
@@ -39,7 +39,7 @@ bool SessionManager::AcceptClientSession(uint32 maxSessionCnt)
 
 bool SessionManager::ConnectServerSession(uint32 maxSessionCnt, Wstring connIp, uint32 connPort)
 {
-    while (GetIssueCount() < maxSessionCnt)
+    while (issueCnt < maxSessionCnt)
     {
         SessionPtr _session = IssueSession();
         if (_session == nullptr)
@@ -60,6 +60,11 @@ bool SessionManager::ConnectServerSession(uint32 maxSessionCnt, Wstring connIp, 
 SessionPtr SessionManager::IssueSession()
 {
     LockGuard lockGuard(sessionLock);
+    if (sessionPool.size() == 0)
+    {
+        return nullptr;
+    }
+
     issueCnt++;
 
     SessionPtr _session = sessionPool.back();
