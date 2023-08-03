@@ -31,9 +31,9 @@ void IocpManager::Initialize()
 
 void IocpManager::BindAndListen()
 {
-	SocketUtil::Bind(listenSocket, ip, port);
+	SocketUtil::BindAnyAddress(listenSocket, port);
 	SocketUtil::Listen(listenSocket);
-	std::cout << "[INFO] Server Listen Start.." << std::endl;
+	std::wcout << L"[INFO] Server Listen Start IP=" << ip << L", port=" << port << std::endl;
 }
 
 bool IocpManager::StartWorker()
@@ -69,35 +69,34 @@ void IocpManager::AcceptThreadFunc()
 
 void IocpManager::Dispatch(IocpEvent* iocpEvent, DWORD bytes)
 {
+	SessionPtr _session = iocpEvent->sessionRef;
+	CRASH_ASSERT(_session != nullptr);
+
 	switch (iocpEvent->GetType())
 	{
 	case EventType::ACCEPT:
 	{
-		SessionPtr _session = iocpEvent->sessionRef;
+		std::cout << "ACCEPT!!" << std::endl;
 		_session->ProcessAccept();
 		break;
 	}
 	case EventType::CONNECT:
 	{
-		SessionPtr _session = iocpEvent->sessionRef;
 		_session->ProcessConnect();
 		break;
 	}
 	case EventType::DISCONNECT:
 	{
-		SessionPtr _session = iocpEvent->sessionRef;
 		_session->ProcessDisconnect();
 		break;
 	}
 	case EventType::SEND:
 	{
-		SessionPtr _session = iocpEvent->sessionRef;
 		_session->ProcessSend(bytes);
 		break;
 	}
 	case EventType::RECV:
 	{
-		SessionPtr _session = iocpEvent->sessionRef;
 		_session->ProcessRecv(bytes);
 		break;
 	}
@@ -116,10 +115,11 @@ void IocpManager::WorkerThreadFunc()
 		IocpEvent* iocpEvent = nullptr;
 		bool ret = GetQueuedCompletionStatus(iocpHandle, &bytes, &key, reinterpret_cast<LPOVERLAPPED*>(&iocpEvent), INFINITE);
 		CRASH_ASSERT(iocpEvent != NULL);
+		CRASH_ASSERT(iocpEvent != INVALID_HANDLE_VALUE);
 
 		if (ret == false)
 		{
-			int32 errCode = WSAGetLastError();
+			int32 errCode = GetLastError();
 			switch (errCode)
 			{
 			case WAIT_TIMEOUT:
@@ -128,8 +128,8 @@ void IocpManager::WorkerThreadFunc()
 			case ERROR_NETNAME_DELETED:
 				break;
 			default:
-				std::cout << "[FAIL] GQCS ErrorCode: " << WSAGetLastError() << std::endl;
-				Dispatch(iocpEvent, bytes);
+				std::cout << "[FAIL] GQCS ErrorCode: " << errCode << std::endl;
+				//Dispatch(iocpEvent, bytes);
 				break;
 			}
 		}

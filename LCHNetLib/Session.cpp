@@ -79,12 +79,15 @@ bool Session::PostRecv()
 
 bool Session::PostAccept()
 {
-	sessionAcceptEvent.sessionRef = shared_from_this();
-    sessionAcceptEvent.Init();
+	//sessionAcceptEvent.sessionRef = shared_from_this();
+    //sessionAcceptEvent.Init();
+    AcceptEvent* _acceptEvent = new AcceptEvent();
+    _acceptEvent->sessionRef = shared_from_this();
+    _acceptEvent->Init();
 
 	DWORD bytes = 0;
 	if (false == AcceptEx(listenSocket, sessionSocket, AcceptBuffer, 0, sizeof(SOCKADDR_IN) + 16, sizeof(SOCKADDR_IN) + 16,
-		&bytes, static_cast<LPOVERLAPPED>(&sessionAcceptEvent)))
+		&bytes, static_cast<LPOVERLAPPED>(_acceptEvent)))
 	{
 		const INT32 errCode = WSAGetLastError();
 		if (errCode != WSA_IO_PENDING)

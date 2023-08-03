@@ -37,8 +37,6 @@ bool HandleInvalid(ClientSessionPtr& session, char* buffer, uint32 len)
 
 bool Handle_PKT_CS_LOGIN(ClientSessionPtr& session, protocol::RequestLogin& packet)
 {
-    std::cout << "[INFO] Handle Login! Socket= " << session->GetSocket() << ", ID=" << packet.id() << ", Password=" << packet.password() << std::endl;
-    
     //#TODO: DB Login Check하고 Pass, Fail 통보
 
     auto _player = GPlayerManager.NewPlayer();
@@ -51,6 +49,8 @@ bool Handle_PKT_CS_LOGIN(ClientSessionPtr& session, protocol::RequestLogin& pack
     ReturnPkt.set_success(true);
     auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(ReturnPkt);
     session->PostSend(_sendBuffer);
+
+    std::cout << "[INFO] Handle Login! Socket= " << session->GetSocket() << ", ID=" << packet.id() << ", Password=" << packet.password() << std::endl;
     return true;
 }
 
@@ -76,7 +76,8 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
         ReturnPkt.set_actorid(player->actorId);
         ReturnPkt.set_playerid(player->playerId);
         auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(ReturnPkt);
-        zone->BroadCast(player, _sendBuffer);
+        //zone->BroadCast(player, _sendBuffer); Zone에 player 넣었지만 없을수도
+        session->PostSend(_sendBuffer);
     }
 
     std::cout << "[INFO] ReturnEnterGame Packet Send Socket=" << session->GetSocket() << ", PlayerID=" << packet.playerid() << std::endl;

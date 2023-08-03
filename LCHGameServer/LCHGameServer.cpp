@@ -17,8 +17,8 @@ int main()
     IocpManager* iocpManager = new IocpManager(L"127.0.0.1", 7777, 20);
     iocpManager->Initialize();
     iocpManager->BindAndListen();
-    iocpManager->StartAccept<ClientSession>();
     iocpManager->StartWorker();
+    iocpManager->StartAccept<ClientSession>();
 
     while (true)
     {
