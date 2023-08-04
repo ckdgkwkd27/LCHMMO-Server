@@ -74,7 +74,9 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
 
         protocol::ReturnEnterGame ReturnPkt;
         ReturnPkt.set_actorid(player->actorId);
-        ReturnPkt.set_playerid(player->playerId);
+        ReturnPkt.set_zoneid(0);
+        ReturnPkt.set_posx(0);
+        ReturnPkt.set_posy(0);
         auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(ReturnPkt);
         //zone->BroadCast(player, _sendBuffer); Zone에 player 넣었지만 없을수도
         session->PostSend(_sendBuffer);

@@ -21,7 +21,9 @@ message RequestEnterGame
 message ReturnEnterGame
 {
 	uint64 actorId = 1;
-	uint64 playerId = 2;
+	uint32 zoneId= 2;
+	uint32 posX = 3;
+	uint32 posY = 4;
 }
 
 message RequestChat
@@ -38,4 +40,8 @@ message ReturnChat
 message RequestMove
 {
 
+}
+
+message ReturnMove
+{
 }
