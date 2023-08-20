@@ -76,7 +76,6 @@ void IocpManager::Dispatch(IocpEvent* iocpEvent, DWORD bytes)
 	{
 	case EventType::ACCEPT:
 	{
-		std::cout << "ACCEPT!!" << std::endl;
 		_session->ProcessAccept();
 		break;
 	}

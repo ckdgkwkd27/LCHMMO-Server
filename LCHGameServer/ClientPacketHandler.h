@@ -13,6 +13,7 @@ enum : uint16
 	PKT_SC_LOGIN,
 	PKT_CS_ENTER_GAME,
 	PKT_SC_ENTER_GAME,
+	PKT_SC_SPAWN,
 	PKT_CS_CHAT,
 	PKT_SC_CHAT
 };
@@ -29,6 +30,7 @@ public:
 	static bool HandlePacket(ClientSessionPtr session, char* buffer, uint32 len);
 	static CircularBufferPtr MakeSendBufferPtr(protocol::ReturnLogin& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_LOGIN); }
 	static CircularBufferPtr MakeSendBufferPtr(protocol::ReturnEnterGame& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_ENTER_GAME); }
+	static CircularBufferPtr MakeSendBufferPtr(protocol::NotifySpawn& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_ENTER_GAME); }
 
 	template<typename T>
 	static CircularBufferPtr MakeSendBufferPtr(T& pkt, uint16 PacketID)

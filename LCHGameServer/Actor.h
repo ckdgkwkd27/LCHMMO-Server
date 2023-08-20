@@ -1,6 +1,22 @@
 #pragma once
 using ActorIDType = uint64;
 
+enum class ObjectType : uint32
+{
+	NONE = 0,
+	PLAYER,
+	MONSTER,
+	PROJECTILE
+};
+
+enum class MoveState : uint32
+{
+	IDLE = 0,
+	MOVING = 1,
+	SKILL = 2,
+	DEAD = 3,
+};
+
 struct PositionType
 {
 	int32 X;

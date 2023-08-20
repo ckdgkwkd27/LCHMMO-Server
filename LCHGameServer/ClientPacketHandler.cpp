@@ -50,7 +50,7 @@ bool Handle_PKT_CS_LOGIN(ClientSessionPtr& session, protocol::RequestLogin& pack
     auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(ReturnPkt);
     session->PostSend(_sendBuffer);
 
-    std::cout << "[INFO] Handle Login! Socket= " << session->GetSocket() << ", ID=" << packet.id() << ", Password=" << packet.password() << std::endl;
+    std::cout << "[INFO] Handle Login! Socket=" << session->GetSocket() << ", ID=" << packet.id() << ", Password=" << packet.password() << std::endl;
     return true;
 }
 
@@ -72,14 +72,41 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
         if (zone == nullptr)
             return false;
 
+
         protocol::ReturnEnterGame ReturnPkt;
-        ReturnPkt.set_actorid(player->actorId);
+        ReturnPkt.mutable_myplayer()->set_objecttype((uint32)ObjectType::PLAYER);
+        ReturnPkt.mutable_myplayer()->set_actorid(player->actorId);
+        ReturnPkt.mutable_myplayer()->set_name(std::string("Player_") + std::to_string(player->playerId));
+        ReturnPkt.mutable_myplayer()->mutable_posinfo()->set_state((uint32)MoveState::IDLE);
+        ReturnPkt.mutable_myplayer()->mutable_posinfo()->set_posx(0);
+        ReturnPkt.mutable_myplayer()->mutable_posinfo()->set_posy(0);
+        ReturnPkt.mutable_myplayer()->mutable_statinfo()->set_level(1);
+        ReturnPkt.mutable_myplayer()->mutable_statinfo()->set_hp(100);
+        ReturnPkt.mutable_myplayer()->mutable_statinfo()->set_maxhp(100);
+        ReturnPkt.mutable_myplayer()->mutable_statinfo()->set_attack(5);
+        ReturnPkt.mutable_myplayer()->mutable_statinfo()->set_speed(10);
+        ReturnPkt.mutable_myplayer()->mutable_statinfo()->set_totalexp(0);
         ReturnPkt.set_zoneid(0);
-        ReturnPkt.set_posx(0);
-        ReturnPkt.set_posy(0);
         auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(ReturnPkt);
-        //zone->BroadCast(player, _sendBuffer); Zone에 player 넣었지만 없을수도
         session->PostSend(_sendBuffer);
+
+        //나를 제외한 사람들에겐 Spawn Packet Send
+        protocol::NotifySpawn SpawnPkt;
+        protocol::ObjectInfo* playerInfo = SpawnPkt.add_objects();
+		playerInfo->set_objecttype((uint32)ObjectType::PLAYER);
+		playerInfo->set_actorid(player->actorId);
+		playerInfo->set_name(std::string("Player_") + std::to_string(player->playerId));
+		playerInfo->mutable_posinfo()->set_state((uint32)MoveState::IDLE);
+		playerInfo->mutable_posinfo()->set_posx(0);
+		playerInfo->mutable_posinfo()->set_posy(0);
+		playerInfo->mutable_statinfo()->set_level(1);
+		playerInfo->mutable_statinfo()->set_hp(100);
+		playerInfo->mutable_statinfo()->set_maxhp(100);
+		playerInfo->mutable_statinfo()->set_attack(5);
+		playerInfo->mutable_statinfo()->set_speed(10);
+		playerInfo->mutable_statinfo()->set_totalexp(0);
+        auto _broadCastBuffer = ClientPacketHandler::MakeSendBufferPtr(SpawnPkt);
+        zone->BroadCast(player, _broadCastBuffer);
     }
 
     std::cout << "[INFO] ReturnEnterGame Packet Send Socket=" << session->GetSocket() << ", PlayerID=" << packet.playerid() << std::endl;
