@@ -40,7 +40,19 @@ bool Handle_PKT_CS_LOGIN(ClientSessionPtr& session, protocol::RequestLogin& pack
     //#TODO: DB Login Check하고 Pass, Fail 통보
 
     auto _player = GPlayerManager.NewPlayer();
-    _player->actorId = GZoneManager.IssueActorID();
+    _player->ActorInfo.set_objecttype((uint32)ObjectType::PLAYER);
+    _player->ActorInfo.set_actorid(GZoneManager.IssueActorID());
+    _player->ActorInfo.set_name("Player" + std::to_string(_player->playerId));
+    _player->ActorInfo.mutable_posinfo()->set_state((uint32)MoveState::IDLE);
+    _player->ActorInfo.mutable_posinfo()->set_posx(0);
+    _player->ActorInfo.mutable_posinfo()->set_posy(0);
+    _player->ActorInfo.mutable_statinfo()->set_level(1);
+    _player->ActorInfo.mutable_statinfo()->set_hp(100);
+    _player->ActorInfo.mutable_statinfo()->set_maxhp(100);
+    _player->ActorInfo.mutable_statinfo()->set_attack(5);
+    _player->ActorInfo.mutable_statinfo()->set_speed(10);
+    _player->ActorInfo.mutable_statinfo()->set_totalexp(0);
+
     _player->ownerSession = session;
     session->currentPlayer = _player;
 
@@ -72,41 +84,39 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
         if (zone == nullptr)
             return false;
 
+        //Player 게임입장
+		{
+			protocol::ReturnEnterGame ReturnPkt;
+            ReturnPkt.mutable_myplayer()->CopyFrom(player->ActorInfo);
+			ReturnPkt.set_zoneid(0);
+			auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(ReturnPkt);
+			session->PostSend(_sendBuffer);
+		}
 
-        protocol::ReturnEnterGame ReturnPkt;
-        ReturnPkt.mutable_myplayer()->set_objecttype((uint32)ObjectType::PLAYER);
-        ReturnPkt.mutable_myplayer()->set_actorid(player->actorId);
-        ReturnPkt.mutable_myplayer()->set_name(std::string("Player_") + std::to_string(player->playerId));
-        ReturnPkt.mutable_myplayer()->mutable_posinfo()->set_state((uint32)MoveState::IDLE);
-        ReturnPkt.mutable_myplayer()->mutable_posinfo()->set_posx(0);
-        ReturnPkt.mutable_myplayer()->mutable_posinfo()->set_posy(0);
-        ReturnPkt.mutable_myplayer()->mutable_statinfo()->set_level(1);
-        ReturnPkt.mutable_myplayer()->mutable_statinfo()->set_hp(100);
-        ReturnPkt.mutable_myplayer()->mutable_statinfo()->set_maxhp(100);
-        ReturnPkt.mutable_myplayer()->mutable_statinfo()->set_attack(5);
-        ReturnPkt.mutable_myplayer()->mutable_statinfo()->set_speed(10);
-        ReturnPkt.mutable_myplayer()->mutable_statinfo()->set_totalexp(0);
-        ReturnPkt.set_zoneid(0);
-        auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(ReturnPkt);
-        session->PostSend(_sendBuffer);
+        //Player에게 다른사람을 알린다
+		{
+			protocol::NotifySpawn SpawnPkt;
+			for (auto otherActor : zone->actorVector)
+			{
+				if (otherActor->ActorInfo.objecttype() == (uint32)ObjectType::PLAYER && otherActor->ActorInfo.actorid() != player->ActorInfo.actorid())
+				{
+                    protocol::ObjectInfo* playerInfo = SpawnPkt.add_objects();
+                    *playerInfo = otherActor->ActorInfo;
+				}
+			}
 
-        //나를 제외한 사람들에겐 Spawn Packet Send
-        protocol::NotifySpawn SpawnPkt;
-        protocol::ObjectInfo* playerInfo = SpawnPkt.add_objects();
-		playerInfo->set_objecttype((uint32)ObjectType::PLAYER);
-		playerInfo->set_actorid(player->actorId);
-		playerInfo->set_name(std::string("Player_") + std::to_string(player->playerId));
-		playerInfo->mutable_posinfo()->set_state((uint32)MoveState::IDLE);
-		playerInfo->mutable_posinfo()->set_posx(0);
-		playerInfo->mutable_posinfo()->set_posy(0);
-		playerInfo->mutable_statinfo()->set_level(1);
-		playerInfo->mutable_statinfo()->set_hp(100);
-		playerInfo->mutable_statinfo()->set_maxhp(100);
-		playerInfo->mutable_statinfo()->set_attack(5);
-		playerInfo->mutable_statinfo()->set_speed(10);
-		playerInfo->mutable_statinfo()->set_totalexp(0);
-        auto _broadCastBuffer = ClientPacketHandler::MakeSendBufferPtr(SpawnPkt);
-        zone->BroadCast(player, _broadCastBuffer);
+            auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(SpawnPkt);
+            player->ownerSession->PostSend(_sendBuffer);
+		}
+
+        //다른 사람들에게 Player를 알린다.
+        {
+            protocol::NotifySpawn SpawnPkt;
+            protocol::ObjectInfo* playerInfo = SpawnPkt.add_objects();
+            *playerInfo = player->ActorInfo;
+            auto _broadCastBuffer = ClientPacketHandler::MakeSendBufferPtr(SpawnPkt);
+            zone->BroadCast(player, _broadCastBuffer);
+        }
     }
 
     std::cout << "[INFO] ReturnEnterGame Packet Send Socket=" << session->GetSocket() << ", PlayerID=" << packet.playerid() << std::endl;

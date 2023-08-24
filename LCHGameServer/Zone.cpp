@@ -19,7 +19,7 @@ ActorPtr Zone::FindActor(ActorIDType _actorID)
 	auto it = std::find_if(actorVector.begin(), actorVector.end(), [_actorID](ActorPtr _actor)
 		{
 			if (_actor == nullptr) CRASH_ASSERT(false);
-			return _actor->actorId == _actorID;
+			return _actor->ActorInfo.actorid() == _actorID;
 		});
 	if (it == actorVector.end())
 		return nullptr;
@@ -37,7 +37,8 @@ void Zone::BroadCast(ActorPtr _selfPlayer, CircularBufferPtr _sendBuffer)
 		_player = std::dynamic_pointer_cast<Player>(_actor);
 		if (_player != nullptr && _player != _selfPlayer)
 		{
-			printf("ME=%lld => OTHER=%lld\n", _selfPlayer->actorId, _player->playerId);
+			printf("ME=%lld => OTHER=%lld\n", _selfPlayer->ActorInfo.actorid(), _player->ActorInfo.actorid());
+			printf("_player SOCKET=%lld", _player->ownerSession->GetSocket());
 			_player->ownerSession->PostSend(_sendBuffer);
 		}
 	}
