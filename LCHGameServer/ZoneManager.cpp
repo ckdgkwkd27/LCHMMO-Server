@@ -19,6 +19,7 @@ void ZoneManager::Initialize()
 		_zone->xMax = 100;
 		_zone->yMax = 100;
 		RegisterZone(_zone);
+		_zone->Init();
 	}
 
 	std::cout << "[INFO] Zone Init Completed!" << std::endl;

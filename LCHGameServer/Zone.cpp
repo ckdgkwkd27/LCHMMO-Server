@@ -3,6 +3,13 @@
 #include "Player.h"
 #include "ClientSession.h"
 
+void Zone::Init()
+{
+	zoneMap.LoadMap(zoneID);
+
+	//Spawn Monster or Npc
+}
+
 void Zone::RegisterActor(ActorPtr _actor)
 {
 	LockGuard guard(actorLock);

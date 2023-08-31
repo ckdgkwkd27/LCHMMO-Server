@@ -18,24 +18,13 @@ enum class MoveState : uint32
 	DEAD = 3,
 };
 
-struct PositionType
-{
-	int32 X;
-	int32 Y;
-};
-
-struct RotationType
-{
-	int32 X;
-	int32 Y;
-};
-
 class Actor
 {
 public:
 	virtual ~Actor() {}
 public:
 	protocol::ObjectInfo ActorInfo;
+	uint32 zoneID;
 };
 
 using ActorPtr = std::shared_ptr<Actor>;

@@ -52,6 +52,7 @@ bool Handle_PKT_CS_LOGIN(ClientSessionPtr& session, protocol::RequestLogin& pack
     _player->ActorInfo.mutable_statinfo()->set_attack(5);
     _player->ActorInfo.mutable_statinfo()->set_speed(10);
     _player->ActorInfo.mutable_statinfo()->set_totalexp(0);
+    _player->zoneID = 0;
 
     _player->ownerSession = session;
     session->currentPlayer = _player;
@@ -88,7 +89,7 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
 		{
 			protocol::ReturnEnterGame ReturnPkt;
             ReturnPkt.mutable_myplayer()->CopyFrom(player->ActorInfo);
-			ReturnPkt.set_zoneid(0);
+			ReturnPkt.set_zoneid(player->zoneID);
 			auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(ReturnPkt);
 			session->PostSend(_sendBuffer);
 		}
