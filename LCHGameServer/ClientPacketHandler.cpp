@@ -124,6 +124,19 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
     return true;
 }
 
+bool Handle_PKT_CS_MOVE(ClientSessionPtr& session, protocol::RequestMove& packet)
+{
+    PlayerPtr _player = session->currentPlayer;
+    if(_player == nullptr)
+        return false;
+
+    ZonePtr _zone = GZoneManager.FindZoneByID(_player->zoneID);
+    if (_zone == nullptr)
+        return false;
+
+    return true;
+}
+
 bool Handle_PKT_CS_CHAT(ClientSessionPtr& session, protocol::RequestChat& packet)
 {
     session->GetSocket();

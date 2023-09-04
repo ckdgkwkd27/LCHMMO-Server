@@ -58,11 +58,13 @@ message NotifySpawn
 
 message RequestMove
 {
-
+	PositionInfo posInfo = 1;
 }
 
 message ReturnMove
 {
+	int32 actorId = 1;
+	PositionInfo posInfo = 2;
 }
 
 message RequestDespawn

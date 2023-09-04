@@ -2,6 +2,13 @@
 #include "Zone.h"
 #include "ObjectPool.h"
 
+enum ZoneIDEnum
+{
+	START_ZONE,
+
+	CNT
+};
+
 class ZoneManager
 {
 public:

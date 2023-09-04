@@ -14,7 +14,7 @@ int main()
 
     ClientPacketHandler::Init();
 
-    IocpManager* iocpManager = new IocpManager(L"127.0.0.1", 7777, 20);
+    IocpManager* iocpManager = new IocpManager(L"127.0.0.1", 8888, 20);
     iocpManager->Initialize();
     iocpManager->BindAndListen();
     iocpManager->StartWorker();

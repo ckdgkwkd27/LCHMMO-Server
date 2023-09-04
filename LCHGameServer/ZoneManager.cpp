@@ -12,7 +12,7 @@ ZoneManager::ZoneManager()
 //#TODO 추후에 Config에서 읽을수 있도록한다
 void ZoneManager::Initialize()
 {
-	for (uint32 idx = 0; idx < 5; idx++)
+	for (uint32 idx = 0; idx < ZoneIDEnum::CNT; idx++)
 	{
 		ZonePtr _zone = ZonePtr(zonePool->BorrowObject());
 		_zone->zoneID = idx;

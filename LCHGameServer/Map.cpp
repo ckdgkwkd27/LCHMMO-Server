@@ -4,9 +4,8 @@
 
 void Map::LoadMap(int mapId, std::string pathPrefix)
 {
-    std::string mapName = "Map_" + std::to_string(mapId);
-
-    std::ifstream openFile(mapName);
+    std::string mapName = "/Map_" + std::to_string(mapId) + ".txt";
+    std::ifstream openFile(pathPrefix + mapName);
     CRASH_ASSERT(openFile.is_open());
 
     std::string line;
@@ -28,6 +27,7 @@ void Map::LoadMap(int mapId, std::string pathPrefix)
     for (uint32 y = 0; y < yCount; y++)
     {
         std::string mapLine;
+        getline(openFile, mapLine);
         for (uint32 x = 0; x < xCount; x++)
         {
             CollisionBuf[y][x] = (mapLine[x] == '1' ? true : false);

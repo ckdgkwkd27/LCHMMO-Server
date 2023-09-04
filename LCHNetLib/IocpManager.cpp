@@ -31,8 +31,8 @@ void IocpManager::Initialize()
 
 void IocpManager::BindAndListen()
 {
-	SocketUtil::BindAnyAddress(listenSocket, port);
-	SocketUtil::Listen(listenSocket);
+	CRASH_ASSERT(SocketUtil::BindAnyAddress(listenSocket, port));
+	CRASH_ASSERT(SocketUtil::Listen(listenSocket));
 	std::wcout << L"[INFO] Server Listen Start IP=" << ip << L", port=" << port << std::endl;
 }
 

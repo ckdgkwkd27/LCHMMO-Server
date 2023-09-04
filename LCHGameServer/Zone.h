@@ -11,6 +11,8 @@ public:
 	ActorPtr FindActor(ActorIDType _actorID);
 	void BroadCast(ActorPtr _selfPlayer, CircularBufferPtr _sendBuffer);
 
+	bool Update();
+
 public:
 	ZoneIDType zoneID;
 	std::vector<ActorPtr> actorVector;

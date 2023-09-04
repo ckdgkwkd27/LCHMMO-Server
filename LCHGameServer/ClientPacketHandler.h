@@ -14,6 +14,8 @@ enum : uint16
 	PKT_CS_ENTER_GAME,
 	PKT_SC_ENTER_GAME,
 	PKT_SC_SPAWN,
+	PKT_CS_MOVE,
+	PKT_SC_MOVE,
 	PKT_CS_CHAT,
 	PKT_SC_CHAT
 };
@@ -21,6 +23,7 @@ enum : uint16
 bool HandleInvalid(ClientSessionPtr& session, char* buffer, uint32 len);
 bool Handle_PKT_CS_LOGIN(ClientSessionPtr& session, protocol::RequestLogin& packet);
 bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterGame& packet);
+bool Handle_PKT_CS_MOVE(ClientSessionPtr& session, protocol::RequestMove& packet);
 bool Handle_PKT_CS_CHAT(ClientSessionPtr& session, protocol::RequestChat& packet);
 
 class ClientPacketHandler
@@ -31,6 +34,7 @@ public:
 	static CircularBufferPtr MakeSendBufferPtr(protocol::ReturnLogin& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_LOGIN); }
 	static CircularBufferPtr MakeSendBufferPtr(protocol::ReturnEnterGame& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_ENTER_GAME); }
 	static CircularBufferPtr MakeSendBufferPtr(protocol::NotifySpawn& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_SPAWN); }
+	static CircularBufferPtr MakeSendBufferPtr(protocol::ReturnMove& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_MOVE); }
 
 	template<typename T>
 	static CircularBufferPtr MakeSendBufferPtr(T& pkt, uint16 PacketID)

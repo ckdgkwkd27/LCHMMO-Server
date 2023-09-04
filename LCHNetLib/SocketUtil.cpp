@@ -66,12 +66,20 @@ bool SocketUtil::BindAnyAddress(SOCKET _socket, uint16 port)
     sockin.sin_addr.s_addr = ::htonl(INADDR_ANY);
     sockin.sin_port = ::htons(port);
 
-    return SOCKET_ERROR != ::bind(_socket, reinterpret_cast<const SOCKADDR*>(&sockin), sizeof(sockin));
+    if (SOCKET_ERROR != ::bind(_socket, reinterpret_cast<const SOCKADDR*>(&sockin), sizeof(sockin)))
+        return true;
+
+    std::cout << "[FAIL]: Bind Error: " << WSAGetLastError() << std::endl;
+    return false;
 }
 
 bool SocketUtil::Listen(SOCKET _socket, int32 backlog)
 {
-    return SOCKET_ERROR != ::listen(_socket, backlog);
+    if (SOCKET_ERROR != ::listen(_socket, backlog))
+        return true;
+
+    std::cout << "[FAIL]: Listen Error: " << WSAGetLastError() << std::endl;
+    return false;
 }
 
 bool SocketUtil::SetOptionLinger(SOCKET _socket)

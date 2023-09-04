@@ -101,7 +101,7 @@ private:
 	uint32 xCount, yCount;
 	 
 public:
-	void LoadMap(int mapId, std::string pathPrefix = "../../../../../Common/MapData");
+	void LoadMap(int mapId, std::string pathPrefix = "../../Common/MapData");
 	bool CanGo(Vector2Int cellPos, bool checkActor = true);
 	ActorPtr Find(Vector2Int cellPos);
 	bool ApplyLeave(ActorPtr actor);
