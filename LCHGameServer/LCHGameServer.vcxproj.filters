@@ -32,7 +32,10 @@
     <ClCompile Include="ObjectPool.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Map.cpp">
+      <Filter>Zone</Filter>
+    </ClCompile>
+    <ClCompile Include="Ticker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protobuf-3.18.x\bin\protocol.pb.h">
@@ -65,7 +68,10 @@
     <ClInclude Include="ObjectPool.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h" />
+    <ClInclude Include="Map.h">
+      <Filter>Zone</Filter>
+    </ClInclude>
+    <ClInclude Include="Ticker.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Protobuf">
