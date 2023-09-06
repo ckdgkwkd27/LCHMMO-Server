@@ -6,6 +6,10 @@
 void Zone::Init()
 {
 	zoneMap.LoadMap(zoneID);
+	this->xMax = zoneMap.MaxX;
+	this->xMin = zoneMap.MinX;
+	this->yMax = zoneMap.MaxY;
+	this->yMin = zoneMap.MinY;
 
 	//Spawn Monster or Npc
 }

@@ -12,8 +12,6 @@ int main()
 {
     GPlayerManager.Initialize();
     GZoneManager.Initialize();
-    Ticker ticker([]() {std::cout << "Tick!" << std::endl; }, std::chrono::duration<int64, std::milli>(1000));
-    ticker.Start();
 
     ClientPacketHandler::Init();
 
@@ -22,6 +20,9 @@ int main()
     iocpManager->BindAndListen();
     iocpManager->StartWorker();
     iocpManager->StartAccept<ClientSession>();
+
+    Ticker ticker([]() { GZoneManager.TickUpdate(); }, std::chrono::duration<int64, std::milli>(1000));
+	ticker.Start();
 
     while (true)
     {

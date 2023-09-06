@@ -16,8 +16,10 @@ public:
 public:
 	ZoneIDType zoneID;
 	std::vector<ActorPtr> actorVector;
-	uint32 xMax;
-	uint32 yMax;
+	int32 xMax;
+	int32 xMin;
+	int32 yMax;
+	int32 yMin;
 	Map zoneMap;
 
 private:

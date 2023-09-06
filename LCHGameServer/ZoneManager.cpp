@@ -16,10 +16,8 @@ void ZoneManager::Initialize()
 	{
 		ZonePtr _zone = ZonePtr(zonePool->BorrowObject());
 		_zone->zoneID = idx;
-		_zone->xMax = 100;
-		_zone->yMax = 100;
-		RegisterZone(_zone);
 		_zone->Init();
+		RegisterZone(_zone);
 	}
 
 	std::cout << "[INFO] Zone Init Completed!" << std::endl;
@@ -78,4 +76,9 @@ ZonePtr ZoneManager::FindZoneByID(ZoneIDType _zoneId)
 		return nullptr;
 
 	return *it;
+}
+
+void ZoneManager::TickUpdate()
+{
+	std::cout << "Tick..!" << std::endl;
 }

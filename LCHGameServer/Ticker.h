@@ -1,4 +1,6 @@
 #pragma once
+#include "ZoneManager.h"
+
 class Ticker
 {
 public:

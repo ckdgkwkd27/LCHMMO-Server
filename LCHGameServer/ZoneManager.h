@@ -18,6 +18,7 @@ public:
 	bool RegisterActor(ZoneIDType _zoneId, ActorPtr _actor);
 	ActorIDType IssueActorID();
 	ZonePtr FindZoneByID(ZoneIDType _zoneId);
+	void TickUpdate();
 
 public:
 	std::vector<ZonePtr> zoneVector;
