@@ -63,7 +63,7 @@ message RequestMove
 
 message ReturnMove
 {
-	int32 actorId = 1;
+	uint64 actorId = 1;
 	PositionInfo posInfo = 2;
 }
 

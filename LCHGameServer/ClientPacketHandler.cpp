@@ -127,13 +127,20 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
 bool Handle_PKT_CS_MOVE(ClientSessionPtr& session, protocol::RequestMove& packet)
 {
     PlayerPtr _player = session->currentPlayer;
-    if(_player == nullptr)
-        return false;
+    RETURN_FALSE_ON_FAIL(_player != nullptr);
 
     ZonePtr _zone = GZoneManager.FindZoneByID(_player->zoneID);
-    if (_zone == nullptr)
-        return false;
+    RETURN_FALSE_ON_FAIL(_zone != nullptr);
 
+    _player->ActorInfo.mutable_posinfo()->CopyFrom(packet.posinfo());
+
+    protocol::ReturnMove MovePkt;
+    MovePkt.set_actorid(_player->ActorInfo.actorid());
+    MovePkt.mutable_posinfo()->CopyFrom(packet.posinfo());
+    auto _broadCastBuffer = ClientPacketHandler::MakeSendBufferPtr(MovePkt);
+    _zone->BroadCast(_player, _broadCastBuffer);
+
+    std::cout << "[INFO] ReturnMove Packet Send Socket=" << session->GetSocket() << ", ActorID=" << MovePkt.actorid() << std::endl;
     return true;
 }
 
