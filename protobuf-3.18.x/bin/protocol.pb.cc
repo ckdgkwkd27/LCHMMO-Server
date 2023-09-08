@@ -154,7 +154,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT RequestMoveDefaultTypeInternal 
 constexpr ReturnMove::ReturnMove(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : posinfo_(nullptr)
-  , actorid_(0){}
+  , actorid_(uint64_t{0u}){}
 struct ReturnMoveDefaultTypeInternal {
   constexpr ReturnMoveDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -391,7 +391,7 @@ const char descriptor_table_protodef_protocol_2eproto[] PROTOBUF_SECTION_VARIABL
   "zoneId\030\002 \001(\r\"4\n\013NotifySpawn\022%\n\007objects\030\001"
   " \003(\0132\024.protocol.ObjectInfo\"6\n\013RequestMov"
   "e\022\'\n\007posInfo\030\001 \001(\0132\026.protocol.PositionIn"
-  "fo\"F\n\nReturnMove\022\017\n\007actorId\030\001 \001(\005\022\'\n\007pos"
+  "fo\"F\n\nReturnMove\022\017\n\007actorId\030\001 \001(\004\022\'\n\007pos"
   "Info\030\002 \001(\0132\026.protocol.PositionInfo\"\020\n\016Re"
   "questDespawn\"\017\n\rReturnDespawn\"\032\n\013Request"
   "Chat\022\013\n\003msg\030\001 \001(\t\"+\n\nReturnChat\022\020\n\010playe"
@@ -2771,7 +2771,7 @@ void ReturnMove::Clear() {
     delete posinfo_;
   }
   posinfo_ = nullptr;
-  actorid_ = 0;
+  actorid_ = uint64_t{0u};
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -2781,7 +2781,7 @@ const char* ReturnMove::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID:
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // int32 actorId = 1;
+      // uint64 actorId = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
           actorid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
@@ -2826,10 +2826,10 @@ failure:
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // int32 actorId = 1;
+  // uint64 actorId = 1;
   if (this->_internal_actorid() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_actorid(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(1, this->_internal_actorid(), target);
   }
 
   // .protocol.PositionInfo posInfo = 2;
@@ -2863,9 +2863,9 @@ size_t ReturnMove::ByteSizeLong() const {
         *posinfo_);
   }
 
-  // int32 actorId = 1;
+  // uint64 actorId = 1;
   if (this->_internal_actorid() != 0) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32SizePlusOne(this->_internal_actorid());
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_actorid());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);

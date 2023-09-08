@@ -1906,13 +1906,13 @@ class ReturnMove final :
       ::protocol::PositionInfo* posinfo);
   ::protocol::PositionInfo* unsafe_arena_release_posinfo();
 
-  // int32 actorId = 1;
+  // uint64 actorId = 1;
   void clear_actorid();
-  ::PROTOBUF_NAMESPACE_ID::int32 actorid() const;
-  void set_actorid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  ::PROTOBUF_NAMESPACE_ID::uint64 actorid() const;
+  void set_actorid(::PROTOBUF_NAMESPACE_ID::uint64 value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_actorid() const;
-  void _internal_set_actorid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_actorid() const;
+  void _internal_set_actorid(::PROTOBUF_NAMESPACE_ID::uint64 value);
   public:
 
   // @@protoc_insertion_point(class_scope:protocol.ReturnMove)
@@ -1923,7 +1923,7 @@ class ReturnMove final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::protocol::PositionInfo* posinfo_;
-  ::PROTOBUF_NAMESPACE_ID::int32 actorid_;
+  ::PROTOBUF_NAMESPACE_ID::uint64 actorid_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_protocol_2eproto;
 };
@@ -3373,22 +3373,22 @@ inline void RequestMove::set_allocated_posinfo(::protocol::PositionInfo* posinfo
 
 // ReturnMove
 
-// int32 actorId = 1;
+// uint64 actorId = 1;
 inline void ReturnMove::clear_actorid() {
-  actorid_ = 0;
+  actorid_ = uint64_t{0u};
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 ReturnMove::_internal_actorid() const {
+inline ::PROTOBUF_NAMESPACE_ID::uint64 ReturnMove::_internal_actorid() const {
   return actorid_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 ReturnMove::actorid() const {
+inline ::PROTOBUF_NAMESPACE_ID::uint64 ReturnMove::actorid() const {
   // @@protoc_insertion_point(field_get:protocol.ReturnMove.actorId)
   return _internal_actorid();
 }
-inline void ReturnMove::_internal_set_actorid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void ReturnMove::_internal_set_actorid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   
   actorid_ = value;
 }
-inline void ReturnMove::set_actorid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void ReturnMove::set_actorid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _internal_set_actorid(value);
   // @@protoc_insertion_point(field_set:protocol.ReturnMove.actorId)
 }

@@ -20,6 +20,10 @@ void ClientPacketHandler::Init()
     {
         return HandlePacket<protocol::RequestEnterGame>(Handle_PKT_CS_ENTER_GAME, session, buffer, len);
     };
+    GClientPacketHandler[PKT_CS_MOVE] = [](ClientSessionPtr& session, char* buffer, uint32 len)
+	{
+		return HandlePacket<protocol::RequestMove>(Handle_PKT_CS_MOVE, session, buffer, len);
+	};
 }
 
 bool ClientPacketHandler::HandlePacket(ClientSessionPtr session, char* buffer, uint32 len)
