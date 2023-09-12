@@ -36,6 +36,9 @@
       <Filter>Zone</Filter>
     </ClCompile>
     <ClCompile Include="Ticker.cpp" />
+    <ClCompile Include="Monster.cpp">
+      <Filter>Actor\Monster</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protobuf-3.18.x\bin\protocol.pb.h">
@@ -72,6 +75,9 @@
       <Filter>Zone</Filter>
     </ClInclude>
     <ClInclude Include="Ticker.h" />
+    <ClInclude Include="Monster.h">
+      <Filter>Actor\Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Protobuf">
@@ -91,6 +97,9 @@
     </Filter>
     <Filter Include="Actor\Player">
       <UniqueIdentifier>{ad65f75d-f879-4bad-89b5-d207f4bcd86b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\Monster">
+      <UniqueIdentifier>{d1291f44-e1c8-4265-936a-894b3ce2563b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

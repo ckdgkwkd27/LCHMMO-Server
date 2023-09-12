@@ -56,7 +56,7 @@ PlayerPtr PlayerManager::FindPlayerByName(std::string _name)
 {
 	for (auto& info : AllPlayerInfo)
 	{
-		if (info.second->name == _name)
+		if (info.second->ActorInfo.name() == _name)
 		{
 			return info.second;
 		}

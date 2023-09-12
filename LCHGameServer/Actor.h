@@ -22,6 +22,8 @@ class Actor
 {
 public:
 	virtual ~Actor() {}
+	virtual void Update() {}
+
 public:
 	protocol::ObjectInfo ActorInfo;
 	uint32 zoneID;

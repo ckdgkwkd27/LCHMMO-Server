@@ -81,4 +81,8 @@ ZonePtr ZoneManager::FindZoneByID(ZoneIDType _zoneId)
 void ZoneManager::TickUpdate()
 {
 	std::cout << "Tick..!" << std::endl;
+	for (ZonePtr _zone : zoneVector)
+	{
+		_zone->Update();
+	}
 }

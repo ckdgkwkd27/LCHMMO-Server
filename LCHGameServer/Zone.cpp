@@ -12,6 +12,10 @@ void Zone::Init()
 	this->yMin = zoneMap.MinY;
 
 	//Spawn Monster or Npc
+	if (zoneID == 1)
+	{
+		
+	}
 }
 
 void Zone::RegisterActor(ActorPtr _actor)
@@ -53,4 +57,14 @@ void Zone::BroadCast(ActorPtr _selfPlayer, CircularBufferPtr _sendBuffer)
 			_player->ownerSession->PostSend(_sendBuffer);
 		}
 	}
+}
+
+bool Zone::Update()
+{
+	for (ActorPtr _actor : actorVector)
+	{
+		_actor->Update();
+	}
+
+	return true;
 }

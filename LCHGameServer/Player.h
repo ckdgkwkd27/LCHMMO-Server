@@ -8,7 +8,6 @@ class Player : public Actor
 {
 public:
 	PlayerIDType playerId;
-	std::string name;
 	std::shared_ptr<ClientSession> ownerSession;
 };
 
