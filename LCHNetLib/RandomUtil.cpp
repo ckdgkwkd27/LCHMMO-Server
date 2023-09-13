@@ -3,8 +3,8 @@
 
 float RandomUtil::GetRandomFloat()
 {
-	std::mt19937 engine((uint32)time(NULL));
-	std::normal_distribution<float> dist = std::normal_distribution<float>(0, 1);
+	std::mt19937 engine((unsigned int)time(NULL));
+	std::uniform_real_distribution<float> dist = std::uniform_real_distribution<float>(0.0, 1.0);
 	auto generator = std::bind(dist, engine);
 	return generator();
 }
