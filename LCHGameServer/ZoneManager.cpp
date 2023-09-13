@@ -80,9 +80,10 @@ ZonePtr ZoneManager::FindZoneByID(ZoneIDType _zoneId)
 
 void ZoneManager::TickUpdate()
 {
-	std::cout << "Tick..!" << std::endl;
+	milliseconds CurrTimeStamp = CURRENT_TIMESTAMP();
+
 	for (ZonePtr _zone : zoneVector)
 	{
-		_zone->Update();
+		_zone->Update(CurrTimeStamp);
 	}
 }

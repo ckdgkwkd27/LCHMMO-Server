@@ -11,7 +11,7 @@ public:
 	ActorPtr FindActor(ActorIDType _actorID);
 	void BroadCast(ActorPtr _selfPlayer, CircularBufferPtr _sendBuffer);
 
-	bool Update();
+	bool Update(milliseconds UpdateTimeStamp);
 
 public:
 	ZoneIDType zoneID;

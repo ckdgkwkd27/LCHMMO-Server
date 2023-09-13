@@ -2,6 +2,7 @@
 #include "Zone.h"
 #include "Player.h"
 #include "ClientSession.h"
+#include "Monster.h"
 
 void Zone::Init()
 {
@@ -12,9 +13,13 @@ void Zone::Init()
 	this->yMin = zoneMap.MinY;
 
 	//Spawn Monster or Npc
-	if (zoneID == 1)
+	if (zoneID == 0) //#TODO Set to Zone1
 	{
-		
+		MonsterPtr monster = std::make_shared<Monster>();
+		monster->ActorInfo.mutable_posinfo()->set_posx(5);
+		monster->ActorInfo.mutable_posinfo()->set_posy(5);
+		RegisterActor(monster);
+		std::cout << "[TEMPLOG] Monster Spawned!" << std::endl;
 	}
 }
 
@@ -59,11 +64,11 @@ void Zone::BroadCast(ActorPtr _selfPlayer, CircularBufferPtr _sendBuffer)
 	}
 }
 
-bool Zone::Update()
+bool Zone::Update(milliseconds UpdateTimeStamp)
 {
 	for (ActorPtr _actor : actorVector)
 	{
-		_actor->Update();
+		_actor->Update(UpdateTimeStamp);
 	}
 
 	return true;

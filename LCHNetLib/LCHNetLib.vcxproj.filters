@@ -44,6 +44,9 @@
     <ClInclude Include="Global.h">
       <Filter>Primitive</Filter>
     </ClInclude>
+    <ClInclude Include="RandomUtil.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SocketUtil.cpp">
@@ -85,6 +88,9 @@
     </ClCompile>
     <ClCompile Include="Global.cpp">
       <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomUtil.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

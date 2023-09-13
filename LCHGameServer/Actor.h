@@ -22,7 +22,7 @@ class Actor
 {
 public:
 	virtual ~Actor() {}
-	virtual void Update() {}
+	virtual void Update(milliseconds UpdateTimeStamp) { UpdateTimeStamp; }
 
 public:
 	protocol::ObjectInfo ActorInfo;
