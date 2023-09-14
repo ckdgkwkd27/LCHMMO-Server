@@ -3,12 +3,14 @@
 #include "Map.h"
 using ZoneIDType = uint32;
 
+class Player;
 class Zone
 {
 public:
 	void Init();
 	void RegisterActor(ActorPtr _actor);
 	ActorPtr FindActor(ActorIDType _actorID);
+	PlayerPtr FindPlayerInCondition(std::function<bool(ActorPtr)> _condition);
 	void BroadCast(ActorPtr _selfPlayer, CircularBufferPtr _sendBuffer);
 
 	bool Update(milliseconds UpdateTimeStamp);

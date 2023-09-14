@@ -2,6 +2,7 @@
 #include "Monster.h"
 #include "ZoneManager.h"
 #include "RandomUtil.h"
+#include "Player.h"
 
 Monster::Monster()
 {
@@ -48,6 +49,21 @@ void Monster::Update(milliseconds UpdateTimeStamp)
 
 void Monster::UpdateIdle()
 {
+	SetMoveState(MoveState::MOVING);
+}
+
+void Monster::UpdateMoving()
+{
+	ZonePtr zone = GZoneManager.FindZoneByID(zoneId);
+	if (zone == nullptr)
+	{
+		std::cout << "[FAILURE] Monster ACtorID=" << ActorInfo.actorid() << "Wrong Zone..!" << std::endl;
+		delete this;
+	}
+
+	//PlayerPtr player = zone->FindActor()
+
+	//Patrol
 	int32 Radius = RoamRadius;
 	float Angle = RandomUtil::GetRandomFloat() * 360.0f;
 
@@ -56,15 +72,6 @@ void Monster::UpdateIdle()
 
 	Destination.set_posx(TargetPositionX);
 	Destination.set_posy(TargetPositionY);
-
-	ActorInfo.mutable_posinfo()->set_state((uint32)MoveState::MOVING);
-
-	//State Push To Queue Maybe?
-}
-
-void Monster::UpdateMoving()
-{
-
 }
 
 void Monster::UpdateSkill()
@@ -75,4 +82,9 @@ void Monster::UpdateSkill()
 void Monster::UpdateDead()
 {
 
+}
+
+void Monster::SetMoveState(MoveState _state)
+{
+	ActorInfo.mutable_posinfo()->set_state((uint32)_state);
 }

@@ -47,6 +47,23 @@ ActorPtr Zone::FindActor(ActorIDType _actorID)
 	return *it;
 }
 
+PlayerPtr Zone::FindPlayerInCondition(std::function<bool(ActorPtr)> _condition)
+{
+	LockGuard guard(actorLock);
+
+	for (ActorPtr _actor : actorVector)
+	{
+		if (_actor->ActorInfo.objecttype() == (uint32)ObjectType::PLAYER)
+		{
+			if (_condition(_actor) == true)
+			{
+				return std::dynamic_pointer_cast<Player>(_actor);
+			}
+		}
+	}
+	return nullptr;
+}
+
 void Zone::BroadCast(ActorPtr _selfPlayer, CircularBufferPtr _sendBuffer)
 {
 	LockGuard guard(actorLock);
