@@ -1,5 +1,6 @@
 #pragma once
 #include "Actor.h"
+#include "Player.h"
 #include "Map.h"
 using ZoneIDType = uint32;
 

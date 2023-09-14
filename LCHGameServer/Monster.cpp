@@ -61,7 +61,7 @@ void Monster::UpdateMoving()
 		delete this;
 	}
 
-	//PlayerPtr player = zone->FindActor()
+	PlayerPtr player = zone->FindPlayerInCondition([])
 
 	//Patrol
 	int32 Radius = RoamRadius;
