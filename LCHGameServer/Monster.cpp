@@ -3,6 +3,7 @@
 #include "ZoneManager.h"
 #include "RandomUtil.h"
 #include "Player.h"
+#include "ClientPacketHandler.h"
 
 Monster::Monster()
 {
@@ -61,7 +62,19 @@ void Monster::UpdateMoving()
 		delete this;
 	}
 
-	PlayerPtr player = zone->FindPlayerInCondition([])
+	PlayerPtr player = zone->FindPlayerInCondition([this](ActorPtr actor)
+		{
+			Vector2Int dir(ActorInfo.posinfo().posx() - actor->ActorInfo.posinfo().posx(),
+				ActorInfo.posinfo().posy() - actor->ActorInfo.posinfo().posy());
+			return dir.CellDistFromZero <= SEARCH_CELL_DISTANCE;
+		});
+
+	if (player != nullptr)
+	{
+		//#TODO 공격으로 상태전환
+		std::cout << "Monster Found Player=" << player->ActorInfo.name() << std::endl;
+		SetMoveState(MoveState::SKILL); //#TODO Chase로 가는거 고려
+	}
 
 	//Patrol
 	int32 Radius = RoamRadius;
@@ -72,6 +85,13 @@ void Monster::UpdateMoving()
 
 	Destination.set_posx(TargetPositionX);
 	Destination.set_posy(TargetPositionY);
+	zone->zoneMap.ApplyMove(shared_from_this(), Vector2Int(TargetPositionX, TargetPositionY));
+
+	protocol::ReturnMove movePacket;
+	movePacket.set_actorid(ActorInfo.actorid());
+	movePacket.mutable_posinfo()->CopyFrom(ActorInfo.posinfo());
+	auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(movePacket);
+	zone->BroadCast(shared_from_this(), _sendBuffer);
 }
 
 void Monster::UpdateSkill()

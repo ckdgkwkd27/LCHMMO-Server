@@ -4,6 +4,7 @@
 
 #define STATE_CHANGE_INTERVAL 10
 #define SEARCH_INTERVAL 10
+#define SEARCH_CELL_DISTANCE 10
 
 class Monster : public Actor
 {

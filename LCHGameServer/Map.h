@@ -26,7 +26,6 @@ public:
 		return Vector2Int(a.x + b.x, a.y + b.y);
 	}
 
-
 	friend Vector2Int operator-(Vector2Int a, Vector2Int b)
 	{
 		return Vector2Int(a.x - b.x, a.y - b.y);
