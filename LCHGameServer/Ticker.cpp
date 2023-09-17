@@ -5,7 +5,9 @@ Ticker::Ticker(OnTickFunction _onTickFunction, TickIntervalType _tickInterval)
 	:onTickFunction(_onTickFunction),
 	tickInterval(_tickInterval),
 	isRunning(false)
-{}
+{
+	Start();
+}
 
 void Ticker::Start()
 {
@@ -30,10 +32,11 @@ void Ticker::Loop()
 {
 	while (isRunning)
 	{
-		std::thread tickThread(onTickFunction);
-		tickThread.join();
+		//std::thread tickThread(onTickFunction);
+		//tickThread.join();
 
-		LockGuard guard(tickLock);
+		//LockGuard guard(tickLock);
+		onTickFunction();
 		TickIntervalType _tickInterval = tickInterval;
 		std::this_thread::sleep_for(tickInterval);
 	}

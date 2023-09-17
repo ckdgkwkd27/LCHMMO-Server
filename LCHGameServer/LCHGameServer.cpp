@@ -21,8 +21,13 @@ int main()
     iocpManager->StartWorker();
     iocpManager->StartAccept<ClientSession>();
 
-    Ticker ticker([]() { GZoneManager.TickUpdate(); }, std::chrono::duration<int64, std::milli>(1000));
-	ticker.Start();
+    std::thread tickThread = std::thread([] 
+	{
+		Ticker ticker([]() { GZoneManager.TickUpdate(); },
+		std::chrono::duration<int64, std::milli>(15));
+	});
+
+	GZoneManager.SpawnNpc();
 
     while (true)
     {
@@ -30,6 +35,7 @@ int main()
     }
 
     iocpManager->Join();
+    tickThread.join();
 
     return true;
 }

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ZoneManager.h"
+#include "ClientPacketHandler.h"
 
 ZoneManager GZoneManager;
 
@@ -74,7 +75,7 @@ ZonePtr ZoneManager::FindZoneByID(ZoneIDType _zoneId)
 	auto it = std::find_if(zoneVector.begin(), zoneVector.end(), [_zoneId](ZonePtr _zone) { return _zone->zoneID == _zoneId; });
 	if(it == zoneVector.end())
 		return nullptr;
-
+	std::cout << "FindZoneByID Result=" << (*it)->zoneID << std::endl; //<-------------여기 수정
 	return *it;
 }
 
@@ -85,5 +86,26 @@ void ZoneManager::TickUpdate()
 	for (ZonePtr _zone : zoneVector)
 	{
 		_zone->Update(CurrTimeStamp);
+	}
+}
+
+void ZoneManager::SpawnNpc()
+{
+	LockGuard guard(zoneLock);
+	ZonePtr _zone = zoneVector[0];
+
+	//Spawn Monster or Npc
+	if (_zone->zoneID == 0) //#TODO Set to Zone1
+	{
+		for (uint32 i = 0; i < 5; i++)
+		{
+			MonsterPtr monster = std::make_shared<Monster>();
+			monster->zoneID = 0;
+			monster->ActorInfo.mutable_posinfo()->set_posx(-1 * i - 1);
+			monster->ActorInfo.mutable_posinfo()->set_posy(-1 * i - 1);
+			_zone->RegisterActor(monster);
+		}
+
+		std::cout << "[INFO] ZoneID=" << _zone->zoneID << " Monster Spawned!" << std::endl;
 	}
 }

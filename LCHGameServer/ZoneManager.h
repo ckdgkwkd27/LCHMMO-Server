@@ -1,10 +1,14 @@
 #pragma once
 #include "Zone.h"
 #include "ObjectPool.h"
+#include "Monster.h"
+
+class ClientPacketHandler;
 
 enum ZoneIDEnum
 {
 	START_ZONE,
+	FIELD_ZONE,
 
 	CNT
 };
@@ -27,6 +31,7 @@ public:
 
 public:
 	RecursiveMutex zoneLock;
+	void SpawnNpc();
 };
 
 extern ZoneManager GZoneManager;

@@ -103,7 +103,7 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
 			protocol::NotifySpawn SpawnPkt;
 			for (auto otherActor : zone->actorVector)
 			{
-				if (otherActor->ActorInfo.objecttype() == (uint32)ObjectType::PLAYER && otherActor->ActorInfo.actorid() != player->ActorInfo.actorid())
+				if (otherActor->ActorInfo.actorid() != player->ActorInfo.actorid())
 				{
                     protocol::ObjectInfo* playerInfo = SpawnPkt.add_objects();
                     *playerInfo = otherActor->ActorInfo;

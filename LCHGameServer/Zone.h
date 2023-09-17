@@ -4,7 +4,6 @@
 #include "Map.h"
 using ZoneIDType = uint32;
 
-class Player;
 class Zone
 {
 public:

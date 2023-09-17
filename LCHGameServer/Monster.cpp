@@ -11,8 +11,6 @@ Monster::Monster()
 	ActorInfo.set_actorid(GZoneManager.IssueActorID());
 	ActorInfo.set_name("Monster" + std::to_string(ActorInfo.actorid()));
 	ActorInfo.mutable_posinfo()->set_state((uint32)MoveState::IDLE);
-	ActorInfo.mutable_posinfo()->set_posx(0);
-	ActorInfo.mutable_posinfo()->set_posy(0);
 	ActorInfo.mutable_statinfo()->set_level(1);
 	ActorInfo.mutable_statinfo()->set_hp(10);
 	ActorInfo.mutable_statinfo()->set_maxhp(10);
@@ -26,26 +24,30 @@ Monster::Monster()
 
 void Monster::Update(milliseconds UpdateTimeStamp)
 {
-	auto Elapsed = StateChangeTimeStamp - UpdateTimeStamp;
-	std::cout << "Elapsed=" << Elapsed.count() << std::endl;
+	auto Elapsed = UpdateTimeStamp - StateChangeTimeStamp;
 
-	switch ((MoveState)ActorInfo.posinfo().state())
+	if (Elapsed.count() > 100)
 	{
-	case MoveState::IDLE:
-		UpdateIdle();
-		break;
-	case MoveState::MOVING:
-		UpdateMoving();
-		break;
-	case MoveState::SKILL:
-		UpdateSkill();
-		break;
-	case MoveState::DEAD:
-		UpdateDead();
-		break;
-	}
+		std::cout << "Elapsed=" << Elapsed.count() << std::endl;
 
-	StateChangeTimeStamp = UpdateTimeStamp;
+		switch ((MoveState)ActorInfo.posinfo().state())
+		{
+		case MoveState::IDLE:
+			UpdateIdle();
+			break;
+		case MoveState::MOVING:
+			UpdateMoving();
+			break;
+		case MoveState::SKILL:
+			UpdateSkill();
+			break;
+		case MoveState::DEAD:
+			UpdateDead();
+			break;
+		}
+
+		StateChangeTimeStamp = UpdateTimeStamp;
+	}
 }
 
 void Monster::UpdateIdle()
@@ -58,7 +60,7 @@ void Monster::UpdateMoving()
 	ZonePtr zone = GZoneManager.FindZoneByID(zoneId);
 	if (zone == nullptr)
 	{
-		std::cout << "[FAILURE] Monster ACtorID=" << ActorInfo.actorid() << "Wrong Zone..!" << std::endl;
+		std::cout << "[FAILURE] Monster ActorID=" << ActorInfo.actorid() << " Wrong ZoneID=" << zoneID << std::endl;
 		delete this;
 	}
 
