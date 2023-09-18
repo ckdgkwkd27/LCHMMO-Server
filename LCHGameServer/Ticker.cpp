@@ -13,8 +13,7 @@ void Ticker::Start()
 {
 	if (isRunning) return;
 	isRunning = true;
-	std::thread tickThread(&Ticker::Loop, this);
-	tickThread.join();
+	Loop();
 }
 
 void Ticker::Stop()

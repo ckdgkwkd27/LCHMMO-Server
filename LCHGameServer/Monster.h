@@ -4,7 +4,7 @@
 
 #define STATE_CHANGE_INTERVAL 10
 #define SEARCH_INTERVAL 10
-#define SEARCH_CELL_DISTANCE 10
+#define SEARCH_CELL_DISTANCE 5
 
 class Monster : public Actor
 {
@@ -25,7 +25,6 @@ private:
 	protocol::PositionInfo SpawnPosition;
 	protocol::PositionInfo Destination;
 	
-	ZoneIDType zoneId;
 	uint32 RoamRadius;
 };
 

@@ -8,11 +8,17 @@ class Vector2Int
 public:
 	int32 x;
 	int32 y;
-	int sqrMagnitude;
-	int CellDistFromZero;
+	int32 sqrMagnitude;
+	int32 CellDistFromZero;
 
 public:
-	Vector2Int(int32 x, int32 y) { this->x = x; this->y = y; }
+	Vector2Int(int32 x, int32 y) 
+	{ 
+		this->x = x; 
+		this->y = y; 
+		this->CellDistFromZero = abs(x) + abs(y);
+	}
+
 	float Magnitude() { return (float)sqrt(sqrMagnitude); }
 
 public:
@@ -36,7 +42,7 @@ class Pos
 {
 public:
 	Pos() { this->y = 0; this->x = 0; }
-	Pos(int y, int x) { this->y = y; this->x = x; }
+	Pos(int32 y, int32 x) { this->y = y; this->x = x; }
 	bool operator==(Pos& other)
 	{
 		return y == other.y && x == other.x;
