@@ -44,8 +44,8 @@ bool Map::CanGo(Vector2Int cellPos, bool checkActor)
     if (cellPos.y < MinY || cellPos.y > MaxY)
         return false;
 
-    int x = cellPos.x - MinX;
-    int y = MaxY - cellPos.y;
+    int32 x = cellPos.x - MinX;
+    int32 y = MaxY - cellPos.y;
     return !CollisionBuf[y][x] && (!checkActor || ObjectBuf[y][x] == nullptr);
 }
 
@@ -57,7 +57,7 @@ ActorPtr Map::Find(Vector2Int cellPos)
         return nullptr;
 
 	int32 x = cellPos.x - MinX;
-    int32 y = cellPos.y - MinY;
+    int32 y = MaxY - cellPos.y;
     return ObjectBuf[y][x];
 }
 
@@ -90,9 +90,8 @@ bool Map::ApplyMove(ActorPtr actor, Vector2Int dest)
     if (_zone == nullptr)
         return false;
 
-    protocol::PositionInfo posInfo = actor->ActorInfo.posinfo();
-    if (CanGo(dest, true) == false)
-        return false;
+	if (CanGo(dest, true) == false)
+		return false;
 
     {
         int32 x = dest.x - MinX;
@@ -100,8 +99,8 @@ bool Map::ApplyMove(ActorPtr actor, Vector2Int dest)
         ObjectBuf[y][x] = actor;
     }
 
-    posInfo.set_posx(dest.x);
-    posInfo.set_posy(dest.y);
+    actor->ActorInfo.mutable_posinfo()->set_posx(dest.x);
+    actor->ActorInfo.mutable_posinfo()->set_posy(dest.y);
     return true;
 }
 

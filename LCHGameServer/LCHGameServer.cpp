@@ -26,7 +26,7 @@ int main()
     std::thread tickThread = std::thread([] 
 	{
 		Ticker ticker([]() { GZoneManager.TickUpdate(); },
-		std::chrono::duration<int64, std::milli>(15));
+		std::chrono::duration<int64, std::milli>(60));
 	});
 
 

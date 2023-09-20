@@ -23,7 +23,6 @@ private:
 	milliseconds SearchTimeStamp;
 
 	protocol::PositionInfo SpawnPosition;
-	protocol::PositionInfo Destination;
 	
 	uint32 RoamRadius;
 };
