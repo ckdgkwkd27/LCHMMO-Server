@@ -2,6 +2,7 @@
 #include "ClientPacketHandler.h"
 #include "PlayerManager.h"
 #include "ZoneManager.h"
+#include "TimeUtil.h"
 
 ClientPacketHandlerFunc GClientPacketHandler[UINT16_MAX];
 
@@ -23,6 +24,10 @@ void ClientPacketHandler::Init()
     GClientPacketHandler[PKT_CS_MOVE] = [](ClientSessionPtr& session, char* buffer, uint32 len)
 	{
 		return HandlePacket<protocol::RequestMove>(Handle_PKT_CS_MOVE, session, buffer, len);
+	};
+	GClientPacketHandler[PKT_CS_SKILL] = [](ClientSessionPtr& session, char* buffer, uint32 len)
+	{
+		return HandlePacket<protocol::RequestSkill>(Handle_PKT_CS_SKILL, session, buffer, len);
 	};
 }
 
@@ -48,13 +53,14 @@ bool Handle_PKT_CS_LOGIN(ClientSessionPtr& session, protocol::RequestLogin& pack
     _player->ActorInfo.set_actorid(GZoneManager.IssueActorID());
     _player->ActorInfo.set_name("Player" + std::to_string(_player->playerId));
     _player->ActorInfo.mutable_posinfo()->set_state((uint32)MoveState::IDLE);
+    _player->ActorInfo.mutable_posinfo()->set_movedir((uint32)MoveDir::UP);
     _player->ActorInfo.mutable_posinfo()->set_posx(0);
     _player->ActorInfo.mutable_posinfo()->set_posy(0);
     _player->ActorInfo.mutable_statinfo()->set_level(1);
     _player->ActorInfo.mutable_statinfo()->set_hp(100);
     _player->ActorInfo.mutable_statinfo()->set_maxhp(100);
     _player->ActorInfo.mutable_statinfo()->set_attack(5);
-    _player->ActorInfo.mutable_statinfo()->set_speed(10);
+    _player->ActorInfo.mutable_statinfo()->set_speed(5);
     _player->ActorInfo.mutable_statinfo()->set_totalexp(0);
     _player->zoneID = 0;
 
@@ -76,53 +82,13 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
     if (session->currentPlayer->playerId != packet.playerid())
         return false;
 
-    {
-		LockGuard guard(GZoneManager.zoneLock);
+    PlayerPtr _player = session->currentPlayer;
+    RETURN_FALSE_ON_FAIL(_player != nullptr);
 
-        //Zone Spawn
-        PlayerPtr player = GPlayerManager.FindPlayerByID(packet.playerid());
-        if (false == GZoneManager.RegisterActor(0, player))
-            return false;
+    ZonePtr _zone = GZoneManager.FindZoneByID(_player->zoneID);
+    RETURN_FALSE_ON_FAIL(_zone != nullptr);
 
-        //BroadCast
-        auto zone = GZoneManager.FindZoneByID(0);
-        if (zone == nullptr)
-            return false;
-
-        //Player 게임입장
-		{
-			protocol::ReturnEnterGame ReturnPkt;
-            ReturnPkt.mutable_myplayer()->CopyFrom(player->ActorInfo);
-			ReturnPkt.set_zoneid(player->zoneID);
-			auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(ReturnPkt);
-			session->PostSend(_sendBuffer);
-		}
-
-        //Player에게 다른사람을 알린다
-		{
-			protocol::NotifySpawn SpawnPkt;
-			for (auto otherActor : zone->actorVector)
-			{
-				if (otherActor->ActorInfo.actorid() != player->ActorInfo.actorid())
-				{
-                    protocol::ObjectInfo* playerInfo = SpawnPkt.add_objects();
-                    *playerInfo = otherActor->ActorInfo;
-				}
-			}
-
-            auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(SpawnPkt);
-            player->ownerSession->PostSend(_sendBuffer);
-		}
-
-        //다른 사람들에게 Player를 알린다.
-        {
-            protocol::NotifySpawn SpawnPkt;
-            protocol::ObjectInfo* playerInfo = SpawnPkt.add_objects();
-            *playerInfo = player->ActorInfo;
-            auto _broadCastBuffer = ClientPacketHandler::MakeSendBufferPtr(SpawnPkt);
-            zone->BroadCast(player, _broadCastBuffer);
-        }
-    }
+    _zone->messageQueue.Push([_zone, _player, packet]() {_zone->EnterGame(_player, packet); });
 
     std::cout << "[INFO] ReturnEnterGame Packet Send Socket=" << session->GetSocket() << ", PlayerID=" << packet.playerid() << std::endl;
     return true;
@@ -136,15 +102,23 @@ bool Handle_PKT_CS_MOVE(ClientSessionPtr& session, protocol::RequestMove& packet
     ZonePtr _zone = GZoneManager.FindZoneByID(_player->zoneID);
     RETURN_FALSE_ON_FAIL(_zone != nullptr);
 
-    _player->ActorInfo.mutable_posinfo()->CopyFrom(packet.posinfo());
+    _zone->messageQueue.Push([_zone, _player, packet]() {_zone->HandleMove(_player, packet); });
 
-    protocol::ReturnMove MovePkt;
-    MovePkt.set_actorid(_player->ActorInfo.actorid());
-    MovePkt.mutable_posinfo()->CopyFrom(packet.posinfo());
-    auto _broadCastBuffer = ClientPacketHandler::MakeSendBufferPtr(MovePkt);
-    _zone->BroadCast(_player, _broadCastBuffer);
+    //auto now = std::chrono::high_resolution_clock::now();
+    //std::cout << "이동처리 완료=" << TimeUtil::GetCurrentTime() << std::endl;
+    //std::cout << "[INFO] ReturnMove Packet Send Socket=" << session->GetSocket() << ", ActorID=" << MovePkt.actorid() << std::endl;
+    return true;
+}
 
-    std::cout << "[INFO] ReturnMove Packet Send Socket=" << session->GetSocket() << ", ActorID=" << MovePkt.actorid() << std::endl;
+bool Handle_PKT_CS_SKILL(ClientSessionPtr& session, protocol::RequestSkill& packet)
+{
+    PlayerPtr _player = session->currentPlayer;
+    RETURN_FALSE_ON_FAIL(_player != nullptr);
+
+    ZonePtr _zone = GZoneManager.FindZoneByID(_player->zoneID);
+    RETURN_FALSE_ON_FAIL(_zone != nullptr);
+
+    _zone->messageQueue.Push([_zone, _player, packet] {_zone->HandleSkill(_player, packet); });
     return true;
 }
 

@@ -33,7 +33,7 @@ inline ObjectPool<T>::ObjectPool(uint32 _maxSize)
 template<typename T>
 inline ObjectPool<T>::~ObjectPool()
 {
-	LockGuard poolGuard(poolLock);
+	RecursiveLockGuard poolGuard(poolLock);
 	
 	while (!pool.empty())
 	{
@@ -48,7 +48,7 @@ inline ObjectPool<T>::~ObjectPool()
 template<typename T>
 T* ObjectPool<T>::BorrowObject()
 {
-	LockGuard poolGuard(poolLock);
+	RecursiveLockGuard poolGuard(poolLock);
 
 	if (pool.empty())
 	{
@@ -63,14 +63,14 @@ T* ObjectPool<T>::BorrowObject()
 template<typename T>
 inline void ObjectPool<T>::ReturnObject(T* _object)
 {
-	LockGuard poolGuard(poolLock);
+	RecursiveLockGuard poolGuard(poolLock);
 	pool.push(_object);
 }
 
 template<typename T>
 inline void ObjectPool<T>::ExpandPool()
 {
-	LockGuard poolGuard(poolLock);
+	RecursiveLockGuard poolGuard(poolLock);
 
 	for (uint32 i = 0; i < maxSize; i++)
 	{

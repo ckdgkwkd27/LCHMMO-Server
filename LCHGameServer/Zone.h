@@ -2,6 +2,8 @@
 #include "Actor.h"
 #include "Player.h"
 #include "Map.h"
+#include "MessageQueue.h"
+#include "ClientPacketHandler.h"
 using ZoneIDType = uint32;
 
 class Zone
@@ -9,11 +11,16 @@ class Zone
 public:
 	void Init();
 	void RegisterActor(ActorPtr _actor);
-	ActorPtr FindActor(ActorIDType _actorID);
+	ActorPtr FindActor(ActorIDType _actorId);
 	PlayerPtr FindPlayerInCondition(std::function<bool(ActorPtr)> _condition);
 	void BroadCast(ActorPtr _selfPlayer, CircularBufferPtr _sendBuffer);
 
-	bool Update(milliseconds UpdateTimeStamp);
+	bool Update();
+
+	void EnterGame(PlayerPtr player, protocol::RequestEnterGame enterPacket);
+	void LeaveGame(ActorIDType _actorId);
+	void HandleMove(PlayerPtr player, protocol::RequestMove movePacket);
+	void HandleSkill(PlayerPtr player, protocol::RequestSkill packet);
 
 public:
 	ZoneIDType zoneID;
@@ -23,6 +30,7 @@ public:
 	int32 yMax;
 	int32 yMin;
 	Map zoneMap;
+	MessageQueue messageQueue;
 
 private:
 	RecursiveMutex actorLock;

@@ -1,6 +1,6 @@
 #pragma once
 #include "Actor.h"
-using PlayerIDType = uint64;
+using PlayerIDType = uint32;
 
 class ClientSession;
 

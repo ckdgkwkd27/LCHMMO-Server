@@ -23,7 +23,7 @@ void Ticker::Stop()
 
 void Ticker::SetDuration(TickIntervalType _tickInterval)
 {
-	LockGuard guard(tickLock);
+	RecursiveLockGuard guard(tickLock);
 	tickInterval = _tickInterval;
 }
 

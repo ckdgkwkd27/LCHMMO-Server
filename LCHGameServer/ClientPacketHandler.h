@@ -16,14 +16,20 @@ enum : uint16
 	PKT_SC_SPAWN,
 	PKT_CS_MOVE,
 	PKT_SC_MOVE,
+	PKT_SC_SET_HP,
+	PKT_CS_SKILL,
+	PKT_SC_SKILL,
 	PKT_CS_CHAT,
-	PKT_SC_CHAT
+	PKT_SC_CHAT,
+	PKT_SC_DIE,
+	PKT_SC_DESPAWN,
 };
 
 bool HandleInvalid(ClientSessionPtr& session, char* buffer, uint32 len);
 bool Handle_PKT_CS_LOGIN(ClientSessionPtr& session, protocol::RequestLogin& packet);
 bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterGame& packet);
 bool Handle_PKT_CS_MOVE(ClientSessionPtr& session, protocol::RequestMove& packet);
+bool Handle_PKT_CS_SKILL(ClientSessionPtr& session, protocol::RequestSkill& packet);
 bool Handle_PKT_CS_CHAT(ClientSessionPtr& session, protocol::RequestChat& packet);
 
 class ClientPacketHandler
@@ -35,6 +41,10 @@ public:
 	static CircularBufferPtr MakeSendBufferPtr(protocol::ReturnEnterGame& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_ENTER_GAME); }
 	static CircularBufferPtr MakeSendBufferPtr(protocol::NotifySpawn& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_SPAWN); }
 	static CircularBufferPtr MakeSendBufferPtr(protocol::ReturnMove& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_MOVE); }
+	static CircularBufferPtr MakeSendBufferPtr(protocol::NotifySetHp& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_SET_HP); }
+	static CircularBufferPtr MakeSendBufferPtr(protocol::ReturnSkill& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_SKILL); }
+	static CircularBufferPtr MakeSendBufferPtr(protocol::NotifyDie& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_DIE); }
+	static CircularBufferPtr MakeSendBufferPtr(protocol::NotifyDespawn& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_DESPAWN); }
 
 	template<typename T>
 	static CircularBufferPtr MakeSendBufferPtr(T& pkt, uint16 PacketID)

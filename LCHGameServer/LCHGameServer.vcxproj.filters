@@ -39,6 +39,9 @@
     <ClCompile Include="Monster.cpp">
       <Filter>Actor\Monster</Filter>
     </ClCompile>
+    <ClCompile Include="MessageQueue.cpp">
+      <Filter>Zone</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protobuf-3.18.x\bin\protocol.pb.h">
@@ -77,6 +80,9 @@
     <ClInclude Include="Ticker.h" />
     <ClInclude Include="Monster.h">
       <Filter>Actor\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageQueue.h">
+      <Filter>Zone</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

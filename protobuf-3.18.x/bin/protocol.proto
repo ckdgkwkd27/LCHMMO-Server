@@ -3,7 +3,7 @@ package protocol;
 
 message ObjectInfo {
   uint32 ObjectType = 1;
-  uint64 actorId = 2;
+  uint32 actorId = 2;
   string name = 3;
   PositionInfo posInfo = 4;
   StatInfo statInfo = 5;
@@ -11,8 +11,9 @@ message ObjectInfo {
 
 message PositionInfo {
   uint32 state = 1;
-  int32 posX = 2;
-  int32 posY = 3;
+  uint32 moveDir = 2;
+  int32 posX = 3;
+  int32 posY = 4;
 }
 
 message StatInfo {
@@ -24,10 +25,6 @@ message StatInfo {
   uint32 totalExp = 6;
 }
 
-message SkillInfo {
-  uint32 skillId = 1;
-}
-
 message RequestLogin
 {
 	string id = 1;
@@ -37,12 +34,12 @@ message RequestLogin
 message ReturnLogin
 {
 	bool success = 1;
-	uint64 playerId = 2;
+	uint32 playerId = 2;
 }
 
 message RequestEnterGame
 {
-	uint64 playerId = 1;
+	uint32 playerId = 1;
 }
 
 message ReturnEnterGame
@@ -63,18 +60,37 @@ message RequestMove
 
 message ReturnMove
 {
-	uint64 actorId = 1;
+	uint32 actorId = 1;
 	PositionInfo posInfo = 2;
 }
 
-message RequestDespawn
+message NotifySetHp
 {
-
+	uint32 actorId = 1;
+	uint32 hp = 2;
 }
 
-message ReturnDespawn
+message RequestSkill
 {
+	uint32 skillId = 1;
+	uint32 targetActorId = 2;
+}
 
+message ReturnSkill
+{
+	uint32 actorId = 1;
+	uint32 skillId = 2;
+}
+
+message NotifyDie
+{
+	uint32 actorId = 1;
+	uint32 attackerId = 2;
+}
+
+message NotifyDespawn
+{
+	repeated uint32 actorIds = 1;
 }
 
 message RequestChat
@@ -84,6 +100,6 @@ message RequestChat
 
 message ReturnChat
 {
-	uint64 playerId = 1;
+	uint32 playerId = 1;
 	string msg = 2;
 }

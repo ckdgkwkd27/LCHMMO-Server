@@ -47,6 +47,9 @@
     <ClInclude Include="RandomUtil.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="TimeUtil.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SocketUtil.cpp">
@@ -92,6 +95,9 @@
     <ClCompile Include="RandomUtil.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="TimeUtil.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Network">
@@ -112,10 +118,5 @@
     <Filter Include="Network\IOCP">
       <UniqueIdentifier>{1c8decd0-50ff-4759-988a-965c94740c35}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="진행상황_고민.txt">
-      <Filter>Network\Connection</Filter>
-    </Text>
   </ItemGroup>
 </Project>

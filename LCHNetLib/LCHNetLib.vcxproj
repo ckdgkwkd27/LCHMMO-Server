@@ -161,6 +161,7 @@
     <ClInclude Include="Session.h" />
     <ClInclude Include="SessionManager.h" />
     <ClInclude Include="SocketUtil.h" />
+    <ClInclude Include="TimeUtil.h" />
     <ClInclude Include="Types.h" />
   </ItemGroup>
   <ItemGroup>
@@ -183,10 +184,8 @@
     <ClCompile Include="Session.cpp" />
     <ClCompile Include="SessionManager.cpp" />
     <ClCompile Include="SocketUtil.cpp" />
+    <ClCompile Include="TimeUtil.cpp" />
     <ClCompile Include="Types.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="진행상황_고민.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

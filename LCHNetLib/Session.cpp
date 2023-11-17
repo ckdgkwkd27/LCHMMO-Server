@@ -24,7 +24,7 @@ bool Session::PostSend(CircularBufferPtr _sendBuffer)
         return false;
 
     {
-        LockGuard lockGuard(sendLock);
+        RecursiveLockGuard lockGuard(sendLock);
         sessionSendEvent.Init();
         sessionSendEvent.sessionRef = shared_from_this();
         sessionSendEvent.sendBuffer = _sendBuffer;
@@ -194,7 +194,7 @@ bool Session::ProcessAccept()
 
 bool Session::ProcessSend(int32 bytes)
 {
-    LockGuard lockGuard(sendLock);
+    RecursiveLockGuard lockGuard(sendLock);
 
     //sessionSendEvent.sendBuffer->Clear();
 

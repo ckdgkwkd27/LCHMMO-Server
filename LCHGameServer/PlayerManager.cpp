@@ -18,7 +18,7 @@ void PlayerManager::Initialize(uint64 maxSize)
 
 PlayerPtr PlayerManager::NewPlayer()
 {
-	LockGuard playerGuard(playerLock);
+	RecursiveLockGuard playerGuard(playerLock);
 	PlayerPtr _player = playerPool.front();
 	playerPool.pop();
 	AddPlayer(_player);
@@ -34,7 +34,7 @@ void PlayerManager::AddPlayer(PlayerPtr _player)
 
 void PlayerManager::DeletePlayer(PlayerPtr _player)
 {
-	LockGuard playerGuard(playerLock);
+	RecursiveLockGuard playerGuard(playerLock);
 	uint64 _playerId = _player->playerId;
 	AllPlayerInfo.erase(_playerId);
 	ReturnPlayer(_player);

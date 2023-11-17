@@ -11,7 +11,7 @@ SessionPtr SessionManager::CreateSession(IocpCorePtr _iocpCore, SessionFactory _
 
 void SessionManager::Broadcast(CircularBufferPtr _sendBuffer)
 {
-    LockGuard lockGuard(sessionLock);
+    RecursiveLockGuard lockGuard(sessionLock);
     for (auto _session : activeSessions)
     {
         _session->PostSend(_sendBuffer);
@@ -59,7 +59,7 @@ bool SessionManager::ConnectServerSession(uint32 maxSessionCnt, Wstring connIp, 
 
 SessionPtr SessionManager::IssueSession()
 {
-    LockGuard lockGuard(sessionLock);
+    RecursiveLockGuard lockGuard(sessionLock);
     if (sessionPool.size() == 0)
     {
         return nullptr;
@@ -80,7 +80,7 @@ SessionPtr SessionManager::IssueSession()
 
 void SessionManager::ReturnSession(SessionPtr _session)
 {
-    LockGuard lockGuard(sessionLock);
+    RecursiveLockGuard lockGuard(sessionLock);
     issueCnt--;
 
     for (auto it = activeSessions.begin(); it != activeSessions.end(); it++)
@@ -96,7 +96,7 @@ void SessionManager::ReturnSession(SessionPtr _session)
 
 void SessionManager::AddToActivePool(SessionPtr _session)
 {
-    LockGuard lockGuard(sessionLock);
+    RecursiveLockGuard lockGuard(sessionLock);
     CRASH_ASSERT((_session != nullptr));
 
     activeSessions.push_back(_session);
@@ -104,7 +104,7 @@ void SessionManager::AddToActivePool(SessionPtr _session)
 
 void SessionManager::DeleteFromActivePool(SessionPtr _session)
 {
-    LockGuard lockGuard(sessionLock);
+    RecursiveLockGuard lockGuard(sessionLock);
     CRASH_ASSERT((_session != nullptr));
     CRASH_ASSERT((activeSessions.end() != std::find(activeSessions.begin(), activeSessions.end(), _session)));
 }

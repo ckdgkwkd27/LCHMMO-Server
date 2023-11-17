@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "IocpManager.h"
+#include "TimeUtil.h"
 
 char AcceptBuf[64] = { 0, };
 
@@ -25,7 +26,7 @@ void IocpManager::Initialize()
 		CRASH_ASSERT(false);
 	}
 
-	std::cout << "[INFO] IOCP Initialization Success.." << std::endl;
+	std::cout << "[INFO] IOCP Initialization(" << workerThreadsCnt << " Threads) Success.." << std::endl;
 	return;
 }
 
@@ -96,6 +97,7 @@ void IocpManager::Dispatch(IocpEvent* iocpEvent, DWORD bytes)
 	}
 	case EventType::RECV:
 	{
+		//std::cout << "이동처리 전=" << TimeUtil::GetCurrentTime() << std::endl;
 		_session->ProcessRecv(bytes);
 		break;
 	}

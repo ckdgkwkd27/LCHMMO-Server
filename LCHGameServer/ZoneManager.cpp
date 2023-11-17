@@ -26,13 +26,13 @@ void ZoneManager::Initialize()
 
 void ZoneManager::RegisterZone(ZonePtr _zone)
 {
-	LockGuard guard(zoneLock);
+	RecursiveLockGuard guard(zoneLock);
 	zoneVector.push_back(_zone);
 }
 
 bool ZoneManager::RegisterActor(ZoneIDType _zoneID, ActorPtr _actor)
 {
-	LockGuard guard(zoneLock);
+	RecursiveLockGuard guard(zoneLock);
 
 	ZonePtr _zone = nullptr;
 	auto it = zoneVector.begin();
@@ -63,7 +63,7 @@ bool ZoneManager::RegisterActor(ZoneIDType _zoneID, ActorPtr _actor)
 
 ActorIDType ZoneManager::IssueActorID()
 {
-	LockGuard guard(zoneLock);
+	RecursiveLockGuard guard(zoneLock);
 	uint32 newActorID = numOfActors;
 	numOfActors++;
 	return newActorID;
@@ -71,7 +71,7 @@ ActorIDType ZoneManager::IssueActorID()
 
 ZonePtr ZoneManager::FindZoneByID(ZoneIDType _zoneId)
 {
-	LockGuard guard(zoneLock);
+	RecursiveLockGuard guard(zoneLock);
 	auto it = std::find_if(zoneVector.begin(), zoneVector.end(), [_zoneId](ZonePtr _zone) { return _zone->zoneID == _zoneId; });
 	if(it == zoneVector.end())
 		return nullptr;
@@ -80,18 +80,16 @@ ZonePtr ZoneManager::FindZoneByID(ZoneIDType _zoneId)
 
 void ZoneManager::TickUpdate()
 {
-	milliseconds CurrTimeStamp = CURRENT_TIMESTAMP();
-
 	for (ZonePtr _zone : zoneVector)
 	{
 		if(_zone->zoneID == 0)
-		_zone->Update(CurrTimeStamp);
+		_zone->Update();
 	}
 }
 
 void ZoneManager::SpawnNpc()
 {
-	LockGuard guard(zoneLock);
+	RecursiveLockGuard guard(zoneLock);
 	ZonePtr _zone = zoneVector[0];
 
 	//Spawn Monster or Npc
@@ -101,8 +99,8 @@ void ZoneManager::SpawnNpc()
 		{
 			MonsterPtr monster = std::make_shared<Monster>();
 			monster->zoneID = 0;
-			monster->ActorInfo.mutable_posinfo()->set_posx(-1 * i - 9);
-			monster->ActorInfo.mutable_posinfo()->set_posy(-1 * i - 9);
+			monster->ActorInfo.mutable_posinfo()->set_posx(-2 * i - 9);
+			monster->ActorInfo.mutable_posinfo()->set_posy(-2 * i - 9);
 			_zone->RegisterActor(monster);
 		}
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "Actor.h"
 #include <fstream>
-#define MAX_MAP_SIZE 1024
+#define MAX_MAP_SIZE 80
 
 class Vector2Int
 {
@@ -16,7 +16,7 @@ public:
 	{ 
 		this->x = x; 
 		this->y = y; 
-		this->CellDistFromZero = abs(x) + abs(y);
+		this->CellDistFromZero = abs(x * x + y * y);
 	}
 
 	float Magnitude() { return (float)sqrt(sqrMagnitude); }
@@ -26,6 +26,21 @@ public:
 	static Vector2Int DOWN() { return Vector2Int(0, -1); }
 	static Vector2Int LEFT() { return Vector2Int(-1, 0); }
 	static Vector2Int RIGHT() { return Vector2Int(1, 0); }
+
+	static double Distance(Vector2Int A, Vector2Int B)
+	{
+		int32 xsquare = (B.x - A.x) * (B.x - A.x);
+		int32 ysquare = (B.y - A.y) * (B.y - A.y);
+		double dist = sqrt(xsquare + ysquare);
+		return dist;
+	}
+
+	static bool IsEqual(Vector2Int a, Vector2Int b)
+	{
+		if (a.x == b.x && a.y == b.y)
+			return true;
+		return false;
+	}
 
 	friend Vector2Int operator+(Vector2Int a, Vector2Int b)
 	{
@@ -96,8 +111,6 @@ public:
 	int32 MinY;
 	int32 MaxX;
 	int32 MaxY;
-	int32 SizeX;
-	int32 SizeY;
 
 	bool CollisionBuf[MAX_MAP_SIZE][MAX_MAP_SIZE];
 	ActorPtr ObjectBuf[MAX_MAP_SIZE][MAX_MAP_SIZE];
@@ -111,8 +124,8 @@ public:
 	ActorPtr Find(Vector2Int cellPos);
 	bool ApplyLeave(ActorPtr actor);
 	bool ApplyMove(ActorPtr actor, Vector2Int dest);
-	std::list<Vector2Int> FindPath(Vector2Int startCellPos, Vector2Int destCellPos, bool CheckActor = true);
-	std::list<Vector2Int> CalcCellPathFromParent(Pos parent[MAX_MAP_SIZE][MAX_MAP_SIZE], Pos dest);
+	std::vector<Vector2Int> FindPath(Vector2Int startCellPos, Vector2Int destCellPos, bool CheckActor = true);
+	std::vector<Vector2Int> CalcCellPathFromParent(std::map<Pos, Pos> parent, Pos dest);
 	Pos Cell2Pos(Vector2Int cell);
 	Vector2Int Pos2Cell(Pos pos);
 };

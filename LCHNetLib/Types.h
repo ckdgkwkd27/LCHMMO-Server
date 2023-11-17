@@ -22,7 +22,8 @@ using AcceptorPtr = std::shared_ptr<Acceptor>;
 using CircularBufferPtr = std::shared_ptr<CircularBuffer>;
 
 using AtomicBool = std::atomic<bool>;
-using LockGuard = std::lock_guard<std::recursive_mutex>;
+using RecursiveLockGuard = std::lock_guard<std::recursive_mutex>;
+using LockGuard = std::lock_guard<std::mutex>;
 using Wstring = std::wstring;
 using RecursiveMutex = std::recursive_mutex;
 using SessionFactory = std::function<std::shared_ptr<Session>(void)>;

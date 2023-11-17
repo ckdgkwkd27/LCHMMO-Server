@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Map.h"
 #include "ZoneManager.h"
+#include "Player.h"
 
 void Map::LoadMap(int mapId, std::string pathPrefix)
 {
@@ -23,6 +24,7 @@ void Map::LoadMap(int mapId, std::string pathPrefix)
 
 	xCount = MaxX - MinX + 1;
 	yCount = MaxY - MinY + 1;
+    printf("LoadMap MapId=%d, MinX=%d, MaxX=%d, MinY=%d, MaxY=%d\n", mapId, MinX, MaxX, MinY, MaxY);
 
     for (uint32 y = 0; y < yCount; y++)
     {
@@ -46,7 +48,8 @@ bool Map::CanGo(Vector2Int cellPos, bool checkActor)
 
     int32 x = cellPos.x - MinX;
     int32 y = MaxY - cellPos.y;
-    return !CollisionBuf[y][x] && (!checkActor || ObjectBuf[y][x] == nullptr);
+    bool ret = !CollisionBuf[y][x] && (!checkActor || ObjectBuf[y][x] == nullptr);
+    return ret;
 }
 
 ActorPtr Map::Find(Vector2Int cellPos)
@@ -76,9 +79,8 @@ bool Map::ApplyLeave(ActorPtr actor)
 	{
 		int x = posInfo.posx() - MinX;
 		int y = MaxY - posInfo.posy();
-		if (ObjectBuf[y][x] == actor)
+        if (ObjectBuf[y][x] == actor)
             ObjectBuf[y][x] = nullptr;
-
 	}
     return true;
 }
@@ -90,8 +92,10 @@ bool Map::ApplyMove(ActorPtr actor, Vector2Int dest)
     if (_zone == nullptr)
         return false;
 
-	if (CanGo(dest, true) == false)
-		return false;
+    if (CanGo(dest, true) == false)
+    {
+        return false;
+    }
 
     {
         int32 x = dest.x - MinX;
@@ -104,27 +108,17 @@ bool Map::ApplyMove(ActorPtr actor, Vector2Int dest)
     return true;
 }
 
-std::list<Vector2Int> Map::FindPath(Vector2Int startCellPos, Vector2Int destCellPos, bool CheckActor)
+std::vector<Vector2Int> Map::FindPath(Vector2Int startCellPos, Vector2Int destCellPos, bool CheckActor)
 {
 	int32 _deltaY[] = { 1, -1, 0, 0 };
 	int32 _deltaX[] = { 0, 0, -1, 1 };
-	int32 _cost[]   = { 10, 10, 10, 10 };
 
     std::vector<Pos> path;
 
-    bool closed[MAX_MAP_SIZE][MAX_MAP_SIZE];
-    memset(closed, false, sizeof(closed));
-
-    int32 opened[MAX_MAP_SIZE][MAX_MAP_SIZE];
-    for (int32 y = 0; y < SizeY; y++)
-    {
-        for (int32 x = 0; x < SizeX; x++)
-        {
-            opened[y][x] = INT_MAX;
-        }
-    }
-
-    Pos parent[MAX_MAP_SIZE][MAX_MAP_SIZE];
+	std::vector<std::vector<bool>> closed(MaxY - MinY + 1, std::vector<bool>(MaxX - MinX + 1, false));
+    std::vector<std::vector<int32>> best(MaxY - MinY + 1, std::vector<int32>(MaxX - MinX + 1, INT32_MAX));
+    std::vector<std::vector<int32>> opened(MaxY - MinY + 1, std::vector<int32>(MaxX - MinX + 1, INT32_MAX));
+    std::map<Pos, Pos> parent;
 
     std::priority_queue<PQNode, std::vector<PQNode>, std::greater<PQNode>> pq;
 
@@ -134,8 +128,15 @@ std::list<Vector2Int> Map::FindPath(Vector2Int startCellPos, Vector2Int destCell
     int32 g = 0;
     int32 h = 10 * (abs(dest.y - pos.y) + abs(dest.x - pos.x));
     opened[pos.y][pos.x] = h;
-    pq.push(PQNode{ g + h, g, pos });
-    parent[pos.y][pos.x] = Pos(pos.y, pos.x);
+
+    PQNode pqNode;
+    pqNode.F = h;
+    pqNode.G = 0;
+    pqNode.pos.y = pos.y;
+    pqNode.pos.x = pos.x;
+
+    pq.push(pqNode);
+    parent[pos] = pos;
 
     while (pq.size() > 0)
     {
@@ -162,32 +163,34 @@ std::list<Vector2Int> Map::FindPath(Vector2Int startCellPos, Vector2Int destCell
 
             g = 0;
             h = 10 * ((dest.y - next.y) * (dest.y - next.y) + (dest.x - next.x) * (dest.x - next.x));
-            if(opened[next.y][next.y] < g + h)
+            if(opened[next.y][next.x] < g + h)
                 continue;
 
             opened[dest.y][dest.x] = g + h;
-            pq.push(PQNode{ g + h, g, next });
-            parent[next.y][next.x] = Pos(node.pos.y, node.pos.x);
+
+            pq.push({ g + h, g, next });
+            parent[next] = node.pos;
         }
     }
 
     return CalcCellPathFromParent(parent, dest);
 }
 
-std::list<Vector2Int> Map::CalcCellPathFromParent(Pos parent[MAX_MAP_SIZE][MAX_MAP_SIZE], Pos dest)
+std::vector<Vector2Int> Map::CalcCellPathFromParent(std::map<Pos, Pos> parent, Pos dest)
 {
-    std::list<Vector2Int> cells = std::list<Vector2Int>();
-    int32 y = dest.y;
-    int32 x = dest.x;
-    while (parent[y][x].y != y || parent[y][x].x != x)
+    std::vector<Vector2Int> cells = std::vector<Vector2Int>();
+    Pos pos = dest;
+    while (true)
     {
-        cells.push_back(Pos2Cell(Pos(y, x)));
-        Pos pos = parent[y][x];
-        y = pos.y;
-        x = pos.x;
+		if (pos == parent[pos])
+			break;
+
+        cells.push_back(Pos2Cell(pos));
+        pos = parent[pos];
     }
-    cells.push_back(Pos2Cell(Pos(y, x)));
-    cells.reverse();
+    cells.push_back(Pos2Cell(pos));
+    
+    std::reverse(std::begin(cells), std::end(cells));
     return cells;
 }
 

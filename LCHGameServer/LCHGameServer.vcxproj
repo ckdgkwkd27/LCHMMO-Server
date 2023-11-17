@@ -176,6 +176,7 @@
     <ClCompile Include="ClientSession.cpp" />
     <ClCompile Include="LCHGameServer.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="MessageQueue.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="ObjectPool.cpp" />
     <ClCompile Include="pch.cpp">
@@ -196,6 +197,7 @@
     <ClInclude Include="ClientPacketHandler.h" />
     <ClInclude Include="ClientSession.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="MessageQueue.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="ObjectPool.h" />
     <ClInclude Include="pch.h" />
