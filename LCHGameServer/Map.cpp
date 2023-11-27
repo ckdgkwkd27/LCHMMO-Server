@@ -24,7 +24,7 @@ void Map::LoadMap(int mapId, std::string pathPrefix)
 
 	xCount = MaxX - MinX + 1;
 	yCount = MaxY - MinY + 1;
-    printf("LoadMap MapId=%d, MinX=%d, MaxX=%d, MinY=%d, MaxY=%d\n", mapId, MinX, MaxX, MinY, MaxY);
+    printf("[INFO] LoadMap MapId=%d, MinX=%d, MaxX=%d, MinY=%d, MaxY=%d\n", mapId, MinX, MaxX, MinY, MaxY);
 
     for (uint32 y = 0; y < yCount; y++)
     {
@@ -129,13 +129,7 @@ std::vector<Vector2Int> Map::FindPath(Vector2Int startCellPos, Vector2Int destCe
     int32 h = 10 * (abs(dest.y - pos.y) + abs(dest.x - pos.x));
     opened[pos.y][pos.x] = h;
 
-    PQNode pqNode;
-    pqNode.F = h;
-    pqNode.G = 0;
-    pqNode.pos.y = pos.y;
-    pqNode.pos.x = pos.x;
-
-    pq.push(pqNode);
+    pq.push({ h, 0, pos });
     parent[pos] = pos;
 
     while (pq.size() > 0)

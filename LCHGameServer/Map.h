@@ -1,7 +1,7 @@
 #pragma once
 #include "Actor.h"
 #include <fstream>
-#define MAX_MAP_SIZE 80
+#define MAX_MAP_SIZE 1024
 
 class Vector2Int
 {

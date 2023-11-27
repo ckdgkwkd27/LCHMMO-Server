@@ -57,8 +57,3 @@ bool Handle_PKT_SC_ENTER_GAME(ServerSessionPtr& session, protocol::ReturnEnterGa
 	session->state = SessionState::ENTER_GAME;
 	return true;
 }
-
-bool Handle_PKT_SC_CHAT(ServerSessionPtr& session, protocol::ReturnChat& packet)
-{
-	return false;
-}

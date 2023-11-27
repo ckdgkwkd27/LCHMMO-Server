@@ -10,7 +10,6 @@ ZoneManager::ZoneManager()
 	numOfActors = 0;
 }
 
-//#TODO 추후에 Config에서 읽을수 있도록한다
 void ZoneManager::Initialize()
 {
 	for (uint32 idx = 0; idx < ZoneIDEnum::CNT; idx++)
@@ -30,7 +29,7 @@ void ZoneManager::RegisterZone(ZonePtr _zone)
 	zoneVector.push_back(_zone);
 }
 
-bool ZoneManager::RegisterActor(ZoneIDType _zoneID, ActorPtr _actor)
+bool ZoneManager::RegisterActor(ZoneIDType zoneId, ActorPtr _actor)
 {
 	RecursiveLockGuard guard(zoneLock);
 
@@ -38,7 +37,7 @@ bool ZoneManager::RegisterActor(ZoneIDType _zoneID, ActorPtr _actor)
 	auto it = zoneVector.begin();
 	for (; it != zoneVector.end(); it++)
 	{
-		if ((*it)->zoneID == _zoneID)
+		if ((*it)->zoneID == zoneId)
 		{
 			_zone = *it;
 			break;
@@ -81,10 +80,7 @@ ZonePtr ZoneManager::FindZoneByID(ZoneIDType _zoneId)
 void ZoneManager::TickUpdate()
 {
 	for (ZonePtr _zone : zoneVector)
-	{
-		if(_zone->zoneID == 0)
 		_zone->Update();
-	}
 }
 
 void ZoneManager::SpawnNpc()

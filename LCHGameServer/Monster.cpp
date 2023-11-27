@@ -67,13 +67,11 @@ void Monster::UpdateMoving()
 	}
 
 	PlayerPtr player = zone->FindPlayerInCondition([this](ActorPtr actor)
-		{
-			Vector2Int dir(ActorInfo.posinfo().posx() - actor->ActorInfo.posinfo().posx(),
-				ActorInfo.posinfo().posy() - actor->ActorInfo.posinfo().posy());
-			//std::cout << "moving Dir=" << dir.x << ", " << dir.y << ", CellDistFromZero=" << dir.CellDistFromZero << std::endl;
-			printf("sqrt(dir.CellDistFromZero)=%f\n", sqrt(dir.CellDistFromZero));
-			return sqrt(dir.CellDistFromZero) <= SEARCH_CELL_DISTANCE;
-		});
+	{
+		Vector2Int dir(ActorInfo.posinfo().posx() - actor->ActorInfo.posinfo().posx(),
+			ActorInfo.posinfo().posy() - actor->ActorInfo.posinfo().posy());
+		return sqrt(dir.CellDistFromZero) <= SEARCH_CELL_DISTANCE;
+	});
 
 	if (player != nullptr)
 	{
@@ -140,8 +138,6 @@ void Monster::UpdateChasing()
 		SetMoveState(MoveState::IDLE);
 		return;
 	} 
-	
-	printf("Chasing Path=(%d,%d)\n", path[1].x, path[1].y);
 
 	if (dist <= SKILL_DISTANCE && (dir.x == 0 || dir.y == 0))
 	{
@@ -221,10 +217,3 @@ void Monster::BroadcastMove()
 	auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(movePacket);
 	zone->BroadCast(shared_from_this(), _sendBuffer);
 }
-
-/*
-*	현재 AI문제
-1. 이동시 빈공간에 충돌형성
-2. 최초 스폰시 안움직이면 인식을 못함
-3. (유니티) 몬스터 Anim이 최초1회만 출력 => CreatureState가 IDLE임(혹시 서버에서 IDLE을 지속적으로 주기때문에 그런가?)
-*/

@@ -29,6 +29,10 @@ void ClientPacketHandler::Init()
 	{
 		return HandlePacket<protocol::RequestSkill>(Handle_PKT_CS_SKILL, session, buffer, len);
 	};
+	GClientPacketHandler[PKT_CS_TELEPORT] = [](ClientSessionPtr& session, char* buffer, uint32 len)
+	{
+		return HandlePacket<protocol::RequestTeleport>(Handle_PKT_CS_TELEPORT, session, buffer, len);
+	};
 }
 
 bool ClientPacketHandler::HandlePacket(ClientSessionPtr session, char* buffer, uint32 len)
@@ -82,16 +86,16 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
     if (session->currentPlayer->playerId != packet.playerid())
         return false;
 
-    PlayerPtr _player = session->currentPlayer;
-    RETURN_FALSE_ON_FAIL(_player != nullptr);
+	PlayerPtr _player = session->currentPlayer;
+	RETURN_FALSE_ON_FAIL(_player != nullptr);
 
-    ZonePtr _zone = GZoneManager.FindZoneByID(_player->zoneID);
-    RETURN_FALSE_ON_FAIL(_zone != nullptr);
+	ZonePtr _zone = GZoneManager.FindZoneByID(_player->zoneID);
+	RETURN_FALSE_ON_FAIL(_zone != nullptr);
 
-    _zone->messageQueue.Push([_zone, _player, packet]() {_zone->EnterGame(_player, packet); });
+	_zone->messageQueue.Push([_zone, _player]() {_zone->EnterGame(_player); });
 
-    std::cout << "[INFO] ReturnEnterGame Packet Send Socket=" << session->GetSocket() << ", PlayerID=" << packet.playerid() << std::endl;
-    return true;
+	std::cout << "[INFO] ReturnEnterGame Packet Send Socket=" << session->GetSocket() << ", PlayerID=" << packet.playerid() << std::endl;
+	return true;
 }
 
 bool Handle_PKT_CS_MOVE(ClientSessionPtr& session, protocol::RequestMove& packet)
@@ -122,9 +126,27 @@ bool Handle_PKT_CS_SKILL(ClientSessionPtr& session, protocol::RequestSkill& pack
     return true;
 }
 
-bool Handle_PKT_CS_CHAT(ClientSessionPtr& session, protocol::RequestChat& packet)
+bool Handle_PKT_CS_TELEPORT(ClientSessionPtr& session, protocol::RequestTeleport& packet)
 {
-    session->GetSocket();
-    packet.msg();
+    PlayerPtr _player = session->currentPlayer;
+    RETURN_FALSE_ON_FAIL(_player != nullptr);
+
+    ZonePtr currentZone = GZoneManager.FindZoneByID(_player->zoneID);
+    RETURN_FALSE_ON_FAIL(currentZone != nullptr);
+
+    ZonePtr newZone = GZoneManager.FindZoneByID(packet.zoneid());
+    RETURN_FALSE_ON_FAIL(newZone != nullptr);
+
+    //Player Despawn 贸府, 脚痹 Zone 涝厘贸府
+    currentZone->UnregisterActor(_player);
+
+    _player->zoneID = packet.zoneid();
+    _player->ActorInfo.mutable_posinfo()->set_posx(packet.posinfo().posx());
+    _player->ActorInfo.mutable_posinfo()->set_posy(packet.posinfo().posy());
+
+    //Notify 
+    newZone->messageQueue.Push([newZone, _player]() {newZone->EnterGame(_player, newZone->zoneID); });
+
+    std::cout << "[INFO] Handle TELEPORT ActorId=" << packet.actorid() << ", ZoneId=" << packet.zoneid() << std::endl;
     return true;
 }

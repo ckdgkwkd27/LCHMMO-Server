@@ -15,22 +15,31 @@ void Zone::Init()
 
 void Zone::RegisterActor(ActorPtr _actor)
 {
-	//RecursiveLockGuard guard(actorLock);
+	if (_actor == nullptr)
+		return;
 
-	if(_actor == nullptr)
-		CRASH_ASSERT(false);
+	RecursiveLockGuard guard(actorLock);
 	actorVector.push_back(_actor);
+}
+
+void Zone::UnregisterActor(ActorPtr _actor)
+{
+	if (_actor == nullptr)
+		return;
+
+	RecursiveLockGuard guard(actorLock);
+	actorVector.erase(std::remove(actorVector.begin(), actorVector.end(), _actor), actorVector.end());
 }
 
 ActorPtr Zone::FindActor(ActorIDType _actorID)
 {
-	//RecursiveLockGuard guard(actorLock);
+	RecursiveLockGuard guard(actorLock);
 
-	auto it = std::find_if(actorVector.begin(), actorVector.end(), [_actorID](ActorPtr _actor)
-		{
+	auto it = std::find_if(actorVector.begin(), actorVector.end(), [_actorID](ActorPtr _actor) {
 			if (_actor == nullptr) CRASH_ASSERT(false);
 			return _actor->ActorInfo.actorid() == _actorID;
-		});
+	});
+
 	if (it == actorVector.end())
 		return nullptr;
 
@@ -84,7 +93,6 @@ bool Zone::Update()
 	//Message Queue Process
 	std::vector<MessageFuncType> messageVector;
 	messageQueue.FlushAll(messageVector);
-
 	for (MessageFuncType message : messageVector)
 	{
 		message();
@@ -93,13 +101,13 @@ bool Zone::Update()
 	return true;
 }
 
-void Zone::EnterGame(PlayerPtr player, protocol::RequestEnterGame enterPacket)
+void Zone::EnterGame(PlayerPtr player, ZoneIDType zoneId)
 {
-	auto zone = GZoneManager.FindZoneByID(0);
+	auto zone = GZoneManager.FindZoneByID(zoneId);
 	if (zone == nullptr)
 		return;
 
-	if (false == GZoneManager.RegisterActor(0, player))
+	if (false == GZoneManager.RegisterActor(zoneId, player))
 		return;
 
 	zone->zoneMap.ApplyMove(player, Vector2Int(player->ActorInfo.posinfo().posx(), player->ActorInfo.posinfo().posy()));
@@ -142,8 +150,13 @@ void Zone::EnterGame(PlayerPtr player, protocol::RequestEnterGame enterPacket)
 void Zone::LeaveGame(ActorIDType _actorId)
 {
 	auto actor = FindActor(_actorId);
+	if (actor == nullptr)
+		return;
+
 	if (actor->ActorInfo.objecttype() == (uint32)ObjectType::PLAYER)
 	{
+		this->UnregisterActor(actor);
+
 		PlayerPtr player = std::dynamic_pointer_cast<Player>(actor);
 		GPlayerManager.DeletePlayer(player);
 

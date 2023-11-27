@@ -13,14 +13,11 @@ enum : uint16
 	PKT_SC_LOGIN,
 	PKT_CS_ENTER_GAME,
 	PKT_SC_ENTER_GAME,
-	PKT_CS_CHAT,
-	PKT_SC_CHAT
 };
 
 bool HandleInvalid(ServerSessionPtr& session, char* buffer, uint32 len);
 bool Handle_PKT_SC_LOGIN(ServerSessionPtr& session, protocol::ReturnLogin& packet);
 bool Handle_PKT_SC_ENTER_GAME(ServerSessionPtr& session, protocol::ReturnEnterGame& packet);
-bool Handle_PKT_SC_CHAT(ServerSessionPtr& session, protocol::ReturnChat& packet);
 
 class ServerPacketHandler
 {

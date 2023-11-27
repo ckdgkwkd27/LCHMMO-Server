@@ -72,9 +72,6 @@ extern ObjectInfoDefaultTypeInternal _ObjectInfo_default_instance_;
 class PositionInfo;
 struct PositionInfoDefaultTypeInternal;
 extern PositionInfoDefaultTypeInternal _PositionInfo_default_instance_;
-class RequestChat;
-struct RequestChatDefaultTypeInternal;
-extern RequestChatDefaultTypeInternal _RequestChat_default_instance_;
 class RequestEnterGame;
 struct RequestEnterGameDefaultTypeInternal;
 extern RequestEnterGameDefaultTypeInternal _RequestEnterGame_default_instance_;
@@ -87,9 +84,9 @@ extern RequestMoveDefaultTypeInternal _RequestMove_default_instance_;
 class RequestSkill;
 struct RequestSkillDefaultTypeInternal;
 extern RequestSkillDefaultTypeInternal _RequestSkill_default_instance_;
-class ReturnChat;
-struct ReturnChatDefaultTypeInternal;
-extern ReturnChatDefaultTypeInternal _ReturnChat_default_instance_;
+class RequestTeleport;
+struct RequestTeleportDefaultTypeInternal;
+extern RequestTeleportDefaultTypeInternal _RequestTeleport_default_instance_;
 class ReturnEnterGame;
 struct ReturnEnterGameDefaultTypeInternal;
 extern ReturnEnterGameDefaultTypeInternal _ReturnEnterGame_default_instance_;
@@ -102,6 +99,9 @@ extern ReturnMoveDefaultTypeInternal _ReturnMove_default_instance_;
 class ReturnSkill;
 struct ReturnSkillDefaultTypeInternal;
 extern ReturnSkillDefaultTypeInternal _ReturnSkill_default_instance_;
+class ReturnTeleport;
+struct ReturnTeleportDefaultTypeInternal;
+extern ReturnTeleportDefaultTypeInternal _ReturnTeleport_default_instance_;
 class StatInfo;
 struct StatInfoDefaultTypeInternal;
 extern StatInfoDefaultTypeInternal _StatInfo_default_instance_;
@@ -113,16 +113,16 @@ template<> ::protocol::NotifySetHp* Arena::CreateMaybeMessage<::protocol::Notify
 template<> ::protocol::NotifySpawn* Arena::CreateMaybeMessage<::protocol::NotifySpawn>(Arena*);
 template<> ::protocol::ObjectInfo* Arena::CreateMaybeMessage<::protocol::ObjectInfo>(Arena*);
 template<> ::protocol::PositionInfo* Arena::CreateMaybeMessage<::protocol::PositionInfo>(Arena*);
-template<> ::protocol::RequestChat* Arena::CreateMaybeMessage<::protocol::RequestChat>(Arena*);
 template<> ::protocol::RequestEnterGame* Arena::CreateMaybeMessage<::protocol::RequestEnterGame>(Arena*);
 template<> ::protocol::RequestLogin* Arena::CreateMaybeMessage<::protocol::RequestLogin>(Arena*);
 template<> ::protocol::RequestMove* Arena::CreateMaybeMessage<::protocol::RequestMove>(Arena*);
 template<> ::protocol::RequestSkill* Arena::CreateMaybeMessage<::protocol::RequestSkill>(Arena*);
-template<> ::protocol::ReturnChat* Arena::CreateMaybeMessage<::protocol::ReturnChat>(Arena*);
+template<> ::protocol::RequestTeleport* Arena::CreateMaybeMessage<::protocol::RequestTeleport>(Arena*);
 template<> ::protocol::ReturnEnterGame* Arena::CreateMaybeMessage<::protocol::ReturnEnterGame>(Arena*);
 template<> ::protocol::ReturnLogin* Arena::CreateMaybeMessage<::protocol::ReturnLogin>(Arena*);
 template<> ::protocol::ReturnMove* Arena::CreateMaybeMessage<::protocol::ReturnMove>(Arena*);
 template<> ::protocol::ReturnSkill* Arena::CreateMaybeMessage<::protocol::ReturnSkill>(Arena*);
+template<> ::protocol::ReturnTeleport* Arena::CreateMaybeMessage<::protocol::ReturnTeleport>(Arena*);
 template<> ::protocol::StatInfo* Arena::CreateMaybeMessage<::protocol::StatInfo>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace protocol {
@@ -2577,24 +2577,24 @@ class NotifyDespawn final :
 };
 // -------------------------------------------------------------------
 
-class RequestChat final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protocol.RequestChat) */ {
+class RequestTeleport final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protocol.RequestTeleport) */ {
  public:
-  inline RequestChat() : RequestChat(nullptr) {}
-  ~RequestChat() override;
-  explicit constexpr RequestChat(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+  inline RequestTeleport() : RequestTeleport(nullptr) {}
+  ~RequestTeleport() override;
+  explicit constexpr RequestTeleport(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
-  RequestChat(const RequestChat& from);
-  RequestChat(RequestChat&& from) noexcept
-    : RequestChat() {
+  RequestTeleport(const RequestTeleport& from);
+  RequestTeleport(RequestTeleport&& from) noexcept
+    : RequestTeleport() {
     *this = ::std::move(from);
   }
 
-  inline RequestChat& operator=(const RequestChat& from) {
+  inline RequestTeleport& operator=(const RequestTeleport& from) {
     CopyFrom(from);
     return *this;
   }
-  inline RequestChat& operator=(RequestChat&& from) noexcept {
+  inline RequestTeleport& operator=(RequestTeleport&& from) noexcept {
     if (this == &from) return *this;
     if (GetOwningArena() == from.GetOwningArena()
   #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
@@ -2617,20 +2617,20 @@ class RequestChat final :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const RequestChat& default_instance() {
+  static const RequestTeleport& default_instance() {
     return *internal_default_instance();
   }
-  static inline const RequestChat* internal_default_instance() {
-    return reinterpret_cast<const RequestChat*>(
-               &_RequestChat_default_instance_);
+  static inline const RequestTeleport* internal_default_instance() {
+    return reinterpret_cast<const RequestTeleport*>(
+               &_RequestTeleport_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     15;
 
-  friend void swap(RequestChat& a, RequestChat& b) {
+  friend void swap(RequestTeleport& a, RequestTeleport& b) {
     a.Swap(&b);
   }
-  inline void Swap(RequestChat* other) {
+  inline void Swap(RequestTeleport* other) {
     if (other == this) return;
     if (GetOwningArena() == other->GetOwningArena()) {
       InternalSwap(other);
@@ -2638,7 +2638,7 @@ class RequestChat final :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(RequestChat* other) {
+  void UnsafeArenaSwap(RequestTeleport* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
     InternalSwap(other);
@@ -2646,17 +2646,17 @@ class RequestChat final :
 
   // implements Message ----------------------------------------------
 
-  inline RequestChat* New() const final {
-    return new RequestChat();
+  inline RequestTeleport* New() const final {
+    return new RequestTeleport();
   }
 
-  RequestChat* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<RequestChat>(arena);
+  RequestTeleport* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<RequestTeleport>(arena);
   }
   using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const RequestChat& from);
+  void CopyFrom(const RequestTeleport& from);
   using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const RequestChat& from);
+  void MergeFrom(const RequestTeleport& from);
   private:
   static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
   public:
@@ -2673,13 +2673,13 @@ class RequestChat final :
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(RequestChat* other);
+  void InternalSwap(RequestTeleport* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "protocol.RequestChat";
+    return "protocol.RequestTeleport";
   }
   protected:
-  explicit RequestChat(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+  explicit RequestTeleport(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                        bool is_message_owned = false);
   private:
   static void ArenaDtor(void* object);
@@ -2696,53 +2696,79 @@ class RequestChat final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kMsgFieldNumber = 1,
+    kPosInfoFieldNumber = 3,
+    kActorIdFieldNumber = 1,
+    kZoneIdFieldNumber = 2,
   };
-  // string msg = 1;
-  void clear_msg();
-  const std::string& msg() const;
-  template <typename ArgT0 = const std::string&, typename... ArgT>
-  void set_msg(ArgT0&& arg0, ArgT... args);
-  std::string* mutable_msg();
-  PROTOBUF_MUST_USE_RESULT std::string* release_msg();
-  void set_allocated_msg(std::string* msg);
+  // .protocol.PositionInfo posInfo = 3;
+  bool has_posinfo() const;
   private:
-  const std::string& _internal_msg() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_msg(const std::string& value);
-  std::string* _internal_mutable_msg();
+  bool _internal_has_posinfo() const;
+  public:
+  void clear_posinfo();
+  const ::protocol::PositionInfo& posinfo() const;
+  PROTOBUF_MUST_USE_RESULT ::protocol::PositionInfo* release_posinfo();
+  ::protocol::PositionInfo* mutable_posinfo();
+  void set_allocated_posinfo(::protocol::PositionInfo* posinfo);
+  private:
+  const ::protocol::PositionInfo& _internal_posinfo() const;
+  ::protocol::PositionInfo* _internal_mutable_posinfo();
+  public:
+  void unsafe_arena_set_allocated_posinfo(
+      ::protocol::PositionInfo* posinfo);
+  ::protocol::PositionInfo* unsafe_arena_release_posinfo();
+
+  // uint32 actorId = 1;
+  void clear_actorid();
+  ::PROTOBUF_NAMESPACE_ID::uint32 actorid() const;
+  void set_actorid(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_actorid() const;
+  void _internal_set_actorid(::PROTOBUF_NAMESPACE_ID::uint32 value);
   public:
 
-  // @@protoc_insertion_point(class_scope:protocol.RequestChat)
+  // uint32 zoneId = 2;
+  void clear_zoneid();
+  ::PROTOBUF_NAMESPACE_ID::uint32 zoneid() const;
+  void set_zoneid(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_zoneid() const;
+  void _internal_set_zoneid(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:protocol.RequestTeleport)
  private:
   class _Internal;
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr msg_;
+  ::protocol::PositionInfo* posinfo_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 actorid_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 zoneid_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_protocol_2eproto;
 };
 // -------------------------------------------------------------------
 
-class ReturnChat final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protocol.ReturnChat) */ {
+class ReturnTeleport final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protocol.ReturnTeleport) */ {
  public:
-  inline ReturnChat() : ReturnChat(nullptr) {}
-  ~ReturnChat() override;
-  explicit constexpr ReturnChat(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+  inline ReturnTeleport() : ReturnTeleport(nullptr) {}
+  ~ReturnTeleport() override;
+  explicit constexpr ReturnTeleport(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
-  ReturnChat(const ReturnChat& from);
-  ReturnChat(ReturnChat&& from) noexcept
-    : ReturnChat() {
+  ReturnTeleport(const ReturnTeleport& from);
+  ReturnTeleport(ReturnTeleport&& from) noexcept
+    : ReturnTeleport() {
     *this = ::std::move(from);
   }
 
-  inline ReturnChat& operator=(const ReturnChat& from) {
+  inline ReturnTeleport& operator=(const ReturnTeleport& from) {
     CopyFrom(from);
     return *this;
   }
-  inline ReturnChat& operator=(ReturnChat&& from) noexcept {
+  inline ReturnTeleport& operator=(ReturnTeleport&& from) noexcept {
     if (this == &from) return *this;
     if (GetOwningArena() == from.GetOwningArena()
   #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
@@ -2765,20 +2791,20 @@ class ReturnChat final :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const ReturnChat& default_instance() {
+  static const ReturnTeleport& default_instance() {
     return *internal_default_instance();
   }
-  static inline const ReturnChat* internal_default_instance() {
-    return reinterpret_cast<const ReturnChat*>(
-               &_ReturnChat_default_instance_);
+  static inline const ReturnTeleport* internal_default_instance() {
+    return reinterpret_cast<const ReturnTeleport*>(
+               &_ReturnTeleport_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     16;
 
-  friend void swap(ReturnChat& a, ReturnChat& b) {
+  friend void swap(ReturnTeleport& a, ReturnTeleport& b) {
     a.Swap(&b);
   }
-  inline void Swap(ReturnChat* other) {
+  inline void Swap(ReturnTeleport* other) {
     if (other == this) return;
     if (GetOwningArena() == other->GetOwningArena()) {
       InternalSwap(other);
@@ -2786,7 +2812,7 @@ class ReturnChat final :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(ReturnChat* other) {
+  void UnsafeArenaSwap(ReturnTeleport* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
     InternalSwap(other);
@@ -2794,17 +2820,17 @@ class ReturnChat final :
 
   // implements Message ----------------------------------------------
 
-  inline ReturnChat* New() const final {
-    return new ReturnChat();
+  inline ReturnTeleport* New() const final {
+    return new ReturnTeleport();
   }
 
-  ReturnChat* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<ReturnChat>(arena);
+  ReturnTeleport* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<ReturnTeleport>(arena);
   }
   using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const ReturnChat& from);
+  void CopyFrom(const ReturnTeleport& from);
   using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const ReturnChat& from);
+  void MergeFrom(const ReturnTeleport& from);
   private:
   static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
   public:
@@ -2821,13 +2847,13 @@ class ReturnChat final :
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(ReturnChat* other);
+  void InternalSwap(ReturnTeleport* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "protocol.ReturnChat";
+    return "protocol.ReturnTeleport";
   }
   protected:
-  explicit ReturnChat(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+  explicit ReturnTeleport(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                        bool is_message_owned = false);
   private:
   static void ArenaDtor(void* object);
@@ -2844,41 +2870,36 @@ class ReturnChat final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kMsgFieldNumber = 2,
-    kPlayerIdFieldNumber = 1,
+    kActorIdFieldNumber = 1,
+    kZoneIdFieldNumber = 2,
   };
-  // string msg = 2;
-  void clear_msg();
-  const std::string& msg() const;
-  template <typename ArgT0 = const std::string&, typename... ArgT>
-  void set_msg(ArgT0&& arg0, ArgT... args);
-  std::string* mutable_msg();
-  PROTOBUF_MUST_USE_RESULT std::string* release_msg();
-  void set_allocated_msg(std::string* msg);
+  // uint32 actorId = 1;
+  void clear_actorid();
+  ::PROTOBUF_NAMESPACE_ID::uint32 actorid() const;
+  void set_actorid(::PROTOBUF_NAMESPACE_ID::uint32 value);
   private:
-  const std::string& _internal_msg() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_msg(const std::string& value);
-  std::string* _internal_mutable_msg();
+  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_actorid() const;
+  void _internal_set_actorid(::PROTOBUF_NAMESPACE_ID::uint32 value);
   public:
 
-  // uint32 playerId = 1;
-  void clear_playerid();
-  ::PROTOBUF_NAMESPACE_ID::uint32 playerid() const;
-  void set_playerid(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  // uint32 zoneId = 2;
+  void clear_zoneid();
+  ::PROTOBUF_NAMESPACE_ID::uint32 zoneid() const;
+  void set_zoneid(::PROTOBUF_NAMESPACE_ID::uint32 value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_playerid() const;
-  void _internal_set_playerid(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_zoneid() const;
+  void _internal_set_zoneid(::PROTOBUF_NAMESPACE_ID::uint32 value);
   public:
 
-  // @@protoc_insertion_point(class_scope:protocol.ReturnChat)
+  // @@protoc_insertion_point(class_scope:protocol.ReturnTeleport)
  private:
   class _Internal;
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr msg_;
-  ::PROTOBUF_NAMESPACE_ID::uint32 playerid_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 actorid_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 zoneid_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_protocol_2eproto;
 };
@@ -4126,122 +4147,180 @@ NotifyDespawn::mutable_actorids() {
 
 // -------------------------------------------------------------------
 
-// RequestChat
+// RequestTeleport
 
-// string msg = 1;
-inline void RequestChat::clear_msg() {
-  msg_.ClearToEmpty();
+// uint32 actorId = 1;
+inline void RequestTeleport::clear_actorid() {
+  actorid_ = 0u;
 }
-inline const std::string& RequestChat::msg() const {
-  // @@protoc_insertion_point(field_get:protocol.RequestChat.msg)
-  return _internal_msg();
+inline ::PROTOBUF_NAMESPACE_ID::uint32 RequestTeleport::_internal_actorid() const {
+  return actorid_;
 }
-template <typename ArgT0, typename... ArgT>
-inline PROTOBUF_ALWAYS_INLINE
-void RequestChat::set_msg(ArgT0&& arg0, ArgT... args) {
- 
- msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:protocol.RequestChat.msg)
+inline ::PROTOBUF_NAMESPACE_ID::uint32 RequestTeleport::actorid() const {
+  // @@protoc_insertion_point(field_get:protocol.RequestTeleport.actorId)
+  return _internal_actorid();
 }
-inline std::string* RequestChat::mutable_msg() {
-  std::string* _s = _internal_mutable_msg();
-  // @@protoc_insertion_point(field_mutable:protocol.RequestChat.msg)
-  return _s;
-}
-inline const std::string& RequestChat::_internal_msg() const {
-  return msg_.Get();
-}
-inline void RequestChat::_internal_set_msg(const std::string& value) {
+inline void RequestTeleport::_internal_set_actorid(::PROTOBUF_NAMESPACE_ID::uint32 value) {
   
-  msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+  actorid_ = value;
 }
-inline std::string* RequestChat::_internal_mutable_msg() {
+inline void RequestTeleport::set_actorid(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  _internal_set_actorid(value);
+  // @@protoc_insertion_point(field_set:protocol.RequestTeleport.actorId)
+}
+
+// uint32 zoneId = 2;
+inline void RequestTeleport::clear_zoneid() {
+  zoneid_ = 0u;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint32 RequestTeleport::_internal_zoneid() const {
+  return zoneid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint32 RequestTeleport::zoneid() const {
+  // @@protoc_insertion_point(field_get:protocol.RequestTeleport.zoneId)
+  return _internal_zoneid();
+}
+inline void RequestTeleport::_internal_set_zoneid(::PROTOBUF_NAMESPACE_ID::uint32 value) {
   
-  return msg_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+  zoneid_ = value;
 }
-inline std::string* RequestChat::release_msg() {
-  // @@protoc_insertion_point(field_release:protocol.RequestChat.msg)
-  return msg_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+inline void RequestTeleport::set_zoneid(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  _internal_set_zoneid(value);
+  // @@protoc_insertion_point(field_set:protocol.RequestTeleport.zoneId)
 }
-inline void RequestChat::set_allocated_msg(std::string* msg) {
-  if (msg != nullptr) {
+
+// .protocol.PositionInfo posInfo = 3;
+inline bool RequestTeleport::_internal_has_posinfo() const {
+  return this != internal_default_instance() && posinfo_ != nullptr;
+}
+inline bool RequestTeleport::has_posinfo() const {
+  return _internal_has_posinfo();
+}
+inline void RequestTeleport::clear_posinfo() {
+  if (GetArenaForAllocation() == nullptr && posinfo_ != nullptr) {
+    delete posinfo_;
+  }
+  posinfo_ = nullptr;
+}
+inline const ::protocol::PositionInfo& RequestTeleport::_internal_posinfo() const {
+  const ::protocol::PositionInfo* p = posinfo_;
+  return p != nullptr ? *p : reinterpret_cast<const ::protocol::PositionInfo&>(
+      ::protocol::_PositionInfo_default_instance_);
+}
+inline const ::protocol::PositionInfo& RequestTeleport::posinfo() const {
+  // @@protoc_insertion_point(field_get:protocol.RequestTeleport.posInfo)
+  return _internal_posinfo();
+}
+inline void RequestTeleport::unsafe_arena_set_allocated_posinfo(
+    ::protocol::PositionInfo* posinfo) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(posinfo_);
+  }
+  posinfo_ = posinfo;
+  if (posinfo) {
     
   } else {
     
   }
-  msg_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), msg,
-      GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set_allocated:protocol.RequestChat.msg)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:protocol.RequestTeleport.posInfo)
+}
+inline ::protocol::PositionInfo* RequestTeleport::release_posinfo() {
+  
+  ::protocol::PositionInfo* temp = posinfo_;
+  posinfo_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::protocol::PositionInfo* RequestTeleport::unsafe_arena_release_posinfo() {
+  // @@protoc_insertion_point(field_release:protocol.RequestTeleport.posInfo)
+  
+  ::protocol::PositionInfo* temp = posinfo_;
+  posinfo_ = nullptr;
+  return temp;
+}
+inline ::protocol::PositionInfo* RequestTeleport::_internal_mutable_posinfo() {
+  
+  if (posinfo_ == nullptr) {
+    auto* p = CreateMaybeMessage<::protocol::PositionInfo>(GetArenaForAllocation());
+    posinfo_ = p;
+  }
+  return posinfo_;
+}
+inline ::protocol::PositionInfo* RequestTeleport::mutable_posinfo() {
+  ::protocol::PositionInfo* _msg = _internal_mutable_posinfo();
+  // @@protoc_insertion_point(field_mutable:protocol.RequestTeleport.posInfo)
+  return _msg;
+}
+inline void RequestTeleport::set_allocated_posinfo(::protocol::PositionInfo* posinfo) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete posinfo_;
+  }
+  if (posinfo) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::protocol::PositionInfo>::GetOwningArena(posinfo);
+    if (message_arena != submessage_arena) {
+      posinfo = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, posinfo, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  posinfo_ = posinfo;
+  // @@protoc_insertion_point(field_set_allocated:protocol.RequestTeleport.posInfo)
 }
 
 // -------------------------------------------------------------------
 
-// ReturnChat
+// ReturnTeleport
 
-// uint32 playerId = 1;
-inline void ReturnChat::clear_playerid() {
-  playerid_ = 0u;
+// uint32 actorId = 1;
+inline void ReturnTeleport::clear_actorid() {
+  actorid_ = 0u;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint32 ReturnChat::_internal_playerid() const {
-  return playerid_;
+inline ::PROTOBUF_NAMESPACE_ID::uint32 ReturnTeleport::_internal_actorid() const {
+  return actorid_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint32 ReturnChat::playerid() const {
-  // @@protoc_insertion_point(field_get:protocol.ReturnChat.playerId)
-  return _internal_playerid();
+inline ::PROTOBUF_NAMESPACE_ID::uint32 ReturnTeleport::actorid() const {
+  // @@protoc_insertion_point(field_get:protocol.ReturnTeleport.actorId)
+  return _internal_actorid();
 }
-inline void ReturnChat::_internal_set_playerid(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+inline void ReturnTeleport::_internal_set_actorid(::PROTOBUF_NAMESPACE_ID::uint32 value) {
   
-  playerid_ = value;
+  actorid_ = value;
 }
-inline void ReturnChat::set_playerid(::PROTOBUF_NAMESPACE_ID::uint32 value) {
-  _internal_set_playerid(value);
-  // @@protoc_insertion_point(field_set:protocol.ReturnChat.playerId)
+inline void ReturnTeleport::set_actorid(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  _internal_set_actorid(value);
+  // @@protoc_insertion_point(field_set:protocol.ReturnTeleport.actorId)
 }
 
-// string msg = 2;
-inline void ReturnChat::clear_msg() {
-  msg_.ClearToEmpty();
+// uint32 zoneId = 2;
+inline void ReturnTeleport::clear_zoneid() {
+  zoneid_ = 0u;
 }
-inline const std::string& ReturnChat::msg() const {
-  // @@protoc_insertion_point(field_get:protocol.ReturnChat.msg)
-  return _internal_msg();
+inline ::PROTOBUF_NAMESPACE_ID::uint32 ReturnTeleport::_internal_zoneid() const {
+  return zoneid_;
 }
-template <typename ArgT0, typename... ArgT>
-inline PROTOBUF_ALWAYS_INLINE
-void ReturnChat::set_msg(ArgT0&& arg0, ArgT... args) {
- 
- msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:protocol.ReturnChat.msg)
+inline ::PROTOBUF_NAMESPACE_ID::uint32 ReturnTeleport::zoneid() const {
+  // @@protoc_insertion_point(field_get:protocol.ReturnTeleport.zoneId)
+  return _internal_zoneid();
 }
-inline std::string* ReturnChat::mutable_msg() {
-  std::string* _s = _internal_mutable_msg();
-  // @@protoc_insertion_point(field_mutable:protocol.ReturnChat.msg)
-  return _s;
-}
-inline const std::string& ReturnChat::_internal_msg() const {
-  return msg_.Get();
-}
-inline void ReturnChat::_internal_set_msg(const std::string& value) {
+inline void ReturnTeleport::_internal_set_zoneid(::PROTOBUF_NAMESPACE_ID::uint32 value) {
   
-  msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+  zoneid_ = value;
 }
-inline std::string* ReturnChat::_internal_mutable_msg() {
-  
-  return msg_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
-}
-inline std::string* ReturnChat::release_msg() {
-  // @@protoc_insertion_point(field_release:protocol.ReturnChat.msg)
-  return msg_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
-}
-inline void ReturnChat::set_allocated_msg(std::string* msg) {
-  if (msg != nullptr) {
-    
-  } else {
-    
-  }
-  msg_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), msg,
-      GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set_allocated:protocol.ReturnChat.msg)
+inline void ReturnTeleport::set_zoneid(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  _internal_set_zoneid(value);
+  // @@protoc_insertion_point(field_set:protocol.ReturnTeleport.zoneId)
 }
 
 #ifdef __GNUC__

@@ -19,10 +19,10 @@ enum : uint16
 	PKT_SC_SET_HP,
 	PKT_CS_SKILL,
 	PKT_SC_SKILL,
-	PKT_CS_CHAT,
-	PKT_SC_CHAT,
 	PKT_SC_DIE,
 	PKT_SC_DESPAWN,
+	PKT_CS_TELEPORT,
+	PKT_SC_TELEPORT,
 };
 
 bool HandleInvalid(ClientSessionPtr& session, char* buffer, uint32 len);
@@ -30,7 +30,7 @@ bool Handle_PKT_CS_LOGIN(ClientSessionPtr& session, protocol::RequestLogin& pack
 bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterGame& packet);
 bool Handle_PKT_CS_MOVE(ClientSessionPtr& session, protocol::RequestMove& packet);
 bool Handle_PKT_CS_SKILL(ClientSessionPtr& session, protocol::RequestSkill& packet);
-bool Handle_PKT_CS_CHAT(ClientSessionPtr& session, protocol::RequestChat& packet);
+bool Handle_PKT_CS_TELEPORT(ClientSessionPtr& session, protocol::RequestTeleport& packet);
 
 class ClientPacketHandler
 {

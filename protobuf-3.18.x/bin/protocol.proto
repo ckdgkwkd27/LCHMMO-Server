@@ -93,13 +93,15 @@ message NotifyDespawn
 	repeated uint32 actorIds = 1;
 }
 
-message RequestChat
+message RequestTeleport
 {
-	string msg = 1;
+	uint32 actorId = 1;
+	uint32 zoneId = 2;
+	PositionInfo posInfo = 3; 
 }
 
-message ReturnChat
+message ReturnTeleport
 {
-	uint32 playerId = 1;
-	string msg = 2;
+	uint32 actorId = 1;
+	uint32 zoneId = 2;
 }
