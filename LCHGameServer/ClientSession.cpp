@@ -2,6 +2,8 @@
 #include "ClientSession.h"
 #include "ClientPacketHandler.h"
 #include "Player.h"
+#include "Zone.h"
+#include "ZoneManager.h"
 
 void ClientSession::OnAccepted()
 {
@@ -16,6 +18,9 @@ void ClientSession::OnConnected()
 void ClientSession::OnDisconnected()
 {
 	GSessionManager.DeleteFromActivePool(shared_from_this());
+
+	ZonePtr zone = GZoneManager.FindZoneByID(this->currentPlayer->zoneID);
+	zone->messageQueue.Push([=]() {zone->LeaveGame(this->currentPlayer->ActorInfo.actorid()); });
 }
 
 uint32 ClientSession::OnRecv(char* buffer, uint32 len)

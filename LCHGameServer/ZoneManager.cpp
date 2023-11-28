@@ -86,20 +86,36 @@ void ZoneManager::TickUpdate()
 void ZoneManager::SpawnNpc()
 {
 	RecursiveLockGuard guard(zoneLock);
-	ZonePtr _zone = zoneVector[0];
 
 	//Spawn Monster or Npc
-	if (_zone->zoneID == 0) //#TODO Set to Zone1
+	for (ZonePtr _zone : zoneVector)
 	{
-		for (uint32 i = 0; i < 1; i++)
+		/*if (_zone->zoneID == 0)
 		{
-			MonsterPtr monster = std::make_shared<Monster>();
-			monster->zoneID = 0;
-			monster->ActorInfo.mutable_posinfo()->set_posx(-2 * i - 9);
-			monster->ActorInfo.mutable_posinfo()->set_posy(-2 * i - 9);
-			_zone->RegisterActor(monster);
-		}
+			for (uint32 i = 0; i < 1; i++)
+			{
+				MonsterPtr monster = std::make_shared<Monster>();
+				monster->zoneID = 0;
+				monster->ActorInfo.mutable_posinfo()->set_posx(-2 * i - 9);
+				monster->ActorInfo.mutable_posinfo()->set_posy(-2 * i - 9);
+				_zone->RegisterActor(monster);
+			}
 
-		std::cout << "[INFO] ZoneID=" << _zone->zoneID << " Monster Spawned!" << std::endl;
+			std::cout << "[INFO] ZoneID=" << _zone->zoneID << " Monster Spawned!" << std::endl;
+		}*/
+
+		if (_zone->zoneID == 1)
+		{
+			for (uint32 i = 0; i < 3; i++)
+			{
+				MonsterPtr monster = std::make_shared<Monster>();
+				monster->zoneID = _zone->zoneID;
+				monster->ActorInfo.mutable_posinfo()->set_posx(-2 * i - 9);
+				monster->ActorInfo.mutable_posinfo()->set_posy(-2 * i - 9);
+				_zone->RegisterActor(monster);
+			}
+
+			std::cout << "[INFO] ZoneID=" << _zone->zoneID << " Monster Spawned!" << std::endl;
+		}
 	}
 }

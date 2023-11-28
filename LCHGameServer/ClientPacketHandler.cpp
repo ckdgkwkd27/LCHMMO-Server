@@ -138,13 +138,16 @@ bool Handle_PKT_CS_TELEPORT(ClientSessionPtr& session, protocol::RequestTeleport
     RETURN_FALSE_ON_FAIL(newZone != nullptr);
 
     //Player Despawn 贸府, 脚痹 Zone 涝厘贸府
-    currentZone->UnregisterActor(_player);
+    //currentZone->UnregisterActor(_player);
 
     _player->zoneID = packet.zoneid();
     _player->ActorInfo.mutable_posinfo()->set_posx(packet.posinfo().posx());
     _player->ActorInfo.mutable_posinfo()->set_posy(packet.posinfo().posy());
 
-    //Notify 
+	//Despawn Old
+    currentZone->messageQueue.Push([currentZone, _player]() {currentZone->LeaveGame(_player->ActorInfo.actorid()); });
+
+    //Notify
     newZone->messageQueue.Push([newZone, _player]() {newZone->EnterGame(_player, newZone->zoneID); });
 
     std::cout << "[INFO] Handle TELEPORT ActorId=" << packet.actorid() << ", ZoneId=" << packet.zoneid() << std::endl;
