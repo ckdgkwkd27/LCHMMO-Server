@@ -37,7 +37,7 @@ bool SessionManager::AcceptClientSession(uint32 maxSessionCnt)
     return true;
 }
 
-bool SessionManager::ConnectServerSession(uint32 maxSessionCnt, Wstring connIp, uint32 connPort)
+bool SessionManager::ConnectServerSession(uint32 maxSessionCnt, Wstring connIp, uint16 connPort)
 {
     while (issueCnt < maxSessionCnt)
     {

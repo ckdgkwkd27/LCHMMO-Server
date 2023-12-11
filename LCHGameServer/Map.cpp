@@ -2,11 +2,12 @@
 #include "Map.h"
 #include "ZoneManager.h"
 #include "Player.h"
+#include "Section.h"
 
 void Map::LoadMap(int mapId, std::string pathPrefix)
 {
-    std::string mapName = "/Map_" + std::to_string(mapId) + ".txt";
-    std::ifstream openFile(pathPrefix + mapName);
+    std::string mapFullPath = pathPrefix + "/Map_" + std::to_string(mapId) + ".txt";
+    std::ifstream openFile(mapFullPath);
     CRASH_ASSERT(openFile.is_open());
 
     std::string line;
@@ -76,6 +77,11 @@ bool Map::ApplyLeave(ActorPtr actor)
 	if (posInfo.posy() < MinY || posInfo.posy() > MaxY)
 		return false;
 
+    //Remove from section
+    Vector2Int cellPos(posInfo.posx(), posInfo.posy());
+    SectionPtr section = _zone->GetSection(cellPos);
+    section->Remove(actor);
+
 	{
 		int x = posInfo.posx() - MinX;
 		int y = MaxY - posInfo.posy();
@@ -103,6 +109,16 @@ bool Map::ApplyMove(ActorPtr actor, Vector2Int dest)
         ObjectBuf[y][x] = actor;
     }
 
+    //Section
+	Vector2Int cellPos(actor->ActorInfo.posinfo().posx(), actor->ActorInfo.posinfo().posy());
+    SectionPtr now = _zone->GetSection(cellPos);
+    SectionPtr after = _zone->GetSection(dest);
+    if (now != after)
+    {
+        now->Remove(actor);
+        after->Add(actor);
+    }
+
     actor->ActorInfo.mutable_posinfo()->set_posx(dest.x);
     actor->ActorInfo.mutable_posinfo()->set_posy(dest.y);
     return true;
@@ -115,9 +131,9 @@ std::vector<Vector2Int> Map::FindPath(Vector2Int startCellPos, Vector2Int destCe
 
     std::vector<Pos> path;
 
-	std::vector<std::vector<bool>> closed(MaxY - MinY + 1, std::vector<bool>(MaxX - MinX + 1, false));
-    std::vector<std::vector<int32>> best(MaxY - MinY + 1, std::vector<int32>(MaxX - MinX + 1, INT32_MAX));
-    std::vector<std::vector<int32>> opened(MaxY - MinY + 1, std::vector<int32>(MaxX - MinX + 1, INT32_MAX));
+	std::vector<std::vector<bool>> closed(MaxY - MinY + 1, std::vector<bool>(MaxY - MinY + 1, false));
+    std::vector<std::vector<int32>> best(MaxY - MinY + 1, std::vector<int32>(MaxY - MinY + 1, INT32_MAX));
+    std::vector<std::vector<int32>> opened(MaxY - MinY + 1, std::vector<int32>(MaxY - MinY + 1, INT32_MAX));
     std::map<Pos, Pos> parent;
 
     std::priority_queue<PQNode, std::vector<PQNode>, std::greater<PQNode>> pq;
@@ -190,7 +206,19 @@ std::vector<Vector2Int> Map::CalcCellPathFromParent(std::map<Pos, Pos> parent, P
 
 Pos Map::Cell2Pos(Vector2Int cell)
 {
-    return Pos(MaxY - cell.y, cell.x - MinX);
+    int32 posY = cell.y;
+    if (posY < 0)
+        posY = 0;
+    if(posY > MaxY - MinY)
+        posY = MaxY - MinY;
+
+    int32 posX = cell.x;
+	if (posX < 0)
+		posX = 0;
+	if (posX > MaxX - MinX)
+		posX = MaxX - MinX;
+
+    return Pos(posY, posX);
 }
 
 Vector2Int Map::Pos2Cell(Pos pos)

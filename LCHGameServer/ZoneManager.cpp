@@ -106,7 +106,7 @@ void ZoneManager::SpawnNpc()
 
 		if (_zone->zoneID == 1)
 		{
-			for (uint32 i = 0; i < 3; i++)
+			for (uint32 i = 0; i < 30; i++)
 			{
 				MonsterPtr monster = std::make_shared<Monster>();
 				monster->zoneID = _zone->zoneID;

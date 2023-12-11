@@ -187,7 +187,9 @@
     </ClCompile>
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
+    <ClCompile Include="Section.cpp" />
     <ClCompile Include="Ticker.cpp" />
+    <ClCompile Include="Viewport.cpp" />
     <ClCompile Include="Zone.cpp" />
     <ClCompile Include="ZoneManager.cpp" />
   </ItemGroup>
@@ -203,7 +205,9 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />
+    <ClInclude Include="Section.h" />
     <ClInclude Include="Ticker.h" />
+    <ClInclude Include="Viewport.h" />
     <ClInclude Include="Zone.h" />
     <ClInclude Include="ZoneManager.h" />
   </ItemGroup>

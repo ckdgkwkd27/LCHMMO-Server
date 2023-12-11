@@ -54,7 +54,7 @@ bool SocketUtil::Bind(SOCKET _socket, Wstring ip, uint16 port)
 
     sockin.sin_family = AF_INET;
     sockin.sin_addr = address;
-    sockin.sin_port = port;
+    sockin.sin_port = ::htons(port);
 
     return SOCKET_ERROR != ::bind(_socket, reinterpret_cast<const SOCKADDR*>(&sockin), sizeof(SOCKADDR_IN));
 }

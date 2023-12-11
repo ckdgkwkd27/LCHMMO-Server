@@ -100,7 +100,7 @@ bool Session::PostAccept()
 	return true;
 }
 
-bool Session::PostConnect(Wstring ip, uint32 port)
+bool Session::PostConnect(Wstring ip, uint16 port)
 {
     if(isConnected)
         return false;
@@ -122,7 +122,7 @@ bool Session::PostConnect(Wstring ip, uint32 port)
     ::InetPtonW(AF_INET, ip.c_str(), &address);
     addr.sin_addr = address;
     addr.sin_family = AF_INET;
-    addr.sin_port = (uint16)port;
+    addr.sin_port = htons(port);
 
     if (false == SocketUtil::ConnectEx(sessionSocket, reinterpret_cast<SOCKADDR*>(&addr), sizeof(addr), nullptr, 0,
         &bytes, &sessionConnectEvent))

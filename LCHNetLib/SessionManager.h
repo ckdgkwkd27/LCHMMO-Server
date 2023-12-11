@@ -21,7 +21,7 @@ public:
 	void Broadcast(CircularBufferPtr _sendBuffer);
 
 	bool AcceptClientSession(uint32 maxSessionCnt);
-	bool ConnectServerSession(uint32 maxSessionCnt, Wstring connIp, uint32 connPort);
+	bool ConnectServerSession(uint32 maxSessionCnt, Wstring connIp, uint16 connPort);
 
 	template <typename T>
 	void PrepareSessions(uint32 maxSessionCnt, SOCKET _listenSocket, HANDLE _iocpHandle);

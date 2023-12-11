@@ -42,6 +42,12 @@
     <ClCompile Include="MessageQueue.cpp">
       <Filter>Zone</Filter>
     </ClCompile>
+    <ClCompile Include="Viewport.cpp">
+      <Filter>Zone</Filter>
+    </ClCompile>
+    <ClCompile Include="Section.cpp">
+      <Filter>Zone</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protobuf-3.18.x\bin\protocol.pb.h">
@@ -82,6 +88,12 @@
       <Filter>Actor\Monster</Filter>
     </ClInclude>
     <ClInclude Include="MessageQueue.h">
+      <Filter>Zone</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewport.h">
+      <Filter>Zone</Filter>
+    </ClInclude>
+    <ClInclude Include="Section.h">
       <Filter>Zone</Filter>
     </ClInclude>
   </ItemGroup>

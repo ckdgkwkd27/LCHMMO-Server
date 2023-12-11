@@ -8,6 +8,7 @@ enum SessionState : uint8
 	CONNECTED,
 	LOGIN,
 	ENTER_GAME,
+	GAME_READY,
 
 	END
 };
@@ -22,5 +23,5 @@ public:
 
 public:
 	uint8 state = NONE;
-	uint64 playerId;
+	uint32 playerId;
 };

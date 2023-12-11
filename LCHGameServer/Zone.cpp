@@ -11,6 +11,21 @@ void Zone::Init()
 	this->xMin = zoneMap.MinX;
 	this->yMax = zoneMap.MaxY;
 	this->yMin = zoneMap.MinY;
+
+	uint32 SizeX = xMax - xMin + 1;
+	uint32 SizeY = yMax - yMin + 1;
+
+	sectionCells = 5;
+	int32 countY = (SizeY + sectionCells - 1) / sectionCells;
+	int32 countX = (SizeX + sectionCells - 1) / sectionCells;
+	sectionVector.resize(countY, std::vector<SectionPtr>(countX));
+	for (int32 y = 0; y < countY; y++)
+	{
+		for (int32 x = 0; x < countX; x++)
+		{
+			sectionVector[y][x] = std::make_shared<Section>(x, y);
+		}
+	}
 }
 
 void Zone::RegisterActor(ActorPtr _actor)
@@ -36,8 +51,8 @@ ActorPtr Zone::FindActor(ActorIDType _actorID)
 	RecursiveLockGuard guard(actorLock);
 
 	auto it = std::find_if(actorVector.begin(), actorVector.end(), [_actorID](ActorPtr _actor) {
-			if (_actor == nullptr) CRASH_ASSERT(false);
-			return _actor->ActorInfo.actorid() == _actorID;
+		if (_actor == nullptr) CRASH_ASSERT(false);
+		return _actor->ActorInfo.actorid() == _actorID;
 	});
 
 	if (it == actorVector.end())
@@ -63,21 +78,108 @@ PlayerPtr Zone::FindPlayerInCondition(std::function<bool(ActorPtr)> _condition)
 	return nullptr;
 }
 
+SectionPtr Zone::GetSection(Vector2Int sectionPos)
+{
+	int32 x = (sectionPos.x - zoneMap.MinX) / sectionCells;
+	int32 y = (zoneMap.MaxY - sectionPos.y) / sectionCells;
+	return GetSection(x, y);
+}
+
+SectionPtr Zone::GetSection(int32 indexX, uint32 indexY)
+{
+	if (indexX < 0 || indexX >= sectionVector[0].size())
+		return nullptr;
+	if (indexY < 0 || indexY >= sectionVector[1].size())
+		return nullptr;
+
+	return sectionVector[indexX][indexY];
+}
+
+std::vector<PlayerPtr> Zone::GetAdjacentPlayers(Vector2Int pos, uint32 range)
+{
+	std::set<SectionPtr> sections = GetAdjacentSections(pos, range);
+
+	std::vector<PlayerPtr> players;
+	for (SectionPtr _section : sections)
+	{
+		for (ActorPtr _actor : _section->actorVector)
+		{
+			if (_actor->ActorInfo.objecttype() == (uint32)ObjectType::PLAYER)
+				players.push_back(std::dynamic_pointer_cast<Player>(_actor));
+		}
+	}
+
+	return players;
+}
+
+std::set<SectionPtr> Zone::GetAdjacentSections(Vector2Int sectionPos, uint32 range)
+{
+	std::set<SectionPtr> sections;
+	int32 maxY = sectionPos.y + range;
+	int32 maxX = sectionPos.x + range;
+	int32 minY = sectionPos.y - range;
+	int32 minX = sectionPos.x - range;
+
+	Vector2Int leftTop(minX, maxY);
+	int32 minIndexY = (zoneMap.MaxY - leftTop.y) / sectionCells;
+	int32 minIndexX = (leftTop.x - zoneMap.MinX) / sectionCells;
+
+	Vector2Int rightBottom(maxX, minY);
+	int32 maxIndexY = (zoneMap.MaxY - rightBottom.y) / sectionCells;
+	int32 maxIndexX = (rightBottom.x - zoneMap.MinX) / sectionCells;
+
+	for (int32 x = minIndexX; x <= maxIndexX; x++)
+	{
+		for (int32 y = minIndexY; y <= maxIndexY; y++)
+		{
+			SectionPtr _section = GetSection(x, y);
+			if (_section == nullptr)
+				continue;
+
+			sections.insert(_section);
+		}
+	}
+
+	return sections;
+}
+
 void Zone::BroadCast(ActorPtr _selfPlayer, CircularBufferPtr _sendBuffer)
 {
 	//RecursiveLockGuard guard(actorLock);
+	Vector2Int posCell(_selfPlayer->ActorInfo.posinfo().posx(), _selfPlayer->ActorInfo.posinfo().posy());
+	std::set<SectionPtr> sections = GetAdjacentSections(posCell);
 
-	for (auto& _actor : actorVector)
+	for (auto _section : sections)
 	{
-		PlayerPtr _player = nullptr;
-		_player = std::dynamic_pointer_cast<Player>(_actor);
-		if (_player != nullptr && _player != _selfPlayer)
+		for (auto _actor : _section->actorVector)
 		{
-			//printf("ME=%lld => OTHER=%lld\n", _selfPlayer->ActorInfo.actorid(), _player->ActorInfo.actorid());
-			//printf("_player SOCKET=%lld", _player->ownerSession->GetSocket());
-			_player->ownerSession->PostSend(_sendBuffer);
+			if (_actor->ActorInfo.objecttype() == (uint32)ObjectType::PLAYER && _actor != nullptr && _actor != _selfPlayer)
+			{
+				Vector2Int playerCellPos(_actor->ActorInfo.posinfo().posx(), _actor->ActorInfo.posinfo().posy());
+				int32 dx = playerCellPos.x - posCell.x;
+				int32 dy = playerCellPos.y - posCell.y;
+				if(abs(dx) > VIEWPORT_CELL)
+					continue;
+				if (abs(dy) > VIEWPORT_CELL)
+					continue;
+
+				PlayerPtr _player = std::dynamic_pointer_cast<Player>(_actor);
+				_player->ownerSession->PostSend(_sendBuffer);
+			}
 		}
 	}
+
+	//for (auto& _actor : actorVector)
+	//{
+	//	PlayerPtr _player = nullptr;
+	//	_player = std::dynamic_pointer_cast<Player>(_actor);
+	//	if (_player != nullptr && _player != _selfPlayer)
+	//	{
+	//		//printf("ME=%lld => OTHER=%lld\n", _selfPlayer->ActorInfo.actorid(), _player->ActorInfo.actorid());
+	//		//printf("_player SOCKET=%lld", _player->ownerSession->GetSocket());
+	//		_player->ownerSession->PostSend(_sendBuffer);
+	//	}
+	//}
 }
 
 bool Zone::Update()
@@ -110,7 +212,9 @@ void Zone::EnterGame(PlayerPtr player, ZoneIDType zoneId)
 	if (false == GZoneManager.RegisterActor(zoneId, player))
 		return;
 
-	zone->zoneMap.ApplyMove(player, Vector2Int(player->ActorInfo.posinfo().posx(), player->ActorInfo.posinfo().posy()));
+	Vector2Int cellPos = Vector2Int::GetVectorFromActorPos(player->ActorInfo.posinfo());
+	zone->zoneMap.ApplyMove(player, cellPos);
+	GetSection(cellPos)->Add(player);
 
 	//Player 게임입장
 	{

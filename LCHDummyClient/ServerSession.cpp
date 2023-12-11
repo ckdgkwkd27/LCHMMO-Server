@@ -9,6 +9,7 @@ void ServerSession::OnAccepted()
 void ServerSession::OnConnected()
 {
 	std::cout << "[INFO] Server OnConnected..!" << std::endl;
+	
 	state = SessionState::CONNECTED;
 
 	protocol::RequestLogin loginPacket;
@@ -20,8 +21,7 @@ void ServerSession::OnConnected()
 
 void ServerSession::OnDisconnected()
 {
-	//CRASH_ASSERT(false);
-	CRASH_ASSERT(false);
+
 }
 
 uint32 ServerSession::OnRecv(char* buffer, uint32 len)

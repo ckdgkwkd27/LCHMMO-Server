@@ -4,8 +4,10 @@
 #include "Map.h"
 #include "MessageQueue.h"
 #include "ClientPacketHandler.h"
-using ZoneIDType = uint32;
+#include "Section.h"
+#define VIEWPORT_CELL 5
 
+using ZoneIDType = uint32;
 class Zone
 {
 public:
@@ -14,10 +16,14 @@ public:
 	void UnregisterActor(ActorPtr _actor);
 	ActorPtr FindActor(ActorIDType _actorId);
 	PlayerPtr FindPlayerInCondition(std::function<bool(ActorPtr)> _condition);
+
+	SectionPtr GetSection(Vector2Int secionPos);
+	SectionPtr GetSection(int32 indexX, uint32 indexY);
+	std::vector<PlayerPtr> GetAdjacentPlayers(Vector2Int pos, uint32 range);
+	std::set<SectionPtr> GetAdjacentSections(Vector2Int sectionPos, uint32 range = VIEWPORT_CELL);
+
 	void BroadCast(ActorPtr _selfPlayer, CircularBufferPtr _sendBuffer);
-
 	bool Update();
-
 	void EnterGame(PlayerPtr player, ZoneIDType zoneId = 0);
 	void LeaveGame(ActorIDType _actorId);
 	void HandleMove(PlayerPtr player, protocol::RequestMove movePacket);
@@ -26,10 +32,9 @@ public:
 public:
 	ZoneIDType zoneID;
 	std::vector<ActorPtr> actorVector;
-	int32 xMax;
-	int32 xMin;
-	int32 yMax;
-	int32 yMin;
+	std::vector<std::vector<SectionPtr>> sectionVector;
+	uint32 sectionCells;
+	int32 xMax, xMin, yMax, yMin;
 	Map zoneMap;
 	MessageQueue messageQueue;
 

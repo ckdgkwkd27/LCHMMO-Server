@@ -32,7 +32,7 @@ void IocpManager::Initialize()
 
 void IocpManager::BindAndListen()
 {
-	CRASH_ASSERT(SocketUtil::BindAnyAddress(listenSocket, port));
+	SocketUtil::Bind(listenSocket, ip, port);
 	CRASH_ASSERT(SocketUtil::Listen(listenSocket));
 	std::wcout << L"[INFO] Server Listen Start IP=" << ip << L", port=" << port << std::endl;
 }
