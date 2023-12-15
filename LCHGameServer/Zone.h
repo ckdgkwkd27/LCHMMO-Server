@@ -5,7 +5,7 @@
 #include "MessageQueue.h"
 #include "ClientPacketHandler.h"
 #include "Section.h"
-#define VIEWPORT_CELL 5
+#define VIEWPORT_CELL 15
 
 using ZoneIDType = uint32;
 class Zone
@@ -18,11 +18,12 @@ public:
 	PlayerPtr FindPlayerInCondition(std::function<bool(ActorPtr)> _condition);
 
 	SectionPtr GetSection(Vector2Int secionPos);
-	SectionPtr GetSection(int32 indexX, uint32 indexY);
+	SectionPtr GetSection(int32 indexY, uint32 indexX);
 	std::vector<PlayerPtr> GetAdjacentPlayers(Vector2Int pos, uint32 range);
 	std::set<SectionPtr> GetAdjacentSections(Vector2Int sectionPos, uint32 range = VIEWPORT_CELL);
 
 	void BroadCast(ActorPtr _selfPlayer, CircularBufferPtr _sendBuffer);
+	void BroadCast(Vector2Int cellPos, CircularBufferPtr _sendBuffer);
 	bool Update();
 	void EnterGame(PlayerPtr player, ZoneIDType zoneId = 0);
 	void LeaveGame(ActorIDType _actorId);

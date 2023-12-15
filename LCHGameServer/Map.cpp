@@ -93,7 +93,7 @@ bool Map::ApplyLeave(ActorPtr actor)
 
 bool Map::ApplyMove(ActorPtr actor, Vector2Int dest)
 {
-    ApplyLeave(actor);
+    //ApplyLeave(actor);
     auto _zone = GZoneManager.FindZoneByID(actor->zoneID);
     if (_zone == nullptr)
         return false;
@@ -101,6 +101,14 @@ bool Map::ApplyMove(ActorPtr actor, Vector2Int dest)
     if (CanGo(dest, true) == false)
     {
         return false;
+    }
+
+    protocol::PositionInfo posInfo = actor->ActorInfo.posinfo();
+    {
+		int32 x = posInfo.posx() - MinX;
+		int32 y = MaxY - posInfo.posy();
+        if (ObjectBuf[y][x] == actor)
+            ObjectBuf[y][x] = nullptr;
     }
 
     {
@@ -112,7 +120,13 @@ bool Map::ApplyMove(ActorPtr actor, Vector2Int dest)
     //Section
 	Vector2Int cellPos(actor->ActorInfo.posinfo().posx(), actor->ActorInfo.posinfo().posy());
     SectionPtr now = _zone->GetSection(cellPos);
-    SectionPtr after = _zone->GetSection(dest);
+
+    SectionPtr after;
+    if(actor->ActorInfo.objecttype() == (uint32)ObjectType::PLAYER)
+        after = _zone->GetSection(dest);
+    else
+        after = _zone->GetSection(dest);
+
     if (now != after)
     {
         now->Remove(actor);
@@ -206,19 +220,20 @@ std::vector<Vector2Int> Map::CalcCellPathFromParent(std::map<Pos, Pos> parent, P
 
 Pos Map::Cell2Pos(Vector2Int cell)
 {
-    int32 posY = cell.y;
-    if (posY < 0)
-        posY = 0;
-    if(posY > MaxY - MinY)
-        posY = MaxY - MinY;
+ //   int32 posY = cell.y;
+ //   if (posY < 0)
+ //       posY = 0;
+ //   if(posY > MaxY - MinY)
+ //       posY = MaxY - MinY;
 
-    int32 posX = cell.x;
-	if (posX < 0)
-		posX = 0;
-	if (posX > MaxX - MinX)
-		posX = MaxX - MinX;
+ //   int32 posX = cell.x;
+	//if (posX < 0)
+	//	posX = 0;
+	//if (posX > MaxX - MinX)
+	//	posX = MaxX - MinX;
 
-    return Pos(posY, posX);
+ //   return Pos(posY, posX);
+    return Pos(MaxY - cell.y, cell.x - MinX);
 }
 
 Vector2Int Map::Pos2Cell(Pos pos)

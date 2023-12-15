@@ -82,17 +82,17 @@ SectionPtr Zone::GetSection(Vector2Int sectionPos)
 {
 	int32 x = (sectionPos.x - zoneMap.MinX) / sectionCells;
 	int32 y = (zoneMap.MaxY - sectionPos.y) / sectionCells;
-	return GetSection(x, y);
+	return GetSection(y, x);
 }
 
-SectionPtr Zone::GetSection(int32 indexX, uint32 indexY)
+SectionPtr Zone::GetSection(int32 indexY, uint32 indexX)
 {
-	if (indexX < 0 || indexX >= sectionVector[0].size())
+	if (indexX < 0 || indexX >= sectionVector[1].size())
 		return nullptr;
-	if (indexY < 0 || indexY >= sectionVector[1].size())
+	if (indexY < 0 || indexY >= sectionVector[0].size())
 		return nullptr;
 
-	return sectionVector[indexX][indexY];
+	return sectionVector[indexY][indexX];
 }
 
 std::vector<PlayerPtr> Zone::GetAdjacentPlayers(Vector2Int pos, uint32 range)
@@ -132,7 +132,7 @@ std::set<SectionPtr> Zone::GetAdjacentSections(Vector2Int sectionPos, uint32 ran
 	{
 		for (int32 y = minIndexY; y <= maxIndexY; y++)
 		{
-			SectionPtr _section = GetSection(x, y);
+			SectionPtr _section = GetSection(y, x);
 			if (_section == nullptr)
 				continue;
 
@@ -168,18 +168,30 @@ void Zone::BroadCast(ActorPtr _selfPlayer, CircularBufferPtr _sendBuffer)
 			}
 		}
 	}
+}
 
-	//for (auto& _actor : actorVector)
-	//{
-	//	PlayerPtr _player = nullptr;
-	//	_player = std::dynamic_pointer_cast<Player>(_actor);
-	//	if (_player != nullptr && _player != _selfPlayer)
-	//	{
-	//		//printf("ME=%lld => OTHER=%lld\n", _selfPlayer->ActorInfo.actorid(), _player->ActorInfo.actorid());
-	//		//printf("_player SOCKET=%lld", _player->ownerSession->GetSocket());
-	//		_player->ownerSession->PostSend(_sendBuffer);
-	//	}
-	//}
+void Zone::BroadCast(Vector2Int cellPos, CircularBufferPtr _sendBuffer)
+{
+	std::set<SectionPtr> sections = GetAdjacentSections(cellPos);
+	for (auto _section : sections)
+	{
+		for (auto _actor : _section->actorVector)
+		{
+			if (_actor->ActorInfo.objecttype() == (uint32)ObjectType::PLAYER && _actor != nullptr)
+			{
+				Vector2Int playerCellPos(_actor->ActorInfo.posinfo().posx(), _actor->ActorInfo.posinfo().posy());
+				int32 dx = playerCellPos.x - cellPos.x;
+				int32 dy = playerCellPos.y - cellPos.y;
+				if (abs(dx) > VIEWPORT_CELL)
+					continue;
+				if (abs(dy) > VIEWPORT_CELL)
+					continue;
+
+				PlayerPtr _player = std::dynamic_pointer_cast<Player>(_actor);
+				_player->ownerSession->PostSend(_sendBuffer);
+			}
+		}
+	}
 }
 
 bool Zone::Update()
@@ -276,7 +288,7 @@ void Zone::LeaveGame(ActorIDType _actorId)
 		protocol::NotifyDespawn despawnPacket;
 		despawnPacket.add_actorids(_actorId);
 		auto sendBuffer = ClientPacketHandler::MakeSendBufferPtr(despawnPacket);
-		BroadCast(nullptr, sendBuffer);
+		BroadCast(Vector2Int::GetVectorFromActorPos(actor->ActorInfo.posinfo()), sendBuffer);
 	}
 }
 
@@ -348,5 +360,5 @@ void Zone::HandleSkill(PlayerPtr player, protocol::RequestSkill packet)
 	resSkillPacket.set_actorid(player->ActorInfo.actorid());
 	resSkillPacket.set_skillid(packet.skillid());
 	auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(resSkillPacket);
-	BroadCast(nullptr, _sendBuffer);
+	BroadCast(player, _sendBuffer);
 }

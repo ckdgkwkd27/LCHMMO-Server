@@ -29,7 +29,7 @@ void Actor::OnDamaged(std::shared_ptr<Actor> attacker, int32 damage)
 	hpPacket.set_actorid(attacker->ActorInfo.actorid());
 	hpPacket.set_hp(ActorInfo.statinfo().hp());
 	auto sendBufer = ClientPacketHandler::MakeSendBufferPtr(hpPacket);
-	zone->BroadCast(nullptr, sendBufer);
+	zone->BroadCast(Vector2Int::GetVectorFromActorPos(ActorInfo.posinfo()), sendBufer);
 
 	if (ActorInfo.statinfo().hp() <= 0)
 	{
@@ -47,7 +47,7 @@ void Actor::OnDead(std::shared_ptr<Actor> attacker)
 	diePacket.set_actorid(ActorInfo.actorid());
 	diePacket.set_attackerid(attacker->ActorInfo.actorid());
 	auto sendBufer = ClientPacketHandler::MakeSendBufferPtr(diePacket);
-	zone->BroadCast(nullptr, sendBufer);
+	zone->BroadCast(Vector2Int::GetVectorFromActorPos(ActorInfo.posinfo()), sendBufer);
 
 	zone->LeaveGame(ActorInfo.actorid());
 
