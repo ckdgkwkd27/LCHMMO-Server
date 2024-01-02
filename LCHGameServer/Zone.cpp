@@ -3,6 +3,8 @@
 #include "ClientSession.h"
 #include "ZoneManager.h"
 #include "PlayerManager.h"
+#include "Viewport.h"
+#include "IocpManager.h"
 
 void Zone::Init()
 {
@@ -15,13 +17,13 @@ void Zone::Init()
 	uint32 SizeX = xMax - xMin + 1;
 	uint32 SizeY = yMax - yMin + 1;
 
-	sectionCells = 5;
+	sectionCells = SECTION_SIZE;
 	int32 countY = (SizeY + sectionCells - 1) / sectionCells;
 	int32 countX = (SizeX + sectionCells - 1) / sectionCells;
-	sectionVector.resize(countY, std::vector<SectionPtr>(countX));
-	for (int32 y = 0; y < countY; y++)
+	sectionVector.resize(countY + 1, std::vector<SectionPtr>(countX + 1));
+	for (int32 y = 0; y <= countY; y++)
 	{
-		for (int32 x = 0; x < countX; x++)
+		for (int32 x = 0; x <= countX; x++)
 		{
 			sectionVector[y][x] = std::make_shared<Section>(x, y);
 		}
@@ -42,7 +44,6 @@ void Zone::UnregisterActor(ActorPtr _actor)
 	if (_actor == nullptr)
 		return;
 
-	RecursiveLockGuard guard(actorLock);
 	actorVector.erase(std::remove(actorVector.begin(), actorVector.end(), _actor), actorVector.end());
 }
 
@@ -63,7 +64,7 @@ ActorPtr Zone::FindActor(ActorIDType _actorID)
 
 PlayerPtr Zone::FindPlayerInCondition(std::function<bool(ActorPtr)> _condition)
 {
-	//RecursiveLockGuard guard(actorLock);
+	RecursiveLockGuard guard(actorLock);
 
 	for (ActorPtr _actor : actorVector)
 	{
@@ -165,6 +166,9 @@ void Zone::BroadCast(ActorPtr _selfPlayer, CircularBufferPtr _sendBuffer)
 
 				PlayerPtr _player = std::dynamic_pointer_cast<Player>(_actor);
 				_player->ownerSession->PostSend(_sendBuffer);
+
+				//Viewport Update
+				//_player->viewport->Update();
 			}
 		}
 	}
@@ -189,6 +193,9 @@ void Zone::BroadCast(Vector2Int cellPos, CircularBufferPtr _sendBuffer)
 
 				PlayerPtr _player = std::dynamic_pointer_cast<Player>(_actor);
 				_player->ownerSession->PostSend(_sendBuffer);
+
+				//Viewport Update
+				//_player->viewport->Update();
 			}
 		}
 	}
@@ -201,7 +208,8 @@ bool Zone::Update()
 	//Actor Update
 	for (ActorPtr _actor : actorVector)
 	{
-		_actor->Update();
+		if(_actor != nullptr)
+			_actor->Update();
 	}
 
 	//Message Queue Process
@@ -210,6 +218,29 @@ bool Zone::Update()
 	for (MessageFuncType message : messageVector)
 	{
 		message();
+	}
+
+	return true;
+}
+
+bool Zone::PlayerViewportUpdate()
+{
+	for (auto _actor : this->actorVector)
+	{
+		if (_actor->ActorInfo.objecttype() == (uint32)ObjectType::PLAYER && _actor != nullptr)
+		{
+			PlayerPtr player = std::dynamic_pointer_cast<Player>(_actor);
+
+			TimeStampType currTimeStamp = TimeUtil::GetCurrTimeStamp();
+			if (currTimeStamp > player->LastViewportUpdateTimeStamp + 200ms)
+			{
+				protocol::RequestViewportUpdate ViewPkt;
+				ViewPkt.set_playerid(player->playerId);
+				auto viewSendBuffer = ClientPacketHandler::MakeSendBufferPtr(ViewPkt);
+				player->ownerSession->PostLoopback(viewSendBuffer);
+			}
+			//player->viewport->Update();
+		}
 	}
 
 	return true;
@@ -224,6 +255,7 @@ void Zone::EnterGame(PlayerPtr player, ZoneIDType zoneId)
 	if (false == GZoneManager.RegisterActor(zoneId, player))
 		return;
 
+	RecursiveLockGuard guard(actorLock);
 	Vector2Int cellPos = Vector2Int::GetVectorFromActorPos(player->ActorInfo.posinfo());
 	zone->zoneMap.ApplyMove(player, cellPos);
 	GetSection(cellPos)->Add(player);
@@ -235,32 +267,46 @@ void Zone::EnterGame(PlayerPtr player, ZoneIDType zoneId)
 		ReturnPkt.set_zoneid(player->zoneID);
 		auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(ReturnPkt);
 		player->ownerSession->PostSend(_sendBuffer);
+		
+		player->viewport->Update();
+
+		protocol::RequestViewportUpdate ViewPkt;
+		ViewPkt.set_playerid(player->playerId);
+		auto viewSendBuffer = ClientPacketHandler::MakeSendBufferPtr(ViewPkt);
+		player->ownerSession->PostLoopback(viewSendBuffer);
 	}
 
 	//Player에게 다른사람을 알린다
-	{
+	/*{
 		protocol::NotifySpawn SpawnPkt;
-		for (auto otherActor : zone->actorVector)
+
+		std::set<SectionPtr> sections = GetAdjacentSections(Vector2Int::GetVectorFromActorPos(player->ActorInfo.posinfo()));
+		for (auto _section : sections)
 		{
-			if (otherActor->ActorInfo.actorid() != player->ActorInfo.actorid())
+			for (auto otherActor : _section->actorVector)
 			{
-				protocol::ObjectInfo* playerInfo = SpawnPkt.add_objects();
-				*playerInfo = otherActor->ActorInfo;
+				if (otherActor->ActorInfo.actorid() != player->ActorInfo.actorid())
+				{
+					protocol::ObjectInfo* playerInfo = SpawnPkt.add_objects();
+					*playerInfo = otherActor->ActorInfo;
+				}
 			}
 		}
 
 		auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(SpawnPkt);
 		player->ownerSession->PostSend(_sendBuffer);
-	}
+	}*/
 
 	//다른 사람들에게 Player를 알린다.
-	{
+	/*{
 		protocol::NotifySpawn SpawnPkt;
 		protocol::ObjectInfo* playerInfo = SpawnPkt.add_objects();
 		*playerInfo = player->ActorInfo;
 		auto _broadCastBuffer = ClientPacketHandler::MakeSendBufferPtr(SpawnPkt);
 		zone->BroadCast(player, _broadCastBuffer);
-	}
+	}*/
+
+	printf("INFO: EnterGame ActorID=%d, ZoneID=%d\n", player->ActorInfo.actorid(), zoneID);
 }
 
 void Zone::LeaveGame(ActorIDType _actorId)
@@ -290,6 +336,11 @@ void Zone::LeaveGame(ActorIDType _actorId)
 		auto sendBuffer = ClientPacketHandler::MakeSendBufferPtr(despawnPacket);
 		BroadCast(Vector2Int::GetVectorFromActorPos(actor->ActorInfo.posinfo()), sendBuffer);
 	}
+
+	if (actor->ActorInfo.objecttype() == (uint32)ObjectType::PLAYER)
+	{
+		printf("INFO: LeaveGame ActorID=%d\n", _actorId);
+	}
 }
 
 void Zone::HandleMove(PlayerPtr player, protocol::RequestMove movePacket)
@@ -307,7 +358,8 @@ void Zone::HandleMove(PlayerPtr player, protocol::RequestMove movePacket)
 
 	player->ActorInfo.mutable_posinfo()->set_state(movePosInfo.state());
 	player->ActorInfo.mutable_posinfo()->set_movedir(movePosInfo.movedir());
-	zoneMap.ApplyMove(player, Vector2Int(movePosInfo.posx(), movePosInfo.posy()));
+	Vector2Int moveCellPos = Vector2Int(movePosInfo.posx(), movePosInfo.posy());
+	zoneMap.ApplyMove(player, moveCellPos);
 
 	//BroadCast
 	protocol::ReturnMove resMovePacket;
@@ -315,6 +367,10 @@ void Zone::HandleMove(PlayerPtr player, protocol::RequestMove movePacket)
 	resMovePacket.mutable_posinfo()->CopyFrom(movePosInfo);
 	auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(resMovePacket);
 	BroadCast(player, _sendBuffer);
+
+	player->viewport->Update();
+	SectionPtr section = GetSection(moveCellPos);
+	section->PlayerViewportUpdate();
 }
 
 void Zone::HandleSkill(PlayerPtr player, protocol::RequestSkill packet)
@@ -332,7 +388,10 @@ void Zone::HandleSkill(PlayerPtr player, protocol::RequestSkill packet)
 		{
 			return _actor->ActorInfo.actorid() == packet.targetactorid();
 		});
+
 		if (it == _zone->actorVector.end())
+			return;
+		if ((*it)->ActorInfo.statinfo().hp() <= 0)
 			return;
 
 		targetActor = *it;
@@ -360,5 +419,5 @@ void Zone::HandleSkill(PlayerPtr player, protocol::RequestSkill packet)
 	resSkillPacket.set_actorid(player->ActorInfo.actorid());
 	resSkillPacket.set_skillid(packet.skillid());
 	auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(resSkillPacket);
-	BroadCast(player, _sendBuffer);
+	BroadCast(Vector2Int::GetVectorFromActorPos(player->ActorInfo.posinfo()), _sendBuffer);
 }

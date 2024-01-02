@@ -21,6 +21,7 @@ public:
 
 	void Register();
 	bool PostSend(CircularBufferPtr _sendBuffer);
+	bool PostLoopback(CircularBufferPtr _sendBuffer);
 
 	bool PostRecv();
 	bool PostAccept();
@@ -32,11 +33,14 @@ public:
 	bool ProcessRecv(int32 bytes);
 	bool ProcessConnect();
 	bool ProcessDisconnect();
+	bool ProcessLoopback(CircularBufferPtr buffer, int32 bytes);
 
 private:
 	SOCKET sessionSocket = INVALID_SOCKET;
 	SOCKET listenSocket = INVALID_SOCKET;
 	HANDLE iocpHandle = INVALID_HANDLE_VALUE;
+
+public:
 	AcceptEvent sessionAcceptEvent;
 	ConnectEvent sessionConnectEvent;
 	DisconnectEvent sessionDisconnectEvent;

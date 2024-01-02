@@ -22,6 +22,8 @@ public:
 	void Dispatch(IocpEvent* iocpEvent, DWORD bytes);
 	void AcceptThreadFunc();
 	void WorkerThreadFunc();
+	bool IocpPost(CircularBufferPtr buffer, IocpEvent* iocpEvent);
+
 
 private:
 	std::wstring ip;
@@ -49,6 +51,8 @@ public:
 		return maxConnectionCnt;
 	}
 };
+
+extern IocpManager* GIocpManager;
 
 template <typename T>
 void IocpManager::StartAccept()

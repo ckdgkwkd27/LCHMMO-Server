@@ -25,3 +25,4 @@ public:
 	std::shared_ptr<Player> currentPlayer;
 };
 
+using ClientSessionPtr = std::shared_ptr<ClientSession>;

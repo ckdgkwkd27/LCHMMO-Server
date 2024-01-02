@@ -9,6 +9,7 @@ public:
 	void Remove(ActorPtr actor);
 	ActorPtr FindActor(ActorIDType _actorId);
 	PlayerPtr FindPlayerInCondition(std::function<bool(ActorPtr)> _condition);
+	bool PlayerViewportUpdate();
 
 private:
 	RecursiveMutex sectionLock;

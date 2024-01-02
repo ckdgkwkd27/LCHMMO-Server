@@ -5,7 +5,8 @@
 #include "MessageQueue.h"
 #include "ClientPacketHandler.h"
 #include "Section.h"
-#define VIEWPORT_CELL 15
+#define SECTION_SIZE 10
+#define VIEWPORT_CELL 10
 
 using ZoneIDType = uint32;
 class Zone
@@ -25,6 +26,7 @@ public:
 	void BroadCast(ActorPtr _selfPlayer, CircularBufferPtr _sendBuffer);
 	void BroadCast(Vector2Int cellPos, CircularBufferPtr _sendBuffer);
 	bool Update();
+	bool PlayerViewportUpdate();
 	void EnterGame(PlayerPtr player, ZoneIDType zoneId = 0);
 	void LeaveGame(ActorIDType _actorId);
 	void HandleMove(PlayerPtr player, protocol::RequestMove movePacket);

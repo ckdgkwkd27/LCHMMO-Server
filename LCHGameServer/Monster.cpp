@@ -95,8 +95,8 @@ void Monster::UpdateMoving()
 		return;
 	} 
 
-	zone->zoneMap.ApplyMove(shared_from_this(), path[1]);
-	this->ActorInfo.mutable_posinfo()->set_movedir((uint32)GetDirFromVector(path[1] - CellPos));
+	if(zone->zoneMap.ApplyMove(shared_from_this(), path[1]))
+		this->ActorInfo.mutable_posinfo()->set_movedir((uint32)GetDirFromVector(path[1] - CellPos));
 	BroadcastMove();
 	SetMoveState(MoveState::IDLE);
 }
@@ -109,9 +109,18 @@ void Monster::UpdateChasing()
 	int64 _moveTick = static_cast <int64>(1000 / ActorInfo.statinfo().speed());
 	nextChaseTimeStamp = CURRENT_TIMESTAMP().count() + _moveTick;
 
-	if (targetActor == nullptr || targetActor->zoneID != zoneID)
+	ZonePtr zone = GZoneManager.FindZoneByID(zoneID);
+	CRASH_ASSERT(zone != nullptr);
+
+	targetActor = zone->FindPlayerInCondition([this](ActorPtr actor)
 	{
-		targetActor = nullptr;
+		Vector2Int dir(ActorInfo.posinfo().posx() - actor->ActorInfo.posinfo().posx(),
+		ActorInfo.posinfo().posy() - actor->ActorInfo.posinfo().posy());
+		return sqrt(dir.CellDistFromZero) <= SEARCH_CELL_DISTANCE;
+	});
+
+	if (targetActor == nullptr)
+	{
 		SetMoveState(MoveState::IDLE);
 		return;
 	}
@@ -128,9 +137,6 @@ void Monster::UpdateChasing()
 		return;
 	}
 
-	ZonePtr zone = GZoneManager.FindZoneByID(targetActor->zoneID);
-	CRASH_ASSERT(zone != nullptr);
-
 	std::vector<Vector2Int> path = zone->zoneMap.FindPath(CellPos, TrgCellPos, false);
 	if (path.size() < 2 || path.size() > CHASE_CELL_DISTANCE)
 	{
@@ -145,8 +151,13 @@ void Monster::UpdateChasing()
 		return;
 	}
 
+	if (zone->zoneMap.ApplyMove(shared_from_this(), path[1]) == false)
+	{
+		SetMoveState(MoveState::MOVING);
+		return;
+	}
+
 	this->ActorInfo.mutable_posinfo()->set_movedir((uint32)GetDirFromVector(path[1] - CellPos));
-	zone->zoneMap.ApplyMove(shared_from_this(), path[1]);
 	BroadcastMove();
 	SetMoveState(MoveState::CHASING);
 }
@@ -160,6 +171,19 @@ void Monster::UpdateSkill()
 
 	ZonePtr zone = GZoneManager.FindZoneByID(targetActor->zoneID);
 	CRASH_ASSERT(zone != nullptr);
+
+	targetActor = zone->FindPlayerInCondition([this](ActorPtr actor)
+	{
+		Vector2Int dir(ActorInfo.posinfo().posx() - actor->ActorInfo.posinfo().posx(),
+		ActorInfo.posinfo().posy() - actor->ActorInfo.posinfo().posy());
+		return sqrt(dir.CellDistFromZero) <= SEARCH_CELL_DISTANCE;
+	});
+
+	if (targetActor == nullptr)
+	{
+		SetMoveState(MoveState::IDLE);
+		return;
+	}
 
 	Vector2Int dir(targetActor->ActorInfo.posinfo().posx() - this->ActorInfo.posinfo().posx(),
 		targetActor->ActorInfo.posinfo().posy() - this->ActorInfo.posinfo().posy());
@@ -216,4 +240,7 @@ void Monster::BroadcastMove()
 
 	auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(movePacket);
 	zone->BroadCast(shared_from_this(), _sendBuffer);
+
+	SectionPtr section = zone->GetSection(Vector2Int::GetVectorFromActorPos(this->ActorInfo.posinfo()));
+	section->PlayerViewportUpdate();
 }

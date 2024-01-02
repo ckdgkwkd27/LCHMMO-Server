@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Section.h"
+#include "Viewport.h"
+#include "ClientPacketHandler.h"
 
 Section::Section(int32 x, int32 y)
 {
@@ -9,17 +11,19 @@ Section::Section(int32 x, int32 y)
 
 void Section::Add(ActorPtr actor)
 {
+	RecursiveLockGuard guard(sectionLock);
 	actorVector.push_back(actor);
 }
 
 void Section::Remove(ActorPtr actor)
 {
+	RecursiveLockGuard guard(sectionLock);
 	actorVector.erase(std::remove(actorVector.begin(), actorVector.end(), actor), actorVector.end());
 }
 
 ActorPtr Section::FindActor(ActorIDType _actorID)
 {
-	RecursiveLockGuard guard(sectionLock);
+	//RecursiveLockGuard guard(sectionLock);
 
 	auto it = std::find_if(actorVector.begin(), actorVector.end(), [_actorID](ActorPtr _actor) {
 		if (_actor == nullptr) CRASH_ASSERT(false);
@@ -47,4 +51,30 @@ PlayerPtr Section::FindPlayerInCondition(std::function<bool(ActorPtr)> _conditio
 		}
 	}
 	return nullptr;
+}
+
+bool Section::PlayerViewportUpdate()
+{
+	//auto startTime = TimeUtil::GetCurrTimeStamp();
+
+	for (auto _actor : this->actorVector)
+	{
+		if (_actor->ActorInfo.objecttype() == (uint32)ObjectType::PLAYER && _actor != nullptr)
+		{
+			PlayerPtr player = std::dynamic_pointer_cast<Player>(_actor);
+
+			TimeStampType currTimeStamp = TimeUtil::GetCurrTimeStamp();
+			if (currTimeStamp > player->LastViewportUpdateTimeStamp + 200ms)
+			{
+				protocol::RequestViewportUpdate ViewPkt;
+				ViewPkt.set_playerid(player->playerId);
+				auto viewSendBuffer = ClientPacketHandler::MakeSendBufferPtr(ViewPkt);
+				player->ownerSession->PostLoopback(viewSendBuffer);
+			}
+		}
+	}
+
+	/*auto endTime = TimeUtil::GetCurrTimeStamp();
+	printf("Vision Update Elapsed=%d\n", endTime - startTime);*/
+	return true;
 }

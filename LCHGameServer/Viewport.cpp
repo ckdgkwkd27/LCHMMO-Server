@@ -9,7 +9,7 @@ Viewport::Viewport(PlayerPtr _owner)
 
 std::set<ActorPtr> Viewport::GatherActors()
 {
-    if (owner == nullptr || owner->zoneID == 0)
+    if (owner == nullptr)
         return std::set<ActorPtr>();
 
     std::set<ActorPtr> actors;
@@ -17,11 +17,14 @@ std::set<ActorPtr> Viewport::GatherActors()
 
     Vector2Int ownerCellpos = Vector2Int::GetVectorFromActorPos(owner->ActorInfo.posinfo());
     std::set<SectionPtr> sections = zone->GetAdjacentSections(ownerCellpos);
-    
     for (SectionPtr _section : sections)
     {
-        for (ActorPtr _actor : _section->actorVector)
+        for (uint32 idx = 0; idx < _section->actorVector.size(); idx++)
         {
+            ActorPtr _actor = _section->actorVector[idx];
+			if (_actor == nullptr)
+				continue;
+
             Vector2Int actorCellPos = Vector2Int::GetVectorFromActorPos(_actor->ActorInfo.posinfo());
             int32 dx = actorCellPos.x - ownerCellpos.x;
             int32 dy = actorCellPos.y - ownerCellpos.y;
@@ -38,17 +41,22 @@ std::set<ActorPtr> Viewport::GatherActors()
 
 void Viewport::Update()
 {
-    if (owner == nullptr || owner->zoneID == 0)
+    if (owner == nullptr)
         return;
 
     std::set<ActorPtr> currActors = GatherActors();
 
     std::vector<ActorPtr> addedActors;
     {
+        uint32 cnt = 0;
 		for (auto _actor : currActors)
 		{
-			if (std::find(prevActors.begin(), prevActors.end(), _actor) == prevActors.end())
+            if(cnt > 10)
+                break;
+
+			if (std::find(prevActors.begin(), prevActors.end(), _actor) == prevActors.end() && _actor != owner)
 				addedActors.push_back(_actor);
+            ++cnt;
 		}
 
 		if (addedActors.size() > 0)
@@ -57,7 +65,7 @@ void Viewport::Update()
 			for (auto _actor : addedActors)
 			{
 				protocol::ObjectInfo* info = spawnPkt.add_objects();
-				info->MergeFrom(_actor->ActorInfo);
+                *info = _actor->ActorInfo;
 			}
 
 			auto _sendBuffer = ClientPacketHandler::MakeSendBufferPtr(spawnPkt);
@@ -69,7 +77,7 @@ void Viewport::Update()
     {
         for (auto _actor : prevActors)
         {
-            if (std::find(currActors.begin(), currActors.end(), _actor) == currActors.end())
+            if (std::find(currActors.begin(), currActors.end(), _actor) == currActors.end() && _actor != owner)
                 removedActors.push_back(_actor);
         }
 
@@ -85,4 +93,7 @@ void Viewport::Update()
             owner->ownerSession->PostSend(_sendBuffer);
         }
     }
+
+    prevActors = currActors;
+    owner->LastViewportUpdateTimeStamp = TimeUtil::GetCurrTimeStamp();
 }

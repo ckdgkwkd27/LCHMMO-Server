@@ -30,7 +30,11 @@ bool Handle_PKT_SC_LOGIN(ServerSessionPtr& session, protocol::ReturnLogin& packe
 bool Handle_PKT_SC_ENTER_GAME(ServerSessionPtr& session, protocol::ReturnEnterGame& packet);
 bool Handle_PKT_SC_SPAWN(ServerSessionPtr& session, protocol::NotifySpawn& packet);
 bool Handle_PKT_SC_MOVE(ServerSessionPtr& session, protocol::ReturnMove& packet);
+bool Handle_PKT_SC_SET_HP(ServerSessionPtr& session, protocol::NotifySetHp& packet);
+bool Handle_PKT_SC_SKILL(ServerSessionPtr& session, protocol::ReturnSkill& packet);
+bool Handle_PKT_SC_DIE(ServerSessionPtr& session, protocol::NotifyDie& packet);
 bool Handle_PKT_SC_DESPAWN(ServerSessionPtr& session, protocol::NotifyDespawn& packet);
+extern std::mutex handlerLock;
 
 
 class ServerPacketHandler

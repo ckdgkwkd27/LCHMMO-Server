@@ -50,10 +50,7 @@ void Actor::OnDead(std::shared_ptr<Actor> attacker)
 	zone->BroadCast(Vector2Int::GetVectorFromActorPos(ActorInfo.posinfo()), sendBufer);
 
 	zone->LeaveGame(ActorInfo.actorid());
-
 	ActorInfo.mutable_statinfo()->set_hp(ActorInfo.statinfo().maxhp());
 	ActorInfo.mutable_posinfo()->set_state((uint32)MoveState::DEAD);
 	ActorInfo.mutable_posinfo()->set_movedir((uint32)MoveDir::DOWN);
-	ActorInfo.mutable_posinfo()->set_posx(0);
-	ActorInfo.mutable_posinfo()->set_posy(0);
 }

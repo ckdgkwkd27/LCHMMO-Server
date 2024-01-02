@@ -2,6 +2,9 @@
 #include "Zone.h"
 #include "ObjectPool.h"
 #include "Monster.h"
+#include "TimeUtil.h"
+#define ZONE_UPDATE_INTERVAL 60ms
+#define PLAYER_VIEWPORT_UDPATE_INTERVAL 1000ms
 
 class ClientPacketHandler;
 
@@ -32,6 +35,11 @@ public:
 public:
 	RecursiveMutex zoneLock;
 	void SpawnNpc();
+
+private:
+	TimeStampType CurrTimeStamp = ZERO_TIMESTAMP;
+	TimeStampType NextTimeStampForZoneUpdate = ZERO_TIMESTAMP;
+	TimeStampType NextTimeStampForPlayerViewportUpdate = ZERO_TIMESTAMP;
 };
 
 extern ZoneManager GZoneManager;

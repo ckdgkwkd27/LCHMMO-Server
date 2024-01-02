@@ -24,4 +24,5 @@ public:
 public:
 	uint8 state = NONE;
 	uint32 playerId;
+	uint32 actorId;
 };

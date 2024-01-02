@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ZoneManager.h"
 #include "ClientPacketHandler.h"
+#include "RandomUtil.h"
 
 ZoneManager GZoneManager;
 
@@ -70,7 +71,7 @@ ActorIDType ZoneManager::IssueActorID()
 
 ZonePtr ZoneManager::FindZoneByID(ZoneIDType _zoneId)
 {
-	RecursiveLockGuard guard(zoneLock);
+	//RecursiveLockGuard guard(zoneLock);
 	auto it = std::find_if(zoneVector.begin(), zoneVector.end(), [_zoneId](ZonePtr _zone) { return _zone->zoneID == _zoneId; });
 	if(it == zoneVector.end())
 		return nullptr;
@@ -79,8 +80,29 @@ ZonePtr ZoneManager::FindZoneByID(ZoneIDType _zoneId)
 
 void ZoneManager::TickUpdate()
 {
-	for (ZonePtr _zone : zoneVector)
-		_zone->Update();
+	CurrTimeStamp = TimeUtil::GetCurrTimeStamp();
+
+	//존 업데이트
+	if (CurrTimeStamp > NextTimeStampForZoneUpdate)
+	{
+		for (ZonePtr _zone : zoneVector)
+			_zone->Update();
+
+		NextTimeStampForZoneUpdate = CurrTimeStamp + ZONE_UPDATE_INTERVAL;
+	}
+
+	auto startTime = TimeUtil::GetCurrTimeStamp();
+
+	//플레이어 시야 업데이트
+	/*if (CurrTimeStamp > NextTimeStampForPlayerViewportUpdate)
+	{
+		for (ZonePtr _zone : zoneVector)
+			_zone->PlayerViewportUpdate();
+
+		NextTimeStampForPlayerViewportUpdate = CurrTimeStamp + PLAYER_VIEWPORT_UDPATE_INTERVAL;
+		auto endTime = TimeUtil::GetCurrTimeStamp();
+		printf("Vision Update Elapsed=%d\n", endTime - startTime);
+	}*/
 }
 
 void ZoneManager::SpawnNpc()
@@ -90,28 +112,14 @@ void ZoneManager::SpawnNpc()
 	//Spawn Monster or Npc
 	for (ZonePtr _zone : zoneVector)
 	{
-		/*if (_zone->zoneID == 0)
-		{
-			for (uint32 i = 0; i < 1; i++)
-			{
-				MonsterPtr monster = std::make_shared<Monster>();
-				monster->zoneID = 0;
-				monster->ActorInfo.mutable_posinfo()->set_posx(-2 * i - 9);
-				monster->ActorInfo.mutable_posinfo()->set_posy(-2 * i - 9);
-				_zone->RegisterActor(monster);
-			}
-
-			std::cout << "[INFO] ZoneID=" << _zone->zoneID << " Monster Spawned!" << std::endl;
-		}*/
-
 		if (_zone->zoneID == 1)
 		{
-			for (uint32 i = 0; i < 30; i++)
+			for (uint32 i = 0; i < 1000; i++)
 			{
 				MonsterPtr monster = std::make_shared<Monster>();
 				monster->zoneID = _zone->zoneID;
-				monster->ActorInfo.mutable_posinfo()->set_posx(-2 * i - 9);
-				monster->ActorInfo.mutable_posinfo()->set_posy(-2 * i - 9);
+				monster->ActorInfo.mutable_posinfo()->set_posx(RandomUtil::GetRandomRangeInt(_zone->xMin, _zone->xMax) / 2);
+				monster->ActorInfo.mutable_posinfo()->set_posy(RandomUtil::GetRandomRangeInt(_zone->yMin, _zone->yMax) / 2);
 				_zone->RegisterActor(monster);
 			}
 

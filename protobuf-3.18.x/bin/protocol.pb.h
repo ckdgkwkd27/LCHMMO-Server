@@ -46,7 +46,7 @@ struct TableStruct_protocol_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[17]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[18]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -87,6 +87,9 @@ extern RequestSkillDefaultTypeInternal _RequestSkill_default_instance_;
 class RequestTeleport;
 struct RequestTeleportDefaultTypeInternal;
 extern RequestTeleportDefaultTypeInternal _RequestTeleport_default_instance_;
+class RequestViewportUpdate;
+struct RequestViewportUpdateDefaultTypeInternal;
+extern RequestViewportUpdateDefaultTypeInternal _RequestViewportUpdate_default_instance_;
 class ReturnEnterGame;
 struct ReturnEnterGameDefaultTypeInternal;
 extern ReturnEnterGameDefaultTypeInternal _ReturnEnterGame_default_instance_;
@@ -118,6 +121,7 @@ template<> ::protocol::RequestLogin* Arena::CreateMaybeMessage<::protocol::Reque
 template<> ::protocol::RequestMove* Arena::CreateMaybeMessage<::protocol::RequestMove>(Arena*);
 template<> ::protocol::RequestSkill* Arena::CreateMaybeMessage<::protocol::RequestSkill>(Arena*);
 template<> ::protocol::RequestTeleport* Arena::CreateMaybeMessage<::protocol::RequestTeleport>(Arena*);
+template<> ::protocol::RequestViewportUpdate* Arena::CreateMaybeMessage<::protocol::RequestViewportUpdate>(Arena*);
 template<> ::protocol::ReturnEnterGame* Arena::CreateMaybeMessage<::protocol::ReturnEnterGame>(Arena*);
 template<> ::protocol::ReturnLogin* Arena::CreateMaybeMessage<::protocol::ReturnLogin>(Arena*);
 template<> ::protocol::ReturnMove* Arena::CreateMaybeMessage<::protocol::ReturnMove>(Arena*);
@@ -1151,6 +1155,7 @@ class RequestEnterGame final :
 
   enum : int {
     kPlayerIdFieldNumber = 1,
+    kZoneIdFieldNumber = 2,
   };
   // uint32 playerId = 1;
   void clear_playerid();
@@ -1161,6 +1166,15 @@ class RequestEnterGame final :
   void _internal_set_playerid(::PROTOBUF_NAMESPACE_ID::uint32 value);
   public:
 
+  // uint32 zoneId = 2;
+  void clear_zoneid();
+  ::PROTOBUF_NAMESPACE_ID::uint32 zoneid() const;
+  void set_zoneid(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_zoneid() const;
+  void _internal_set_zoneid(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  public:
+
   // @@protoc_insertion_point(class_scope:protocol.RequestEnterGame)
  private:
   class _Internal;
@@ -1169,6 +1183,7 @@ class RequestEnterGame final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::uint32 playerid_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 zoneid_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_protocol_2eproto;
 };
@@ -2903,6 +2918,149 @@ class ReturnTeleport final :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_protocol_2eproto;
 };
+// -------------------------------------------------------------------
+
+class RequestViewportUpdate final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protocol.RequestViewportUpdate) */ {
+ public:
+  inline RequestViewportUpdate() : RequestViewportUpdate(nullptr) {}
+  ~RequestViewportUpdate() override;
+  explicit constexpr RequestViewportUpdate(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  RequestViewportUpdate(const RequestViewportUpdate& from);
+  RequestViewportUpdate(RequestViewportUpdate&& from) noexcept
+    : RequestViewportUpdate() {
+    *this = ::std::move(from);
+  }
+
+  inline RequestViewportUpdate& operator=(const RequestViewportUpdate& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline RequestViewportUpdate& operator=(RequestViewportUpdate&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const RequestViewportUpdate& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const RequestViewportUpdate* internal_default_instance() {
+    return reinterpret_cast<const RequestViewportUpdate*>(
+               &_RequestViewportUpdate_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    17;
+
+  friend void swap(RequestViewportUpdate& a, RequestViewportUpdate& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(RequestViewportUpdate* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(RequestViewportUpdate* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline RequestViewportUpdate* New() const final {
+    return new RequestViewportUpdate();
+  }
+
+  RequestViewportUpdate* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<RequestViewportUpdate>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const RequestViewportUpdate& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const RequestViewportUpdate& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(RequestViewportUpdate* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "protocol.RequestViewportUpdate";
+  }
+  protected:
+  explicit RequestViewportUpdate(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kPlayerIdFieldNumber = 1,
+  };
+  // uint32 playerId = 1;
+  void clear_playerid();
+  ::PROTOBUF_NAMESPACE_ID::uint32 playerid() const;
+  void set_playerid(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_playerid() const;
+  void _internal_set_playerid(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:protocol.RequestViewportUpdate)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 playerid_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_protocol_2eproto;
+};
 // ===================================================================
 
 
@@ -3550,6 +3708,26 @@ inline void RequestEnterGame::_internal_set_playerid(::PROTOBUF_NAMESPACE_ID::ui
 inline void RequestEnterGame::set_playerid(::PROTOBUF_NAMESPACE_ID::uint32 value) {
   _internal_set_playerid(value);
   // @@protoc_insertion_point(field_set:protocol.RequestEnterGame.playerId)
+}
+
+// uint32 zoneId = 2;
+inline void RequestEnterGame::clear_zoneid() {
+  zoneid_ = 0u;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint32 RequestEnterGame::_internal_zoneid() const {
+  return zoneid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint32 RequestEnterGame::zoneid() const {
+  // @@protoc_insertion_point(field_get:protocol.RequestEnterGame.zoneId)
+  return _internal_zoneid();
+}
+inline void RequestEnterGame::_internal_set_zoneid(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  
+  zoneid_ = value;
+}
+inline void RequestEnterGame::set_zoneid(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  _internal_set_zoneid(value);
+  // @@protoc_insertion_point(field_set:protocol.RequestEnterGame.zoneId)
 }
 
 // -------------------------------------------------------------------
@@ -4323,9 +4501,35 @@ inline void ReturnTeleport::set_zoneid(::PROTOBUF_NAMESPACE_ID::uint32 value) {
   // @@protoc_insertion_point(field_set:protocol.ReturnTeleport.zoneId)
 }
 
+// -------------------------------------------------------------------
+
+// RequestViewportUpdate
+
+// uint32 playerId = 1;
+inline void RequestViewportUpdate::clear_playerid() {
+  playerid_ = 0u;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint32 RequestViewportUpdate::_internal_playerid() const {
+  return playerid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint32 RequestViewportUpdate::playerid() const {
+  // @@protoc_insertion_point(field_get:protocol.RequestViewportUpdate.playerId)
+  return _internal_playerid();
+}
+inline void RequestViewportUpdate::_internal_set_playerid(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  
+  playerid_ = value;
+}
+inline void RequestViewportUpdate::set_playerid(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  _internal_set_playerid(value);
+  // @@protoc_insertion_point(field_set:protocol.RequestViewportUpdate.playerId)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

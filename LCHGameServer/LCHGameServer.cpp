@@ -15,18 +15,18 @@ int main()
 
     ClientPacketHandler::Init();
 
-    IocpManager* iocpManager = new IocpManager(L"127.0.0.1", 8888, 120);
-    iocpManager->Initialize();
-    iocpManager->BindAndListen();
-    iocpManager->StartWorker();
-    iocpManager->StartAccept<ClientSession>();
+    GIocpManager = new IocpManager(L"127.0.0.1", 8888, 3200);
+    GIocpManager->Initialize();
+    GIocpManager->BindAndListen();
+    GIocpManager->StartWorker();
+    GIocpManager->StartAccept<ClientSession>();
 
 	GZoneManager.SpawnNpc();
 
     std::thread tickThread = std::thread([] 
 	{
 		Ticker ticker([]() { GZoneManager.TickUpdate(); },
-		std::chrono::duration<int64, std::milli>(60));
+		std::chrono::duration<int64, std::milli>(15));
 	});
 
 
@@ -35,7 +35,7 @@ int main()
 
     }
 
-    iocpManager->Join();
+    GIocpManager->Join();
     tickThread.join();
 
     return true;

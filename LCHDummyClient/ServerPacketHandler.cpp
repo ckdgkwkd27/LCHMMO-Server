@@ -3,6 +3,7 @@
 #include "RandomUtil.h"
 
 ServerPacketHandlerFunc GServerPacketHandler[UINT16_MAX];
+std::mutex handlerLock;
 
 void ServerPacketHandler::Init()
 {
@@ -26,6 +27,18 @@ void ServerPacketHandler::Init()
 	GServerPacketHandler[PKT_SC_MOVE] = [](ServerSessionPtr& session, char* buffer, uint32 len)
 	{
 		return HandlePacket<protocol::ReturnMove>(Handle_PKT_SC_MOVE, session, buffer, len);
+	};
+	GServerPacketHandler[PKT_SC_SET_HP] = [](ServerSessionPtr& session, char* buffer, uint32 len)
+	{
+		return HandlePacket<protocol::NotifySetHp>(Handle_PKT_SC_SET_HP, session, buffer, len);
+	};
+	GServerPacketHandler[PKT_SC_SKILL] = [](ServerSessionPtr& session, char* buffer, uint32 len)
+	{
+		return HandlePacket<protocol::ReturnSkill>(Handle_PKT_SC_SKILL, session, buffer, len);
+	};
+	GServerPacketHandler[PKT_SC_DIE] = [](ServerSessionPtr& session, char* buffer, uint32 len)
+	{
+		return HandlePacket<protocol::NotifyDie>(Handle_PKT_SC_DIE, session, buffer, len);
 	};
 	GServerPacketHandler[PKT_SC_DESPAWN] = [](ServerSessionPtr& session, char* buffer, uint32 len)
 	{
@@ -57,6 +70,7 @@ bool Handle_PKT_SC_LOGIN(ServerSessionPtr& session, protocol::ReturnLogin& packe
 
 	protocol::RequestEnterGame RequestPkt;
 	RequestPkt.set_playerid(packet.playerid());
+	RequestPkt.set_zoneid(1);
 	auto _sendBuffer = ServerPacketHandler::MakeSendBufferPtr(RequestPkt);
 	session->PostSend(_sendBuffer);
 	return true;
@@ -64,9 +78,7 @@ bool Handle_PKT_SC_LOGIN(ServerSessionPtr& session, protocol::ReturnLogin& packe
 
 bool Handle_PKT_SC_ENTER_GAME(ServerSessionPtr& session, protocol::ReturnEnterGame& packet)
 {
-	//#TODO Spawn In Game
-	//printf("[INFO] NewPlayer=%d => ME=%d\n", packet.myplayer().actorid() , session->playerId);
-
+	LockGuard guard(handlerLock);
 	session->state = SessionState::ENTER_GAME;
 
 	/*int32 x = RandomUtil::GetRandomRangeInt(-500, 300);
@@ -81,13 +93,12 @@ bool Handle_PKT_SC_ENTER_GAME(ServerSessionPtr& session, protocol::ReturnEnterGa
 	session->PostSend(_sendBuffer);
 	return true;*/
 
-	int32 x = RandomUtil::GetRandomRangeInt(-10, 10);
-	int32 y = RandomUtil::GetRandomRangeInt(-10, 10);
+	int32 x = RandomUtil::GetRandomRangeInt(-506, 399);
+	int32 y = RandomUtil::GetRandomRangeInt(-384, 207);
 
-	//RequestMove에 ActorID 넣도록?
 	protocol::RequestMove movePkt;
 	movePkt.mutable_posinfo()->set_posx(x);
-	movePkt.mutable_posinfo()->set_posy(x);
+	movePkt.mutable_posinfo()->set_posy(y);
 	auto _sendBuffer = ServerPacketHandler::MakeSendBufferPtr(movePkt);
 	session->PostSend(_sendBuffer);
 	return true;
@@ -100,6 +111,21 @@ bool Handle_PKT_SC_SPAWN(ServerSessionPtr& session, protocol::NotifySpawn& packe
 }
 
 bool Handle_PKT_SC_MOVE(ServerSessionPtr& session, protocol::ReturnMove& packet)
+{
+	return true;
+}
+
+bool Handle_PKT_SC_SET_HP(ServerSessionPtr& session, protocol::NotifySetHp& packet)
+{
+	return true;
+}
+
+bool Handle_PKT_SC_SKILL(ServerSessionPtr& session, protocol::ReturnSkill& packet)
+{
+	return true;
+}
+
+bool Handle_PKT_SC_DIE(ServerSessionPtr& session, protocol::NotifyDie& packet)
 {
 	return true;
 }

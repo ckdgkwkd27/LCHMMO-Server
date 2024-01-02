@@ -23,6 +23,7 @@ enum : uint16
 	PKT_SC_DESPAWN,
 	PKT_CS_TELEPORT,
 	PKT_SC_TELEPORT,
+	PKT_S_VIEWPORT_UDPATE,
 };
 
 bool HandleInvalid(ClientSessionPtr& session, char* buffer, uint32 len);
@@ -31,6 +32,7 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
 bool Handle_PKT_CS_MOVE(ClientSessionPtr& session, protocol::RequestMove& packet);
 bool Handle_PKT_CS_SKILL(ClientSessionPtr& session, protocol::RequestSkill& packet);
 bool Handle_PKT_CS_TELEPORT(ClientSessionPtr& session, protocol::RequestTeleport& packet);
+bool Handle_PKT_S_VIEWPORT_UPDATE(ClientSessionPtr& session, protocol::RequestViewportUpdate& packet);
 
 class ClientPacketHandler
 {
@@ -45,6 +47,7 @@ public:
 	static CircularBufferPtr MakeSendBufferPtr(protocol::ReturnSkill& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_SKILL); }
 	static CircularBufferPtr MakeSendBufferPtr(protocol::NotifyDie& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_DIE); }
 	static CircularBufferPtr MakeSendBufferPtr(protocol::NotifyDespawn& pkt) { return MakeSendBufferPtr(pkt, PKT_SC_DESPAWN); }
+	static CircularBufferPtr MakeSendBufferPtr(protocol::RequestViewportUpdate& pkt) { return MakeSendBufferPtr(pkt, PKT_S_VIEWPORT_UDPATE); }
 
 	template<typename T>
 	static CircularBufferPtr MakeSendBufferPtr(T& pkt, uint16 PacketID)

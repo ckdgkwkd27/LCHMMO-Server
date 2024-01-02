@@ -3,6 +3,7 @@
 #include "TimeUtil.h"
 
 char AcceptBuf[64] = { 0, };
+IocpManager* GIocpManager;
 
 IocpManager::IocpManager(std::wstring _ip, uint16 _port, uint32 _maxConnectionCnt)
 {
@@ -135,6 +136,31 @@ void IocpManager::WorkerThreadFunc()
 			}
 		}
 
-		Dispatch(iocpEvent, bytes);
+		if (key == 1024)
+		{
+			CRASH_ASSERT(iocpEvent->sessionRef != nullptr);
+			CircularBufferPtr buffer = iocpEvent->sessionRef->sessionSendEvent.sendBuffer;
+			if (iocpEvent->sessionRef->ProcessLoopback(buffer, bytes) == false)
+			{
+				std::cout << "[FAIL] Loopback Job Failed!" << std::endl;
+				return;
+			}
+			iocpEvent->sessionRef->PostRecv();
+		}
+
+		else
+			Dispatch(iocpEvent, bytes);
 	}
+}
+
+bool IocpManager::IocpPost(CircularBufferPtr buffer, IocpEvent* iocpEvent)
+{
+	bool ret = PostQueuedCompletionStatus(iocpHandle, buffer->DataSize(), 1024, reinterpret_cast<LPOVERLAPPED>(iocpEvent));
+	if (ret == false)
+	{
+		int32 errCode = GetLastError();
+		std::cout << "[FAIL] PQCS ErrorCode: " << errCode << std::endl;
+		return false;
+	}
+	return true;
 }

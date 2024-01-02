@@ -12,3 +12,4 @@ public:
 	std::set<ActorPtr> prevActors;
 };
 
+using ViewportPtr = std::shared_ptr<Viewport>;

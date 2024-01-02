@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Session.h"
 #include "SessionManager.h"
+#include "IocpManager.h"
 
 Session::Session()
     : recvBuffer(BUFFER_SIZE), sendBuffer(BUFFER_SIZE), isConnected(false)
@@ -47,6 +48,19 @@ bool Session::PostSend(CircularBufferPtr _sendBuffer)
     }
 
     return true;
+}
+
+bool Session::PostLoopback(CircularBufferPtr _sendBuffer)
+{
+	if (isConnected == false)
+		return false;
+
+	RecursiveLockGuard lockGuard(sendLock);
+	sessionSendEvent.Init();
+	sessionSendEvent.sessionRef = shared_from_this();
+	sessionSendEvent.sendBuffer = _sendBuffer;
+    RETURN_FALSE_ON_FAIL(GIocpManager->IocpPost(_sendBuffer, &sessionSendEvent));
+	return true;
 }
 
 bool Session::PostRecv()
@@ -254,4 +268,26 @@ bool Session::ProcessDisconnect()
     sessionDisconnectEvent.sessionRef = nullptr;
     OnDisconnected();
     return true;
+}
+
+bool Session::ProcessLoopback(CircularBufferPtr buffer, int32 bytes)
+{
+    RecursiveLockGuard lockGuard(sendLock);
+
+	if (bytes == 0)
+	{
+		PostDisconnect();
+		return false;
+	}
+
+	uint32 dataSize = buffer->DataSize();
+	uint32 processLen = OnRecv(buffer->ReadPos(), dataSize);
+	if (processLen < 0 || dataSize < processLen)
+	{
+		PostDisconnect();
+		return false;
+	}
+
+    buffer->Clean();
+	return true;
 }

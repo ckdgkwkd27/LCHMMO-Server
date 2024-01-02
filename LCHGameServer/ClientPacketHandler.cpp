@@ -3,6 +3,7 @@
 #include "PlayerManager.h"
 #include "ZoneManager.h"
 #include "TimeUtil.h"
+#include "Viewport.h"
 
 ClientPacketHandlerFunc GClientPacketHandler[UINT16_MAX];
 
@@ -32,6 +33,10 @@ void ClientPacketHandler::Init()
 	GClientPacketHandler[PKT_CS_TELEPORT] = [](ClientSessionPtr& session, char* buffer, uint32 len)
 	{
 		return HandlePacket<protocol::RequestTeleport>(Handle_PKT_CS_TELEPORT, session, buffer, len);
+	};
+	GClientPacketHandler[PKT_S_VIEWPORT_UDPATE] = [](ClientSessionPtr& session, char* buffer, uint32 len)
+	{
+		return HandlePacket<protocol::RequestViewportUpdate>(Handle_PKT_S_VIEWPORT_UPDATE, session, buffer, len);
 	};
 }
 
@@ -89,12 +94,14 @@ bool Handle_PKT_CS_ENTER_GAME(ClientSessionPtr& session, protocol::RequestEnterG
 	PlayerPtr _player = session->currentPlayer;
 	RETURN_FALSE_ON_FAIL(_player != nullptr);
 
-	ZonePtr _zone = GZoneManager.FindZoneByID(_player->zoneID);
+	ZonePtr _zone = GZoneManager.FindZoneByID(packet.zoneid());
 	RETURN_FALSE_ON_FAIL(_zone != nullptr);
 
-	_zone->messageQueue.Push([_zone, _player]() {_zone->EnterGame(_player); });
+	_zone->messageQueue.Push([_zone, _player]() {_zone->EnterGame(_player, _zone->zoneID); });
+    _player->viewport = std::make_shared<Viewport>(_player);
+    _player->zoneID = _zone->zoneID;
 
-	std::cout << "[INFO] ReturnEnterGame Packet Send Socket=" << session->GetSocket() << ", PlayerID=" << packet.playerid() << std::endl;
+	std::cout << "[INFO] ReturnEnterGame Packet Send Socket=" << session->GetSocket() << ", PlayerID=" << packet.playerid() << ", ZoneID=" << _zone->zoneID << std::endl;
 	return true;
 }
 
@@ -145,11 +152,24 @@ bool Handle_PKT_CS_TELEPORT(ClientSessionPtr& session, protocol::RequestTeleport
     _player->ActorInfo.mutable_posinfo()->set_posy(packet.posinfo().posy());
 
 	//Despawn Old
-    currentZone->messageQueue.Push([currentZone, _player]() {currentZone->LeaveGame(_player->ActorInfo.actorid()); });
+    currentZone->LeaveGame(_player->ActorInfo.actorid());
 
     //Notify
     newZone->messageQueue.Push([newZone, _player]() {newZone->EnterGame(_player, newZone->zoneID); });
 
     std::cout << "[INFO] Handle TELEPORT ActorId=" << packet.actorid() << ", ZoneId=" << packet.zoneid() << std::endl;
+    return true;
+}
+
+bool Handle_PKT_S_VIEWPORT_UPDATE(ClientSessionPtr& session, protocol::RequestViewportUpdate& packet)
+{
+	PlayerPtr _player = session->currentPlayer;
+	RETURN_FALSE_ON_FAIL(_player != nullptr);
+    RETURN_FALSE_ON_FAIL(_player->playerId == packet.playerid());
+    
+	ZonePtr _zone = GZoneManager.FindZoneByID(_player->zoneID);
+	RETURN_FALSE_ON_FAIL(_zone != nullptr);
+
+	_zone->messageQueue.Push([_player] {_player->viewport->Update(); });
     return true;
 }

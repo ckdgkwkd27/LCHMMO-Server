@@ -40,6 +40,7 @@ message ReturnLogin
 message RequestEnterGame
 {
 	uint32 playerId = 1;
+	uint32 zoneId = 2;
 }
 
 message ReturnEnterGame
@@ -104,4 +105,9 @@ message ReturnTeleport
 {
 	uint32 actorId = 1;
 	uint32 zoneId = 2;
+}
+
+message RequestViewportUpdate
+{
+	uint32 playerId = 1;
 }

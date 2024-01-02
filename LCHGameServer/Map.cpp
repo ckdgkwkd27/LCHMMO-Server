@@ -145,9 +145,9 @@ std::vector<Vector2Int> Map::FindPath(Vector2Int startCellPos, Vector2Int destCe
 
     std::vector<Pos> path;
 
-	std::vector<std::vector<bool>> closed(MaxY - MinY + 1, std::vector<bool>(MaxY - MinY + 1, false));
-    std::vector<std::vector<int32>> best(MaxY - MinY + 1, std::vector<int32>(MaxY - MinY + 1, INT32_MAX));
-    std::vector<std::vector<int32>> opened(MaxY - MinY + 1, std::vector<int32>(MaxY - MinY + 1, INT32_MAX));
+	std::vector<std::vector<bool>> closed(MaxY - MinY + 1, std::vector<bool>(MaxX - MinX + 1, false));
+    std::vector<std::vector<int32>> best(MaxY - MinY + 1, std::vector<int32>(MaxX - MinX + 1, INT32_MAX));
+    std::vector<std::vector<int32>> opened(MaxY - MinY + 1, std::vector<int32>(MaxX - MinX + 1, INT32_MAX));
     std::map<Pos, Pos> parent;
 
     std::priority_queue<PQNode, std::vector<PQNode>, std::greater<PQNode>> pq;

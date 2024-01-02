@@ -1,8 +1,12 @@
 #pragma once
+#define ZERO_TIMESTAMP std::chrono::milliseconds(0)
+
+using TimeStampType = std::chrono::milliseconds;
+
 class TimeUtil
 {
 public:
-	static char* GetCurrentTime()
+	static char* GetCurrentTimeStr()
 	{
 		auto currentTime = std::chrono::system_clock::now();
 		static char buffer[80];
@@ -18,6 +22,12 @@ public:
 		strftime(buffer, 80, "%F %H:%M:%S", &timeinfo);
 		sprintf_s(buffer, "%s:%03d", buffer, (int)millis);
 		return buffer;
+	}
+
+	static TimeStampType GetCurrTimeStamp()
+	{
+		TimeStampType timestamp = duration_cast<TimeStampType>(system_clock::now().time_since_epoch());
+		return timestamp;
 	}
 };
 
